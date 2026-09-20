@@ -405,16 +405,15 @@ html[dir="rtl"] .ce-bird{animation-direction:reverse}
 .tier-1 .ce2-tree{animation:ce2Wilt 3.6s ease-in-out infinite}
 @keyframes ce2Wilt{0%,100%{transform:rotate(3.4deg)}50%{transform:rotate(5.4deg)}}
 
-/* 水壶：充裕时安静小浮；≤60 跳出倾斜浇水；<30 急促 */
+/* 水壶：>60 完全隐藏；≤60 跳出倾斜浇水；<30 急促 */
 .ce2-can{position:absolute;right:9px;bottom:44px;width:80px;height:70px;padding:0;border:0;background:none;cursor:pointer;z-index:3;
-  opacity:.5;transform:scale(.66);transform-origin:68% 88%;filter:drop-shadow(0 8px 8px rgba(120,80,20,.18));
-  animation:ce2CanIdle 3.2s ease-in-out infinite;transition:opacity .5s ease}
+  display:none;opacity:0;transform:rotate(-15deg);transform-origin:68% 88%;filter:drop-shadow(0 8px 8px rgba(120,80,20,.18));
+  transition:opacity .4s ease}
 .ce2-can svg{width:100%;height:100%;display:block;overflow:visible}
-@keyframes ce2CanIdle{0%,100%{transform:scale(.66) translateY(0)}50%{transform:scale(.66) translateY(-3px)}}
 .ce2-canwater{transform-box:fill-box;transform-origin:center;animation:ce2Slosh 1.5s ease-in-out infinite}
 @keyframes ce2Slosh{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.6px)}}
 .ce2-drop{opacity:0}
-.tier-2 .ce2-can,.tier-1 .ce2-can{opacity:1;animation:ce2CanAlert 1.25s ease-in-out infinite}
+.tier-2 .ce2-can,.tier-1 .ce2-can{display:block;opacity:1;animation:ce2CanAlert 1.25s ease-in-out infinite}
 @keyframes ce2CanAlert{0%,100%{transform:rotate(-15deg) translateY(0)}50%{transform:rotate(-22deg) translateY(-7px)}}
 .tier-2 .ce2-drop,.tier-1 .ce2-drop{animation:ce2Drop 1.5s ease-in infinite}
 .tier-1 .ce2-can{animation-duration:.9s}
