@@ -1,0 +1,2 @@
+const {getUser,admin}=require('../lib/supabase');
+module.exports=async(req,res)=>{try{const u=await getUser(req);if(!u)return res.status(401).json({error:'Sign in required'});const {data,error}=await admin().from('profiles').select('plan,credits_monthly,credits_paid,credits_bonus,stars,lifetime_level,monthly_level').eq('id',u.id).single();if(error)throw error;res.status(200).json({plan:data.plan,total:(data.credits_monthly||0)+(data.credits_paid||0)+(data.credits_bonus||0),...data})}catch(e){res.status(500).json({error:e.message})}};

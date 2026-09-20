@@ -1,0 +1,6 @@
+{
+  "subscription":{"student":{"usd":4.99,"monthly":250},"plus":{"usd":9.99,"monthly":800},"family":{"usd":19.99,"monthly":2200}},
+  "packs":{"pack100":{"usd":4.99,"credits":100},"pack500":{"usd":9.99,"credits":500},"pack1500":{"usd":19.99,"credits":1500}},
+  "cost":{"solve":2,"animation":8,"chat":1,"voice":1,"practice":1},
+  "policy":{"free_daily_solves":3,"free_daily_credits":6,"loyalty_reset_per_calendar_month":1,"stars_to_credit":20,"stars_to_credit_monthly_cap":10}
+}
