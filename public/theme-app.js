@@ -87,18 +87,37 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', buildThemePanel);
   else buildThemePanel();
 
-  // ---- 密码实时校验（注册表单）----
+  // ---- 密码实时校验（注册表单）10语种 ----
+  const PW_RULES = {
+    'en':     ['At least 8 characters','Includes uppercase','Includes a number','Includes a special character'],
+    'zh-CN':  ['至少8位','含大写','含数字','含特殊字符'],
+    'zh-TW':  ['至少8位','含大寫','含數字','含特殊字元'],
+    'ja':     ['8文字以上','大文字を含む','数字を含む','記号を含む'],
+    'ko':     ['8자 이상','대문자 포함','숫자 포함','특수문자 포함'],
+    'fr':     ['8 caractères minimum','Une majuscule','Un chiffre','Un caractère spécial'],
+    'de':     ['Mindestens 8 Zeichen','Großbuchstabe','Zahl','Sonderzeichen'],
+    'es':     ['Mínimo 8 caracteres','Una mayúscula','Un número','Un carácter especial'],
+    'it':     ['Almeno 8 caratteri','Una maiuscola','Un numero','Un carattere speciale'],
+    'ar':     ['٨ أحرف على الأقل','حرف كبير','رقم','رمز خاص'],
+    'fa':     ['حداقل ۸ نویسه','حرف بزرگ','شامل عدد','نماد ویژه']
+  };
+  function pwText(lang){ return PW_RULES[lang] || PW_RULES['en']; }
   function setupPasswordCheck(){
     const pw = document.getElementById('signupPassword');
     if(!pw) return;
     const box = document.createElement('div');
     box.style.cssText = 'margin-top:6px;font-size:12px;font-weight:700';
-    box.innerHTML = `
-      <div class="pw-check" id="pc1"><span class="no">○</span> 至少8位</div>
-      <div class="pw-check" id="pc2"><span class="no">○</span> 含大写</div>
-      <div class="pw-check" id="pc3"><span class="no">○</span> 含数字</div>
-      <div class="pw-check" id="pc4"><span class="no">○</span> 含特殊字符</div>
-      <div class="pw-bar"><i id="pwBar" style="width:0%"></i></div>`;
+    function render(lang){
+      const t = pwText(lang);
+      box.innerHTML = `
+        <div class="pw-check" id="pc1"><span class="no">○</span> ${t[0]}</div>
+        <div class="pw-check" id="pc2"><span class="no">○</span> ${t[1]}</div>
+        <div class="pw-check" id="pc3"><span class="no">○</span> ${t[2]}</div>
+        <div class="pw-check" id="pc4"><span class="no">○</span> ${t[3]}</div>
+        <div class="pw-bar"><i id="pwBar" style="width:0%"></i></div>`;
+    }
+    const cur = (window.CALF_LANG || 'en').replace('_','-');
+    render(cur);
     pw.parentNode.insertBefore(box, pw.nextSibling);
 
     function check(){
@@ -112,6 +131,12 @@
       document.getElementById('pwBar').style.width = (score/4*100)+'%';
     }
     pw.addEventListener('input', check);
+    // i18n 钩子：语言切换时重渲染
+    window.calfRefreshI18n = function(lang){
+      const l = (lang||'en').replace('_','-');
+      render(l);
+      check();
+    };
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', setupPasswordCheck);
   else setupPasswordCheck();
