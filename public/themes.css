@@ -158,3 +158,177 @@ body[data-stage="primary_1_3"] .ce-credit-card,body[data-stage="primary_1_3"] .c
 .ce-status-pill.tier-3{background:#f6f8e6;color:#8a761f}
 .ce-status-pill.tier-2{background:#fff1dd;color:#ad681d}
 .ce-status-pill.tier-1{background:#fff0f0;color:#c23b44;animation:ceStatusPulse 1.8s ease-in-out infinite}
+
+/* =========================================================
+   v5.2 增强：儿童小树四层分层动画（蚂蚁森林风）
+   纯CSS keyframes，只用 transform/opacity，无JS轮询
+   ========================================================= */
+
+/* --- 太阳：光芒缓转 + 光晕呼吸 --- */
+.ce-sun{
+  animation:ceSunBreath 3.5s ease-in-out infinite !important;
+}
+.ce-sun::before{
+  content:"";position:absolute;inset:-12px;border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(255,211,97,.3) 20deg,transparent 40deg,transparent 90deg,rgba(255,211,97,.3) 110deg,transparent 130deg,transparent 180deg,rgba(255,211,97,.3) 200deg,transparent 220deg,transparent 270deg,rgba(255,211,97,.3) 290deg,transparent 310deg);
+  animation:ceSunRays 12s linear infinite;
+}
+@keyframes ceSunRays{to{transform:rotate(360deg)}}
+@keyframes ceSunBreath{0%,100%{transform:scale(1);box-shadow:0 0 0 8px rgba(255,211,97,.10),0 0 20px rgba(255,200,66,.30)}50%{transform:scale(1.08);box-shadow:0 0 0 14px rgba(255,211,97,.14),0 0 36px rgba(255,200,66,.45)}}
+
+/* tier1 暴晒刺目橙红 */
+.ce-credit-widget.tier-1 .ce-sun{
+  background:radial-gradient(circle at 34% 29%,#ffe0b8 0 18%,#ff8c42 49%,#e0562e 100%) !important;
+  box-shadow:0 0 0 12px rgba(255,140,66,.18),0 0 40px rgba(255,100,40,.5) !important;
+}
+.ce-credit-widget.tier-1 .ce-sun::before{
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(255,140,66,.4) 20deg,transparent 40deg,transparent 90deg,rgba(255,140,66,.4) 110deg,transparent 130deg,transparent 180deg,rgba(255,140,66,.4) 200deg,transparent 220deg,transparent 270deg,rgba(255,140,66,.4) 290deg,transparent 310deg);
+}
+
+/* --- 云：横向漂移 --- */
+.ce-cloud{animation:ceCloudDrift 18s linear infinite !important}
+.cloud-b{animation-duration:28s !important;animation-delay:-9s !important}
+@keyframes ceCloudDrift{
+  0%{transform:translateX(-40px) scale(.83)}
+  50%{transform:translateX(40px) scale(.83)}
+  100%{transform:translateX(-40px) scale(.83)}
+}
+.ce-credit-widget.tier-1 .ce-cloud{opacity:.25 !important;animation-duration:24s !important}
+.ce-credit-widget.tier-1 .cloud-b{opacity:.15 !important}
+
+/* RTL 镜像 */
+html[dir="rtl"] .ce-cloud{animation-direction:reverse}
+
+/* --- 树：轻柔左右摇晃 --- */
+.ce-tree{animation:ceTreeSway 4s ease-in-out infinite !important}
+@keyframes ceTreeSway{
+  0%,100%{transform:translateX(-50%) rotate(-1.5deg)}
+  50%{transform:translateX(-50%) rotate(1.5deg)}
+}
+.ce-credit-widget.tier-2 .ce-tree{animation:ceTreeDroop 5s ease-in-out infinite !important}
+@keyframes ceTreeDroop{
+  0%,100%{transform:translateX(-50%) rotate(-2.5deg)}
+  50%{transform:translateX(-50%) rotate(-0.5deg)}
+}
+.ce-credit-widget.tier-1 .ce-tree{animation:ceTreeWilt 3.5s ease-in-out infinite !important}
+@keyframes ceTreeWilt{
+  0%,100%{transform:translateX(-50%) rotate(4deg)}
+  50%{transform:translateX(-50%) rotate(7deg)}
+}
+
+/* --- 地面：随 tier 变色 --- */
+.ce-tree-ground{
+  background:radial-gradient(ellipse at center,rgba(84,165,94,.25),rgba(84,165,94,0) 72%) !important;
+}
+.ce-credit-widget.tier-3 .ce-tree-ground{
+  background:radial-gradient(ellipse at center,rgba(120,170,80,.22),rgba(120,170,80,0) 72%) !important;
+}
+.ce-credit-widget.tier-2 .ce-tree-ground{
+  background:radial-gradient(ellipse at center,rgba(190,170,80,.30),rgba(190,170,80,0) 72%) !important;
+}
+.ce-credit-widget.tier-1 .ce-tree-ground{
+  background:radial-gradient(ellipse at center,rgba(200,140,60,.35),rgba(200,140,60,0) 72%) !important;
+}
+/* tier1 干裂裂纹 */
+.ce-credit-widget.tier-1 .ce-tree-ground::after{
+  content:"";position:absolute;inset:6px 20px 0;
+  background:
+    linear-gradient(90deg,transparent 48%,rgba(140,90,30,.4) 49%,transparent 51%),
+    linear-gradient(60deg,transparent 48%,rgba(140,90,30,.3) 49%,transparent 51%),
+    linear-gradient(-60deg,transparent 48%,rgba(140,90,30,.3) 49%,transparent 51%);
+  border-radius:50%;
+}
+
+/* --- 新增小鸟 --- */
+.ce-bird{
+  position:absolute;width:18px;height:8px;
+  top:25px;left:-20px;
+  animation:ceBirdFly 22s linear infinite;
+  pointer-events:none;
+}
+.ce-bird::before,.ce-bird::after{
+  content:"";position:absolute;bottom:0;width:10px;height:4px;
+  border-top:2px solid #5a7a9a;
+  border-radius:50% 50% 0 0;
+}
+.ce-bird::before{left:0;transform:rotate(-8deg)}
+.ce-bird::after{right:0;transform:rotate(8deg)}
+@keyframes ceBirdFly{
+  0%{transform:translateX(0) translateY(0)}
+  25%{transform:translateX(120px) translateY(-8px)}
+  50%{transform:translateX(240px) translateY(4px)}
+  75%{transform:translateX(360px) translateY(-6px)}
+  100%{transform:translateX(480px) translateY(0)}
+}
+html[dir="rtl"] .ce-bird{animation-direction:reverse}
+
+/* --- 水壶：蚂蚁森林风橙壶 --- */
+.ce-watercan .can-body{
+  background:linear-gradient(145deg,#ffb347,#ff8c2e) !important;
+  border-color:rgba(255,255,255,.9) !important;
+}
+.ce-watercan .can-handle{
+  border-color:#e67320 !important;
+}
+.ce-watercan .can-spout{
+  background:#ff9c42 !important;
+}
+/* 壶身小花印 */
+.ce-watercan .can-body::after{
+  content:"✿";position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  color:rgba(255,255,255,.6);font-size:10px;line-height:1;
+}
+
+/* tier3/4 水壶安静角落 */
+.ce-credit-widget.tier-3 .ce-watercan,
+.ce-credit-widget.tier-4 .ce-watercan{
+  animation:ceCanQuiet 3s ease-in-out infinite !important;
+  transform:scale(.85);
+  opacity:.8;
+}
+.ce-credit-widget.tier-3 .drop,
+.ce-credit-widget.tier-4 .drop{opacity:0 !important;animation:none !important}
+@keyframes ceCanQuiet{
+  0%,100%{transform:scale(.85) translateY(0)}
+  50%{transform:scale(.85) translateY(-2px)}
+}
+
+/* tier1/2 水壶弹到显眼位置 */
+.ce-credit-widget.tier-1 .ce-watercan,
+.ce-credit-widget.tier-2 .ce-watercan{
+  animation:ceCanAlert 1.2s ease-in-out infinite !important;
+  right:12px;bottom:20px;
+}
+.ce-credit-widget.tier-2 .drop{animation:ceDrop 1.5s ease-out infinite !important}
+
+/* --- 成人金库：金币微光 + 辉光呼吸 --- */
+.ce-credit-widget.tier-4 .ce-vault-glow{
+  animation:ceVaultGlow 3s ease-in-out infinite !important;
+}
+.ce-credit-widget.tier-4 .coin{
+  animation:ceCoinShimmer 2.5s ease-in-out infinite;
+}
+.ce-credit-widget.tier-4 .c2{animation-delay:.4s}
+.ce-credit-widget.tier-4 .c4{animation-delay:.8s}
+.ce-credit-widget.tier-4 .c6{animation-delay:1.2s}
+@keyframes ceVaultGlow{
+  0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}
+  50%{opacity:.8;transform:translateX(-50%) scale(1.08)}
+}
+@keyframes ceCoinShimmer{
+  0%,100%{filter:brightness(1)}
+  50%{filter:brightness(1.25)}
+}
+/* tier1 金库辉光变暗 */
+.ce-credit-widget.tier-1 .ce-vault-glow{opacity:.2 !important;animation:none !important}
+
+/* --- reduced-motion：只关位移循环，保留 tier 颜色 --- */
+@media(prefers-reduced-motion:reduce){
+  .ce-sun,.ce-sun::before,.ce-cloud,.ce-tree,.ce-watercan,
+  .ce-bird,.ce-vault-glow,.ce-credit-widget.tier-4 .coin{
+    animation:none !important;
+  }
+  .ce-tree{transform:translateX(-50%) !important}
+  .ce-bird{display:none}
+}
