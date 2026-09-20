@@ -665,7 +665,6 @@ if($('creditActionBtn'))$('creditActionBtn').onclick=()=>openModal('plansModal')
 if($('waterCanBtn'))$('waterCanBtn').onclick=()=>openModal('plansModal');
 if($('careResetBtn'))$('careResetBtn').onclick=useCareReset;
 if($('membershipBtn'))$('membershipBtn').onclick=()=>toast(creditUi().view);
-if($('waterCanBtn'))$('waterCanBtn').onclick=()=>openModal('plansModal');
 if($('stage'))$('stage').onchange=e=>{applyStage(e.target.value);session().then(s=>s&&fetch('/api/profile',{method:'POST',headers:authHeader(s),body:JSON.stringify({stage_band:e.target.value,language:currentLang,installId})}))};
 if($('file'))$('file').onchange=e=>{
   const f=e.target.files[0];if(!f)return;
