@@ -60,7 +60,7 @@
           <div>
             <label id="animLabel">🎬 Animation</label>
             <label class="switch" style="font-weight:500"><input id="wantAnim" type="checkbox" checked><span id="animCb">Include interactive animation when useful</span></label>
-            <div id="animHint" class="muted">Animation consumes extra Credits.</div>
+            <div id="animHint" class="muted">Included with your solution — no extra Credits.</div>
           </div>
         </div>
       </section>
@@ -111,19 +111,149 @@
 
   <div id="creditMeterWidget" class="ce-credit-widget role-child tier-4" aria-live="polite">
     <div class="ce-meter-scene ce-child-scene" aria-hidden="true">
-      <div class="ce-sun"></div>
-      <div class="ce-cloud cloud-a"></div><div class="ce-cloud cloud-b"></div><span class="ce-bird"></span>
-      <div class="ce-tree-ground"></div>
-      <div class="ce-tree">
-        <span class="ce-trunk"></span><span class="branch branch-a"></span><span class="branch branch-b"></span>
-        <span class="leaf leaf-a"></span><span class="leaf leaf-b"></span><span class="leaf leaf-c"></span>
-        <span class="leaf leaf-d"></span><span class="leaf leaf-e"></span><span class="leaf leaf-f"></span>
-        <span class="leaf leaf-g"></span><span class="leaf leaf-h"></span>
-      </div>
-      <div class="ce-flower flower-a"></div><div class="ce-flower flower-b"></div>
-      <button class="ce-watercan" id="waterCanBtn" type="button" aria-label="Water the tree" title="Water the tree">
-        <span class="can-handle"></span><span class="can-body"></span><span class="can-spout"></span>
-        <i class="drop d1"></i><i class="drop d2"></i><i class="drop d3"></i>
+      <svg class="ce2-scene" viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <defs>
+          <linearGradient id="ce2Sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#a9ddff"/><stop offset=".55" stop-color="#e7f6ff"/><stop offset="1" stop-color="#f4fbf0"/>
+          </linearGradient>
+          <radialGradient id="ce2Sun" cx=".4" cy=".36" r=".78">
+            <stop offset="0" stop-color="#fff7c6"/><stop offset=".55" stop-color="#ffd45f"/><stop offset="1" stop-color="#f4ac3a"/>
+          </radialGradient>
+          <linearGradient id="ce2Trunk" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#7c5230"/><stop offset=".5" stop-color="#ad7a45"/><stop offset="1" stop-color="#7d512c"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="160" fill="url(#ce2Sky)"/>
+        <rect class="ce2-haze" width="400" height="160"/>
+
+        <!-- 太阳：光芒缓转 + 光晕呼吸 -->
+        <g transform="translate(350,30)">
+          <circle class="ce2-sunglow" r="27" fill="#ffd36a"/>
+          <g class="ce2-rays" stroke="#ffd36a" stroke-width="3.4" stroke-linecap="round">
+            <path d="M0 -23 v-9"/><path d="M0 23 v9"/><path d="M-23 0 h-9"/><path d="M23 0 h9"/>
+            <path d="M-16.5 -16.5 l-6.5 -6.5"/><path d="M16.5 -16.5 l6.5 -6.5"/><path d="M-16.5 16.5 l-6.5 6.5"/><path d="M16.5 16.5 l6.5 6.5"/>
+          </g>
+          <circle r="16" fill="url(#ce2Sun)"/>
+        </g>
+
+        <!-- 云：外层定位、中层缩放、内层横移 -->
+        <g transform="translate(0,22)"><g transform="scale(.92)"><g class="ce2-cloud ce2-cloud-1">
+          <g fill="#ffffff"><ellipse cx="0" cy="7" rx="31" ry="12"/><circle cx="-17" cy="1" r="12"/><circle cx="2" cy="-6" r="15"/><circle cx="19" cy="1" r="11"/></g>
+        </g></g></g>
+        <g transform="translate(0,50)"><g transform="scale(.62)"><g class="ce2-cloud ce2-cloud-2">
+          <g fill="#ffffff"><ellipse cx="0" cy="7" rx="31" ry="12"/><circle cx="-17" cy="1" r="12"/><circle cx="2" cy="-6" r="15"/><circle cx="19" cy="1" r="11"/></g>
+        </g></g></g>
+        <g transform="translate(0,12)"><g transform="scale(.5)"><g class="ce2-cloud ce2-cloud-3">
+          <g fill="#ffffff"><ellipse cx="0" cy="7" rx="31" ry="12"/><circle cx="-17" cy="1" r="12"/><circle cx="2" cy="-6" r="15"/><circle cx="19" cy="1" r="11"/></g>
+        </g></g></g>
+
+        <!-- 飞鸟：外层定位、中层横移、内层扇翅膀 -->
+        <g transform="translate(0,38)"><g class="ce2-bird ce2-bird-1"><g class="ce2-bird-flap">
+          <path d="M0 5 Q6 -2 12 5 Q18 -2 24 5" fill="none" stroke="#5b86b4" stroke-width="2.4" stroke-linecap="round"/>
+        </g></g></g>
+        <g transform="translate(0,64)"><g class="ce2-bird ce2-bird-2"><g class="ce2-bird-flap">
+          <path d="M0 4 Q5 -1.5 10 4 Q15 -1.5 20 4" fill="none" stroke="#7fa3c8" stroke-width="2" stroke-linecap="round"/>
+        </g></g></g>
+
+        <!-- 远山近丘与地面（颜色随四层额度变化） -->
+        <path class="ce2-hill ce2-hill-far" d="M0 116 C 70 92 130 96 200 110 C 270 122 330 96 400 104 L400 160 L0 160 Z"/>
+        <path class="ce2-hill ce2-hill-near" d="M0 130 C 90 108 170 116 250 128 C 310 137 360 124 400 126 L400 160 L0 160 Z"/>
+        <path class="ce2-ground" d="M0 140 C 110 130 200 136 280 140 C 340 143 380 138 400 137 L400 160 L0 160 Z"/>
+
+        <!-- 草丛 -->
+        <g class="ce2-grass" fill="none" stroke-width="2" stroke-linecap="round">
+          <path d="M52 146 l-2 -7 M52 146 l1 -8 M52 146 l4 -6"/>
+          <path d="M252 148 l-2 -7 M252 148 l1 -8 M252 148 l4 -6"/>
+          <path d="M330 145 l-2 -7 M330 145 l1 -8 M330 145 l4 -6"/>
+          <path d="M118 150 l-2 -6 M118 150 l1 -7 M118 150 l4 -5"/>
+        </g>
+        <!-- 小花（充裕时盛开） -->
+        <g class="ce2-flowers">
+          <g transform="translate(88,143)"><path d="M0 0 v6" stroke="#4f9e57" stroke-width="1.6"/><g fill="#ff9eb5"><circle cx="0" cy="-2" r="2.6"/><circle cx="-2.6" cy="0" r="2.2"/><circle cx="2.6" cy="0" r="2.2"/><circle cx="0" cy="2.2" r="2.2"/></g><circle cx="0" cy="0" r="1.6" fill="#ffe27a"/></g>
+          <g transform="translate(272,147)"><path d="M0 0 v6" stroke="#4f9e57" stroke-width="1.6"/><g fill="#ffd166"><circle cx="0" cy="-2" r="2.6"/><circle cx="-2.6" cy="0" r="2.2"/><circle cx="2.6" cy="0" r="2.2"/><circle cx="0" cy="2.2" r="2.2"/></g><circle cx="0" cy="0" r="1.6" fill="#ff9eb5"/></g>
+        </g>
+        <!-- 干裂纹路（告急时出现） -->
+        <g class="ce2-cracks" fill="none" stroke="#a9783d" stroke-width="1.5" stroke-linecap="round">
+          <path d="M96 150 l8 -6 l-4 -7"/><path d="M262 151 l9 -5 l-3 -8"/><path d="M338 149 l6 -5 l-2 -7"/><path d="M150 153 l7 -4"/>
+        </g>
+        <!-- 落叶（低额度时） -->
+        <g class="ce2-fallen">
+          <ellipse cx="168" cy="150" rx="4" ry="2.4" fill="#d8b14f" transform="rotate(-18 168 150)"/>
+          <ellipse cx="236" cy="152" rx="4" ry="2.4" fill="#c9a347" transform="rotate(14 236 152)"/>
+          <ellipse cx="70" cy="152" rx="3.4" ry="2" fill="#d8b14f" transform="rotate(-30 70 152)"/>
+        </g>
+        <!-- 小红桶（干旱时出现在树根） -->
+        <g class="ce2-bucket" transform="translate(150,132)">
+          <path d="M-8 -12 L8 -12 L6.5 3 L-6.5 3 Z" fill="#ef6b5e"/>
+          <ellipse cx="0" cy="-12" rx="8" ry="2.6" fill="#ff8d7e"/>
+          <path d="M-6 -14 C -6 -20 6 -20 6 -14" fill="none" stroke="#d9544a" stroke-width="1.6"/>
+          <g fill="rgba(255,255,255,.55)"><circle cx="0" cy="-5" r="1.5"/><circle cx="-2.4" cy="-3.4" r="1.2"/><circle cx="2.4" cy="-3.4" r="1.2"/><circle cx="-1.5" cy="-1.4" r="1.2"/><circle cx="1.5" cy="-1.4" r="1.2"/></g>
+        </g>
+
+        <!-- 小精灵树 -->
+        <g transform="translate(200,146)"><g class="ce2-tree">
+          <!-- 枝干网络（缺水叶稀时露出） -->
+          <path class="ce2-branch" d="M-3 -36 C -13 -45 -25 -51 -38 -54" fill="none" stroke="url(#ce2Trunk)" stroke-width="4.5" stroke-linecap="round"/>
+          <path class="ce2-twig" d="M-18 -47 C -25 -57 -30 -63 -34 -70"/>
+          <path class="ce2-twig" d="M-30 -52 C -38 -50 -44 -47 -49 -43"/>
+          <path class="ce2-branch" d="M3 -40 C 13 -48 26 -54 40 -55" fill="none" stroke="url(#ce2Trunk)" stroke-width="4.5" stroke-linecap="round"/>
+          <path class="ce2-twig" d="M20 -50 C 28 -60 34 -66 38 -72"/>
+          <path class="ce2-twig" d="M30 -54 C 38 -52 44 -49 49 -45"/>
+          <path class="ce2-twig" d="M0 -44 C 0 -56 2 -64 1 -73"/>
+          <path class="ce2-trunk" d="M-7 0 C -9 -18 -6 -32 -4 -45 L4 -45 C 6 -32 9 -18 7 0 Z" fill="url(#ce2Trunk)"/>
+          <!-- 树冠（带位置类，缺水时逐簇稀疏） -->
+          <circle class="ce2-leaf ce2-l3 fc" cx="0" cy="-60" r="30"/>
+          <circle class="ce2-leaf ce2-l2 fl" cx="-23" cy="-50" r="21"/>
+          <circle class="ce2-leaf ce2-l2 fr" cx="23" cy="-50" r="21"/>
+          <circle class="ce2-leaf ce2-l1 ftl" cx="-11" cy="-80" r="18"/>
+          <circle class="ce2-leaf ce2-l1 ftr" cx="13" cy="-82" r="16"/>
+          <circle class="ce2-leaf ce2-l2 fbl" cx="-31" cy="-34" r="15"/>
+          <circle class="ce2-leaf ce2-l2 fbr" cx="31" cy="-36" r="15"/>
+          <circle class="ce2-leaf ce2-l1 fcm" cx="0" cy="-47" r="19"/>
+          <circle class="ce2-sheen" cx="-15" cy="-74" r="5" fill="rgba(255,255,255,.16)"/>
+          <circle class="ce2-sheen" cx="7" cy="-79" r="3.4" fill="rgba(255,255,255,.13)"/>
+          <!-- 枝头小叶簇：缺水时替代大冠出现 -->
+          <circle class="ce2-tuft" cx="-38" cy="-54" r="6.5"/>
+          <circle class="ce2-tuft" cx="-34" cy="-70" r="5.5"/>
+          <circle class="ce2-tuft" cx="-49" cy="-43" r="5"/>
+          <circle class="ce2-tuft" cx="40" cy="-55" r="6.5"/>
+          <circle class="ce2-tuft" cx="38" cy="-72" r="5.5"/>
+          <circle class="ce2-tuft" cx="49" cy="-45" r="5"/>
+          <circle class="ce2-tuft" cx="1" cy="-73" r="5.5"/>
+          <circle class="ce2-tuft" cx="0" cy="-30" r="5"/>
+        </g></g>
+      </svg>
+
+      <!-- 蚂蚁森林风橙色花印水壶（≤60 跳出浇水提醒） -->
+      <button class="ce2-can" id="waterCanBtn" type="button" aria-label="Water the tree" title="Water the tree">
+        <svg viewBox="0 0 88 76" focusable="false">
+          <defs>
+            <linearGradient id="ce2Can" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffb04a"/><stop offset="1" stop-color="#f2811d"/>
+            </linearGradient>
+            <clipPath id="ce2CanClip"><path d="M26 28 h34 a8 8 0 0 1 8 8 v22 a8 8 0 0 1 -8 8 h-34 a8 8 0 0 1 -8 -8 v-22 a8 8 0 0 1 8 -8 z"/></clipPath>
+          </defs>
+          <!-- 壶嘴 -->
+          <path class="ce2-spout" d="M27 37 C 19 35 15 29 13 22 L 21 19 C 23 26 27 31 33 33 Z" fill="#f58c2a"/>
+          <circle class="ce2-rose" cx="14" cy="20" r="4.6" fill="#ff9c42"/>
+          <!-- 把手 -->
+          <path d="M62 32 C 79 30 79 57 62 55" fill="none" stroke="#ec8a2c" stroke-width="5.5" stroke-linecap="round"/>
+          <!-- 壶身 -->
+          <path d="M26 28 h34 a8 8 0 0 1 8 8 v22 a8 8 0 0 1 -8 8 h-34 a8 8 0 0 1 -8 -8 v-22 a8 8 0 0 1 8 -8 z" fill="url(#ce2Can)"/>
+          <ellipse cx="43" cy="28" rx="11" ry="4" fill="#ffc879"/>
+          <!-- 壶里晃动的水 -->
+          <g clip-path="url(#ce2CanClip)" class="ce2-canwater">
+            <path d="M16 44 q7 -5 14 0 t14 0 t14 0 v18 h-42 z" fill="#7fc8ff" opacity=".55"/>
+          </g>
+          <!-- 花印 -->
+          <g fill="rgba(255,255,255,.6)">
+            <circle cx="43" cy="47" r="2.4"/><circle cx="39.4" cy="49.1" r="2.1"/><circle cx="46.6" cy="49.1" r="2.1"/><circle cx="40.8" cy="52.6" r="2.1"/><circle cx="45.2" cy="52.6" r="2.1"/>
+          </g>
+          <!-- 水珠 -->
+          <path class="ce2-drop dp1" d="M11 27 c -2.6 3.2 -2.6 5.4 0 7 c 2.6 -1.6 2.6 -3.8 0 -7 z" fill="#4fb7ff"/>
+          <path class="ce2-drop dp2" d="M11 27 c -2.6 3.2 -2.6 5.4 0 7 c 2.6 -1.6 2.6 -3.8 0 -7 z" fill="#74c8ff"/>
+          <path class="ce2-drop dp3" d="M11 27 c -2.6 3.2 -2.6 5.4 0 7 c 2.6 -1.6 2.6 -3.8 0 -7 z" fill="#a8dcff"/>
+        </svg>
       </button>
     </div>
 
@@ -263,8 +393,8 @@
     <h3 id="topupTitle" style="margin-top:20px;">💎 Top-up packs</h3>
     <div class="plans">
       <div class="plan"><b id="pack100Name">100 Credits</b><div>$4.99</div><button class="btn secondary" data-product="pack100" id="pack100Btn">Buy</button></div>
-      <div class="plan"><b id="pack500Name">500 Credits</b><div>$9.99</div><button class="btn secondary" data-product="pack500" id="pack500Btn">Buy</button></div>
-      <div class="plan"><b id="pack1500Name">1,500 Credits</b><div>$19.99</div><button class="btn secondary" data-product="pack1500" id="pack1500Btn">Buy</button></div>
+      <div class="plan"><b id="pack250Name">250 Credits</b><div>$9.99</div><button class="btn secondary" data-product="pack250" id="pack250Btn">Buy</button></div>
+      <div class="plan"><b id="pack600Name">600 Credits</b><div>$19.99</div><button class="btn secondary" data-product="pack600" id="pack600Btn">Buy</button></div>
     </div>
     <div class="muted" style="margin-top:10px; font-size:12px;">💡 Care reset may be available to eligible active subscribers when monthly Credits reach zero.</div>
   </div>

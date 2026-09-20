@@ -332,3 +332,132 @@ html[dir="rtl"] .ce-bird{animation-direction:reverse}
   .ce-tree{transform:translateX(-50%) !important}
   .ce-bird{display:none}
 }
+
+/* =========================================================
+   v5.3.1 Credits 小树场景（蚂蚁森林风 SVG 重绘）
+   四层额度：tier4 充裕 / tier3 良好 / tier2 偏低(≤60) / tier1 告急(<30)
+   ========================================================= */
+.ce2-scene{display:block;width:100%;height:100%}
+.ce-credit-widget.role-child{
+  --ce2-hillfar:#c9ecb1; --ce2-hillnear:#a9df82; --ce2-ground:#8fd06a; --ce2-grassline:#5da84f;
+  --ce2-leaf1:#83d96f; --ce2-leaf2:#58bd4a; --ce2-leaf3:#3fa247;
+}
+.ce-credit-widget.role-child.tier-3{
+  --ce2-hillfar:#d4edb8; --ce2-hillnear:#b3df90; --ce2-ground:#9ed079; --ce2-grassline:#6cab57;
+  --ce2-leaf1:#8fd87c; --ce2-leaf2:#63c057; --ce2-leaf3:#4aa650;
+}
+.ce-credit-widget.role-child.tier-2{
+  --ce2-hillfar:#ece2a6; --ce2-hillnear:#e2d188; --ce2-ground:#d8c15f; --ce2-grassline:#b39d49;
+  --ce2-leaf1:#ded474; --ce2-leaf2:#c2b652; --ce2-leaf3:#a3a34c;
+}
+.ce-credit-widget.role-child.tier-1{
+  --ce2-hillfar:#f2dd9e; --ce2-hillnear:#ecc579; --ce2-ground:#e0b45c; --ce2-grassline:#b98a44;
+  --ce2-leaf1:#e6cb74; --ce2-leaf2:#d0ac52; --ce2-leaf3:#b38f46;
+}
+.ce2-hill-far{fill:var(--ce2-hillfar);transition:fill .8s ease}
+.ce2-hill-near{fill:var(--ce2-hillnear);transition:fill .8s ease}
+.ce2-ground{fill:var(--ce2-ground);transition:fill .8s ease}
+.ce2-grass path{stroke:var(--ce2-grassline);transition:stroke .8s ease}
+.ce2-leaf{transition:fill .8s ease,opacity .8s ease}
+.ce2-l1{fill:var(--ce2-leaf1)}.ce2-l2{fill:var(--ce2-leaf2)}.ce2-l3{fill:var(--ce2-leaf3)}
+.ce2-haze{fill:#ffd98e;opacity:0;transition:opacity .8s ease}
+.tier-2 .ce2-haze{opacity:.10}.tier-1 .ce2-haze{opacity:.30}
+.tier-2 .ce2-flowers{opacity:.18}.tier-1 .ce2-flowers{opacity:0}
+.ce-credit-widget:not(.tier-2):not(.tier-1) .ce2-flowers{opacity:1}
+.ce2-cracks{opacity:0;transition:opacity .8s ease}
+.tier-2 .ce2-cracks{opacity:.4}.tier-1 .ce2-cracks{opacity:.85}
+.ce2-fallen{opacity:0;transition:opacity .8s ease}
+.tier-2 .ce2-fallen{opacity:.7}.tier-1 .ce2-fallen{opacity:1}
+.ce2-bucket{opacity:0;transform:translate(150px,132px) scale(.85);transition:opacity .6s ease}
+.tier-2 .ce2-bucket,.tier-1 .ce2-bucket{opacity:1;animation:ce2BucketIn .8s cubic-bezier(.2,1.4,.4,1) 1}
+@keyframes ce2BucketIn{from{opacity:0;transform:translate(150px,140px) scale(.4)}to{opacity:1;transform:translate(150px,132px) scale(.85)}}
+
+/* 太阳 */
+.ce2-rays{transform-box:fill-box;transform-origin:center;animation:ce2Rays 18s linear infinite}
+@keyframes ce2Rays{to{transform:rotate(360deg)}}
+.ce2-sunglow{transform-box:fill-box;transform-origin:center;animation:ce2Glow 3.6s ease-in-out infinite}
+@keyframes ce2Glow{0%,100%{transform:scale(1);opacity:.42}50%{transform:scale(1.24);opacity:.72}}
+.tier-1 .ce2-sunglow{fill:#ff7a3c!important;animation-duration:1.6s}
+.tier-1 .ce2-rays{stroke:#ff8a4d!important;animation-duration:10s}
+
+/* 云 */
+.ce2-cloud{transition:opacity .8s ease}
+@keyframes ce2Drift{from{transform:translateX(-100px)}to{transform:translateX(470px)}}
+.ce2-cloud-1{animation:ce2Drift 40s linear infinite}
+.ce2-cloud-2{animation:ce2Drift 58s linear infinite;animation-delay:-22s}
+.ce2-cloud-3{animation:ce2Drift 72s linear infinite;animation-delay:-48s}
+.tier-2 .ce2-cloud{opacity:.7}.tier-1 .ce2-cloud{opacity:.32}
+
+/* 飞鸟（干旱时飞走） */
+@keyframes ce2Fly{from{transform:translateX(-40px)}to{transform:translateX(460px)}}
+.ce2-bird-1{animation:ce2Fly 30s linear infinite}
+.ce2-bird-2{animation:ce2Fly 46s linear infinite;animation-delay:-20s}
+.ce2-bird-flap{transform-box:fill-box;transform-origin:center;animation:ce2Flap .5s ease-in-out infinite alternate}
+@keyframes ce2Flap{from{transform:scaleY(1)}to{transform:scaleY(.32)}}
+.tier-2 .ce2-bird,.tier-1 .ce2-bird{display:none}
+
+/* 树：轻摇 / 垂头 / 枯萎 */
+.ce2-tree{transform-box:fill-box;transform-origin:50% 100%;animation:ce2Sway 4.2s ease-in-out infinite}
+@keyframes ce2Sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+.tier-3 .ce2-tree{animation:ce2Sway 4.9s ease-in-out infinite}
+.tier-2 .ce2-tree{animation:ce2Droop 5.6s ease-in-out infinite}
+@keyframes ce2Droop{0%,100%{transform:rotate(.8deg)}50%{transform:rotate(2.8deg)}}
+.tier-1 .ce2-tree{animation:ce2Wilt 3.6s ease-in-out infinite}
+@keyframes ce2Wilt{0%,100%{transform:rotate(3.4deg)}50%{transform:rotate(5.4deg)}}
+
+/* 水壶：充裕时安静小浮；≤60 跳出倾斜浇水；<30 急促 */
+.ce2-can{position:absolute;right:9px;bottom:44px;width:80px;height:70px;padding:0;border:0;background:none;cursor:pointer;z-index:3;
+  opacity:.5;transform:scale(.66);transform-origin:68% 88%;filter:drop-shadow(0 8px 8px rgba(120,80,20,.18));
+  animation:ce2CanIdle 3.2s ease-in-out infinite;transition:opacity .5s ease}
+.ce2-can svg{width:100%;height:100%;display:block;overflow:visible}
+@keyframes ce2CanIdle{0%,100%{transform:scale(.66) translateY(0)}50%{transform:scale(.66) translateY(-3px)}}
+.ce2-canwater{transform-box:fill-box;transform-origin:center;animation:ce2Slosh 1.5s ease-in-out infinite}
+@keyframes ce2Slosh{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.6px)}}
+.ce2-drop{opacity:0}
+.tier-2 .ce2-can,.tier-1 .ce2-can{opacity:1;animation:ce2CanAlert 1.25s ease-in-out infinite}
+@keyframes ce2CanAlert{0%,100%{transform:rotate(-15deg) translateY(0)}50%{transform:rotate(-22deg) translateY(-7px)}}
+.tier-2 .ce2-drop,.tier-1 .ce2-drop{animation:ce2Drop 1.5s ease-in infinite}
+.tier-1 .ce2-can{animation-duration:.9s}
+.tier-1 .ce2-drop{animation-duration:.95s}
+.ce2-drop.dp2{animation-delay:.38s!important}.ce2-drop.dp3{animation-delay:.76s!important}
+@keyframes ce2Drop{0%{opacity:0;transform:translate(0,-3px) scale(.6)}22%{opacity:1}82%{opacity:.85}100%{opacity:0;transform:translate(-10px,19px) scale(.9)}}
+.tier-1 .ce2-can::after{content:"";position:absolute;left:10%;right:6%;top:12%;bottom:6%;border-radius:50%;
+  border:3px solid rgba(255,120,60,.55);animation:ce2CanRing 1.05s ease-out infinite}
+@keyframes ce2CanRing{0%{transform:scale(.72);opacity:.85}100%{transform:scale(1.28);opacity:0}}
+
+/* RTL：云鸟反向 */
+html[dir="rtl"] .ce2-cloud-1,html[dir="rtl"] .ce2-cloud-2,html[dir="rtl"] .ce2-cloud-3,
+html[dir="rtl"] .ce2-bird-1,html[dir="rtl"] .ce2-bird-2{animation-direction:reverse}
+
+/* 减弱动画偏好：全部静止，保留四层颜色叙事 */
+@media(prefers-reduced-motion:reduce){
+  .ce2-rays,.ce2-sunglow,.ce2-cloud-1,.ce2-cloud-2,.ce2-cloud-3,.ce2-bird-1,.ce2-bird-2,.ce2-bird-flap,
+  .ce2-tree,.ce2-can,.ce2-canwater,.tier-2 .ce2-drop,.tier-1 .ce2-drop,.tier-1 .ce2-can::after,.ce2-bucket{animation:none!important}
+  .tier-2 .ce2-can,.tier-1 .ce2-can{transform:rotate(-15deg)}
+  .ce2-tree{transform:none}
+}
+
+/* v5.3.1b 缺水时树冠稀疏、露出枝条与枝头小叶簇 */
+.ce2-twig{fill:none;stroke:var(--ce2-twigc,#8a5f38);stroke-width:2.6;stroke-linecap:round;transition:stroke .8s ease}
+.ce2-leaf{transform-box:fill-box;transform-origin:center;transition:fill .8s ease,opacity .8s ease,transform .8s ease}
+.ce2-tuft{opacity:0;fill:var(--ce2-leaf1);transform-box:fill-box;transform-origin:center;transition:opacity .7s ease,fill .8s ease}
+.ce2-sheen{transition:opacity .6s ease}
+.role-child.tier-2{--ce2-twigc:#8a6a3d}
+.role-child.tier-1{--ce2-twigc:#75532f}
+/* tier2 偏低：外侧叶簇收缩，枝条与叶尖小叶簇显出 */
+.tier-2 .fbl,.tier-2 .fbr{transform:scale(.5);opacity:.18}
+.tier-2 .fl,.tier-2 .fr{transform:scale(.68);opacity:.55}
+.tier-2 .ftl,.tier-2 .ftr{transform:scale(.8)}
+.tier-2 .fcm{transform:scale(.72);opacity:.7}
+.tier-2 .ce2-tuft{opacity:.95}
+.tier-2 .ce2-sheen{opacity:.45}
+.tier-2 .fc{transform:scale(.84)}
+/* tier1 告急：大冠几乎落尽，只见枝条与零星叶簇 */
+.tier-1 .fbl,.tier-1 .fbr{opacity:0}
+.tier-1 .fl,.tier-1 .fr{transform:scale(.5);opacity:.22}
+.tier-1 .fc{transform:scale(.6)}
+.tier-1 .fcm{transform:scale(.45);opacity:.3}
+.tier-1 .ftl,.tier-1 .ftr{transform:scale(.7);opacity:.7}
+.tier-1 .ce2-tuft{opacity:.95}
+.tier-1 .ce2-sheen{opacity:0}
+.tier-1 .ce2-branch,.tier-1 .ce2-twig{opacity:.92}
