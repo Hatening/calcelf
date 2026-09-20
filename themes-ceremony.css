@@ -1,0 +1,269 @@
+/* =========================================================
+   CalcElf 欢迎仪式 / 隐私弹窗 / 水壶 / 皇冠领巾
+   ========================================================= */
+
+/* 欢迎仪式全屏 */
+.calcelf-welcome-root {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 30%, #1a1a2e 0%, #0b0b14 70%, #000 100%);
+  overflow: hidden;
+}
+
+.calcelf-welcome-stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.calcelf-lottie-box {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.calcelf-lottie-box svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.calcelf-welcome-content {
+  position: absolute;
+  left: 50%;
+  bottom: 7vh;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: min(92vw, 680px);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.55s ease, transform 0.55s ease;
+  pointer-events: none;
+}
+
+.calcelf-welcome-root.show-content .calcelf-welcome-content {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-6px);
+  pointer-events: auto;
+}
+
+#calcelfWelcomeTitle {
+  margin: 0;
+  font-size: clamp(32px, 6vw, 64px);
+  color: #fff;
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 193, 7, 0.5);
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+#calcelfWelcomeDesc {
+  margin: 12px 0 18px;
+  font-size: clamp(16px, 2.4vw, 24px);
+  color: #ffd93d;
+  font-weight: 700;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+#calcelfWelcomeBtn {
+  font-size: clamp(16px, 2vw, 22px);
+  padding: 14px 34px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffd93d, #ff9f1c);
+  color: #1a1a2e;
+  box-shadow: 0 10px 28px rgba(255, 193, 7, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#calcelfWelcomeBtn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 14px 36px rgba(255, 193, 7, 0.65);
+}
+
+/* 隐私弹窗 */
+.privacy-guard-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(10px);
+  padding: 18px;
+}
+
+.privacy-guard-box {
+  width: min(94vw, 760px);
+  max-height: 88vh;
+  background: #fff;
+  border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+  border: 3px solid #ffc107;
+}
+
+.privacy-guard-box h2 {
+  margin: 0 0 14px;
+  font-size: clamp(20px, 3vw, 30px);
+  color: #1a1a2e;
+}
+
+.privacy-guard-body {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 46vh;
+  padding: 14px 16px;
+  background: #f7f8fc;
+  border-radius: 14px;
+  color: #333;
+  line-height: 1.75;
+  font-size: 15px;
+  border: 1px solid #e6e8f0;
+}
+
+.privacy-guard-body h3 {
+  margin: 14px 0 6px;
+  color: #16213e;
+  font-size: 17px;
+}
+
+.privacy-scroll-hint {
+  margin: 10px 0 0;
+  color: #e67e22;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.privacy-check-label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 14px 0;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.privacy-check-label input {
+  margin-top: 4px;
+  transform: scale(1.25);
+}
+
+.privacy-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.privacy-actions .btn {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.privacy-actions .btn.primary {
+  background: linear-gradient(135deg, #ffd93d, #ff9f1c);
+  color: #1a1a2e;
+}
+
+.privacy-actions .btn.primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.privacy-actions .btn.ghost {
+  background: #eef0f6;
+  color: #333;
+}
+
+.privacy-wait {
+  min-height: 22px;
+  color: #888;
+  font-size: 14px;
+  text-align: right;
+  margin-top: 8px;
+}
+
+/* 积分水壶 */
+.water-can-btn {
+  font-size: 32px;
+  cursor: pointer;
+  animation: waterFloat 1.5s infinite ease-in-out, waterGlow 1.5s infinite alternate;
+  transition: transform 0.2s;
+  filter: drop-shadow(0 0 8px rgba(52, 152, 219, 0.8));
+  user-select: none;
+}
+
+.water-can-btn:hover {
+  transform: scale(1.3) rotate(-10deg);
+}
+
+@keyframes waterFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes waterGlow {
+  0% { filter: drop-shadow(0 0 5px rgba(52, 152, 219, 0.5)); }
+  100% { filter: drop-shadow(0 0 15px rgba(52, 152, 219, 1)); }
+}
+
+/* 头像皇冠领巾 */
+.avatar-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-crown {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-scarf {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  z-index: 2;
+}
+
+.crown-bronze { color: #cd7f32; }
+.crown-silver { color: #c0c0c0; }
+.crown-gold { color: #ffd700; }
+
+.scarf-blue { color: #3498db; }
+.scarf-green { color: #2ecc71; }
+.scarf-purple { color: #9b59b6; }
+.scarf-rainbow {
+  color: #e74c3c;
+  text-shadow: 0 0 5px #f1c40f, 0 0 10px #9b59b6;
+}
+
+/* 积分图标状态 */
+.credit-meter-icon.rich { color: #2ecc71; }
+.credit-meter-icon.good { color: #f1c40f; }
+.credit-meter-icon.low { color: #e67e22; }
+.credit-meter-icon.alert { color: #e74c3c; }

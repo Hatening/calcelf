@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>CalcElf · See the thinking</title>
+  <meta name="description" content="CalcElf is a visual AI learning tutor.">
+  <link rel="icon" type="image/png" href="/brand/favicon-32.png">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/themes.css">
+<link rel="stylesheet" href="/components.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+</head>
+<body data-stage="prefer_not" data-lifetime="1" data-monthly="1">
+
+<header class="top">
+  <div class="topin">
+    <img src="/calcelf-logo.png" class="calc-logo" alt="CalcElf">
+    <div class="brand">
+      <h1>CalcElf</h1>
+      <p id="tagline">See the thinking. Understand the solution.</p>
+    </div>
+    <div class="top-actions">
+      <span id="profileAvatarDisplay" class="avatar-wrap" style="margin-inline-end:8px;"></span>
+      <div class="lang-wrap">
+        <button class="topbtn" id="langBtn" type="button" aria-haspopup="menu" aria-expanded="false">🌐 <span id="langLabel">EN</span> ▾</button>
+        <div class="lang-menu" id="langMenu"></div>
+      </div>
+      <button class="topbtn" id="accountBtn" type="button">Account</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+    <div>
+      <section class="card">
+        <h2 id="heroTitle">📚 AI Learning Tutor</h2>
+        <p id="heroDesc" class="muted">Photo, type or voice supplement → understand the problem → solve it step by step → visualize it when helpful → keep asking about the same problem.</p>
+      </section>
+
+      <section class="card">
+        <div class="row">
+          <div>
+            <label id="stageLabel">Learning stage</label>
+            <select id="stage">
+              <option value="primary_1_3">Primary 1–3</option>
+              <option value="primary_3_6">Primary 3–6</option>
+              <option value="middle_1_2">Middle 1–2</option>
+              <option value="grade_9_12">Grade 9–12</option>
+              <option value="prefer_not">Prefer not to say</option>
+            </select>
+            <div id="stageHint" class="muted">Broad stage band only; used to adapt explanation, typography and visuals.</div>
+          </div>
+          <div>
+            <label id="animLabel">🎬 Animation</label>
+            <label class="switch" style="font-weight:500"><input id="wantAnim" type="checkbox" checked><span id="animCb">Include interactive animation when useful</span></label>
+            <div id="animHint" class="muted">Animation consumes extra Credits.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="row">
+          <div>
+            <label id="imgLabel">📷 Problem image</label>
+            <div class="upload" id="upload"><b id="uploadBig">Tap to take a photo or choose an image</b><span id="uploadSmall" class="muted">JPG / PNG / WEBP · max 8 MB</span></div>
+            <input id="file" class="hidden" type="file" accept="image/*" capture="environment">
+            <div id="preview" class="preview"><img id="previewImg"><div class="actions"><button class="btn secondary" id="removeBtn">Remove image</button></div></div>
+          </div>
+          <div>
+            <label id="textLabel">⌨️ Text input / correction</label>
+            <textarea id="text" rows="7" placeholder="Type the problem; add or correct text if the photo is unclear."></textarea>
+            <div class="actions" style="margin-top:8px"><button class="btn gold" id="voiceBtn">🎤 Voice supplement</button><span id="voiceStatus" class="pill">Speech to text</span></div>
+          </div>
+        </div>
+        <div id="turnstileBox" style="margin-top:10px"></div>
+        <div id="privacyRow" class="switch" style="margin-top:12px; align-items:flex-start; gap:12px;">
+          <input id="agree" type="checkbox" style="width:22px; height:22px; margin-top:2px; accent-color: var(--primary); flex-shrink:0;">
+          <span id="privacyLine" style="font-size:15px; font-weight:600; color:var(--ink); line-height:1.5; cursor:pointer; user-select:none;"></span>
+        </div>
+        <button id="solveBtn" class="btn primary" style="width:100%;margin-top:12px">🔍 Start solving</button>
+        <div id="status" class="status"></div>
+      </section>
+
+      <section class="card loading" id="loading"><div class="spin"></div><p id="loadingText">Analyzing…</p></section>
+
+      <section class="result" id="result">
+        <section class="card"><div class="head"><h2 id="resultTitle">📝 Recognized problem</h2><span id="subject" class="pill"></span></div><div id="question" class="question"></div></section>
+        <section class="card"><div class="head"><h2 id="solutionTitle">💡 Solution walkthrough</h2><span id="count" class="pill"></span></div><div id="solutions"></div></section>
+        <section class="card" id="animCard"><div class="head"><h2 id="animTitle">🎬 Visual animation</h2><span id="animOptional" class="pill">Optional</span></div><div id="animBox" class="anim"></div></section>
+        <section class="card"><div class="head"><h2 id="chatTitle">🗣️ Ask CalcElf</h2><span id="chatPill" class="pill">Current problem context</span></div><div id="chat" class="chat"></div><div class="actions" style="margin-top:8px"><input id="chatInput" placeholder="Why does step 2 work?"><button id="sendChat" class="btn primary">Send</button></div></section>
+        <section class="card"><div class="head"><h2 id="practiceTitle">🎯 Practice this skill</h2><span id="practicePill" class="pill">Earn Stars by practicing</span></div><p id="practiceDesc" class="muted">Level 1 changes numbers. Level 2 changes context. Level 3 is a challenge unlocked after earlier success.</p><div class="actions"><button class="btn secondary" id="practice1">Level 1</button><button class="btn secondary" id="practice2">Level 2</button><button class="btn gold" id="practice3">Level 3 🔒</button></div><div id="practiceArea" style="margin-top:10px"></div></section>
+      </section>
+    </div>
+
+    <aside>
+      <section class="card ce-credit-card" id="creditCard">
+  <div class="ce-card-heading">
+    <div>
+      <span class="ce-eyebrow" id="creditsEyebrow">AI TUTOR BALANCE</span>
+      <div class="ce-title-line"><b id="creditsTitle">🪙 Credits</b><span id="planPill" class="pill">Free</span></div>
+    </div>
+    <span id="creditStatusLabel" class="ce-status-pill tier-4">Plenty</span>
+  </div>
+
+  <div id="creditMeterWidget" class="ce-credit-widget role-child tier-4" aria-live="polite">
+    <div class="ce-meter-scene ce-child-scene" aria-hidden="true">
+      <div class="ce-sun"></div>
+      <div class="ce-cloud cloud-a"></div><div class="ce-cloud cloud-b"></div>
+      <div class="ce-tree-ground"></div>
+      <div class="ce-tree">
+        <span class="ce-trunk"></span><span class="branch branch-a"></span><span class="branch branch-b"></span>
+        <span class="leaf leaf-a"></span><span class="leaf leaf-b"></span><span class="leaf leaf-c"></span>
+        <span class="leaf leaf-d"></span><span class="leaf leaf-e"></span><span class="leaf leaf-f"></span>
+        <span class="leaf leaf-g"></span><span class="leaf leaf-h"></span>
+      </div>
+      <div class="ce-flower flower-a"></div><div class="ce-flower flower-b"></div>
+      <button class="ce-watercan" id="waterCanBtn" type="button" aria-label="Water the tree" title="Water the tree">
+        <span class="can-handle"></span><span class="can-body"></span><span class="can-spout"></span>
+        <i class="drop d1"></i><i class="drop d2"></i><i class="drop d3"></i>
+      </button>
+    </div>
+
+    <div class="ce-meter-scene ce-adult-scene" aria-hidden="true">
+      <div class="ce-vault-glow"></div>
+      <div class="ce-vault">
+        <div class="ce-vault-top"></div><div class="ce-vault-door"><span class="ce-lock"></span></div>
+        <i class="coin c1"></i><i class="coin c2"></i><i class="coin c3"></i><i class="coin c4"></i>
+        <i class="coin c5"></i><i class="coin c6"></i><i class="coin c7"></i><i class="coin c8"></i>
+      </div>
+      <div class="ce-card-chip"></div><div class="ce-card-spark"></div>
+    </div>
+
+    <div class="ce-credit-readout">
+      <span id="credits" class="ce-credit-number">—</span>
+      <span id="creditsLabel" class="ce-credit-unit">Credits</span>
+      <span id="creditSubline" class="ce-credit-subline">Ready for more learning.</span>
+    </div>
+    <button class="ce-meter-action" id="creditActionBtn" type="button">Top up Credits</button>
+  </div>
+
+  <div class="ce-tier-rail" id="creditTierRail">
+    <span class="ce-tier-dot tier-1"></span><span class="ce-tier-dot tier-2"></span>
+    <span class="ce-tier-dot tier-3"></span><span class="ce-tier-dot tier-4 active"></span>
+  </div>
+  <div class="ce-tier-caption"><span id="creditTierLeft">Critical</span><span id="creditTierRight">Plenty</span></div>
+
+  <div class="stats ce-mini-stats">
+    <div class="stat"><b id="stars">0</b><span id="starsLabel">Stars</span></div>
+    <div class="stat"><b id="lifetimeLevel">1</b><span id="levelLabel">Lifetime</span></div>
+    <div class="stat"><b id="monthlyLevel">1</b><span id="monthlyLevelLabel">Month</span></div>
+  </div>
+  <div id="creditNotice" class="ce-credit-notice"></div>
+  <div class="actions ce-credit-actions">
+    <button class="btn gold" id="buyBtn">Buy</button>
+    <button class="btn secondary" id="billingBtn">Manage</button>
+    <button class="btn primary ce-care-btn" id="careResetBtn" type="button" style="display:none">Care reset</button>
+  </div>
+</section>
+
+<section class="card ce-membership-card" id="membershipCard">
+  <div class="ce-card-heading">
+    <div><span class="ce-eyebrow" id="membershipEyebrow">MEMBERSHIP JOURNEY</span><div class="ce-title-line"><b id="membershipTitle">Your learning journey</b></div></div>
+    <span id="membershipPlan" class="ce-member-plan">Free</span>
+  </div>
+  <div class="ce-member-hero">
+    <div id="membershipAvatar" class="ce-member-avatar">🌱</div>
+    <div class="ce-member-copy"><div id="membershipRole" class="ce-member-role">Parent / guardian</div><div id="membershipLevelName" class="ce-member-level">Beginner</div><div id="membershipPerk" class="muted">Every meaningful practice helps you grow.</div></div>
+  </div>
+  <div class="ce-level-dual">
+    <div class="ce-level-box"><div class="ce-level-label" id="monthlyLevelTitle">This month</div><div class="ce-level-main"><strong id="monthlyLevelValue">1</strong><span id="monthlyLevelName">Little Elf</span></div><div class="ce-progress"><i id="monthlyProgress"></i></div><div class="ce-level-foot" id="monthlyProgressText">0 solved this month</div></div>
+    <div class="ce-level-box"><div class="ce-level-label" id="lifetimeLevelTitle">Lifetime</div><div class="ce-level-main"><strong id="lifetimeLevelValue">1</strong><span id="lifetimeLevelName">Beginner</span></div><div class="ce-progress lifetime"><i id="lifetimeProgress"></i></div><div class="ce-level-foot" id="lifetimeProgressText">0 correct answers</div></div>
+  </div>
+  <div class="ce-membership-footer"><span id="membershipThemeHint">Your lifetime level shapes the main color; your monthly level adds the accent.</span><button class="btn secondary" id="membershipBtn" type="button">View progress</button></div>
+</section>
+
+
+      <section class="card"><b id="styleTitle">🎨 Adaptive style</b><div id="styleSummary" class="muted" style="margin-top:6px">Your learning stage controls typography and visual density. Membership level changes the color theme.</div></section>
+
+      <section class="card"><b id="rewardsTitle">🏅 Rewards</b><div id="rewardsDesc" class="muted" style="margin:6px 0 8px">Stars are earned from real learning and practice, not simply opening answers.</div><button class="btn secondary" id="rewardsBtn" style="width:100%">View rewards</button></section>
+
+      <section class="card"><b id="inviteTitle">🤝 Invite</b><div id="inviteDesc" class="muted" style="margin:6px 0 8px">Referral rewards are delayed until qualifying activity is completed.</div><button class="btn secondary" id="inviteBtn" style="width:100%">My invite code</button></section>
+
+      <section class="card feedback-card" id="feedbackEntry">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:24px;">💌</span>
+          <div>
+            <b style="display:block; font-size:14px;">Great Advice</b>
+            <span class="muted" style="font-size:11px;">Suggestions adopted earn Credits!</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card"><b id="privacyTitle">🔐 Privacy-first</b><div id="privacyDesc" class="muted" style="margin-top:6px">No core need for student name, school, exact birthday or precise location.</div></section>
+    </aside>
+  </div>
+</main>
+
+<footer class="wrap muted"><a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <span id="footerText">CalcElf is a learning aid, not a grading authority.</span></footer>
+
+<!-- ============================================================
+     认证模态框
+     ============================================================ -->
+<div class="modal" id="authModal">
+  <div class="modalbox">
+    <button class="close" data-close="authModal">×</button>
+    <h2 id="accountModalTitle" style="text-align:center; margin-bottom:10px;">Account</h2>
+    <p id="accountModalDesc" class="muted" style="text-align:center; margin-bottom:20px;">For minors, use an adult/parent/guardian account where required.</p>
+
+    <!-- 头像选择区（仅在注册 Tab 显示） -->
+    <div id="avatarSelectionArea" style="display:none; margin-bottom:15px;">
+      <label style="text-align:center; display:block; margin-bottom:10px; font-weight:600;">Choose your avatar</label>
+      <div id="avatarGrid" style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;"></div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin">Login</button>
+      <button class="auth-tab" id="tabSignup">Sign Up</button>
+    </div>
+    <div id="loginForm" class="auth-form">
+      <input id="loginEmail" type="email" placeholder="Email address" autocomplete="email">
+      <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
+      <button class="btn primary" id="loginWithPasswordBtn" style="width:100%">Login</button>
+    </div>
+    <div id="signupForm" class="auth-form" style="display:none">
+      <input id="signupEmail" type="email" placeholder="Email address" autocomplete="email">
+      <input id="signupPassword" type="password" placeholder="Password (min 8 chars)" autocomplete="new-password">
+      <input id="signupName" type="text" placeholder="Display name (optional)" autocomplete="nickname">
+      <select id="signupRole" style="margin-bottom:10px;">
+        <option value="parent">Parent / guardian</option>
+        <option value="adult">Adult / learner</option>
+      </select>
+      <button class="btn primary" id="signupBtn" style="width:100%">Sign Up</button>
+    </div>
+    <div class="auth-divider"><span id="authOr">or</span></div>
+    <button class="btn google-btn" id="googleLoginBtn" style="width:100%">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <span id="googleLoginText">Sign in with Google</span>
+    </button>
+    <div id="authMsg" class="muted" style="margin-top:10px; text-align:center;"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Plans Modal
+     ============================================================ -->
+<div class="modal" id="plansModal">
+  <div class="modalbox" style="max-width: 600px;">
+    <button class="close" data-close="plansModal">×</button>
+    <h2 id="plansTitle">🚀 Credits & plans</h2>
+    <p id="plansDesc" class="muted">Subscriptions grant monthly Credits. There is no unlimited AI tier.</p>
+    <div class="plans">
+      <div class="plan"><b id="planStudentName">Student</b><div class="price">$4.99</div><div class="muted" id="planStudentCredits">250 monthly Credits</div><button class="btn gold" data-product="student" style="width:100%;margin-top:9px">Choose</button></div>
+      <div class="plan recommended"><b id="planPlusName">Plus · Popular</b><div class="price">$9.99</div><div class="muted" id="planPlusCredits">800 monthly Credits</div><button class="btn primary" data-product="plus" style="width:100%;margin-top:9px">Choose</button></div>
+      <div class="plan"><b id="planFamilyName">Family</b><div class="price">$19.99</div><div class="muted" id="planFamilyCredits">2,200 monthly Credits</div><button class="btn gold" data-product="family" style="width:100%;margin-top:9px">Choose</button></div>
+    </div>
+    <h3 id="topupTitle" style="margin-top:20px;">💎 Top-up packs</h3>
+    <div class="plans">
+      <div class="plan"><b id="pack100Name">100 Credits</b><div>$4.99</div><button class="btn secondary" data-product="pack100" id="pack100Btn">Buy</button></div>
+      <div class="plan"><b id="pack500Name">500 Credits</b><div>$9.99</div><button class="btn secondary" data-product="pack500" id="pack500Btn">Buy</button></div>
+      <div class="plan"><b id="pack1500Name">1,500 Credits</b><div>$19.99</div><button class="btn secondary" data-product="pack1500" id="pack1500Btn">Buy</button></div>
+    </div>
+    <div class="muted" style="margin-top:10px; font-size:12px;">💡 Care reset may be available to eligible active subscribers when monthly Credits reach zero.</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Rewards Modal
+     ============================================================ -->
+<div class="modal" id="rewardsModal">
+  <div class="modalbox">
+    <button class="close" data-close="rewardsModal">×</button>
+    <h2 id="rewardModalTitle">Rewards</h2>
+    <div id="rewardList"></div>
+    <button class="btn gold" id="convertStars" style="margin-top:10px">20 Stars → 1 bonus Credit</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     Invite Modal
+     ============================================================ -->
+<div class="modal" id="inviteModal">
+  <div class="modalbox">
+    <button class="close" data-close="inviteModal">×</button>
+    <h2 id="inviteModalTitle">Invite a friend</h2>
+    <p id="inviteModalDesc" class="muted">Rewards unlock only after real activity and may be delayed for fraud review.</p>
+    <div id="inviteCode" style="font-size:25px;font-weight:900;text-align:center;padding:18px;background:#f7f9fc;border-radius:12px">—</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Feedback Modal
+     ============================================================ -->
+<div class="modal" id="feedbackModal">
+  <div class="modalbox">
+    <button class="close" data-close="feedbackModal">×</button>
+    <h2 id="feedbackTitle">💌 Share Your Great Advice</h2>
+    <p id="feedbackDesc" class="muted">If your suggestion is adopted, you'll receive Credits as a reward!</p>
+    <textarea id="feedbackText" placeholder="Tell us your ideas to improve CalcElf..."></textarea>
+    <div class="feedback-actions">
+      <button class="btn gold" id="feedbackVoiceBtn">🎤 Voice</button>
+      <button class="btn primary" id="submitFeedbackBtn" style="flex:1;">Send Feedback</button>
+    </div>
+    <div id="feedbackMsg" class="muted" style="margin-top:8px; text-align:center;"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     隐私声明弹窗（强制居中悬浮 + 强制滚动 + 5秒倒计时）
+     ============================================================ -->
+<div id="privacyModal" style="
+  display: none;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0,0,0,0.75) !important;
+  z-index: 2147483000 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  backdrop-filter: blur(8px);
+">
+  <div class="modalbox" style="
+    width: min(850px, 95vw) !important;
+    height: 85vh !important;
+    max-height: 85vh !important;
+    background: #fff;
+    border-radius: 24px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    box-sizing: border-box;
+    position: relative;
+    margin: auto;
+  ">
+    <button id="privacyCloseBtn" style="position:absolute; right:16px; top:16px; border:0; background:none; font-size:24px; color:#888; cursor:pointer; z-index:10;" aria-label="Close">×</button>
+    <h2 id="privacyTitle" style="text-align:center; margin:0 0 12px 0; flex-shrink:0; font-size: 22px;">🔐 Privacy Notice</h2>
+
+    <!-- 强制阅读滚动区 -->
+    <div id="privacyScrollArea" style="
+      flex: 1 1 auto;
+      overflow-y: auto;
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #eee;
+      margin-bottom: 12px;
+      position: relative;
+      -webkit-overflow-scrolling: touch;
+      min-height: 0;
+    ">
+      <div id="privacyBody" style="line-height: 1.8; font-size: 16px; color: #222; text-align: left;"></div>
+      <div id="privacyScrollEnd" style="height: 20px;"></div>
+
+      <!-- 滑动引导遮罩层 -->
+      <div id="scrollOverlay" style="
+        position: absolute; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 100%);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        border-radius: 10px; pointer-events: none; transition: opacity 0.4s ease; z-index: 5;
+      ">
+        <div class="arrow-icon" style="font-size:48px; animation: bounceArrow 1.2s infinite;">👇</div>
+        <div class="mouse-icon" style="font-size:28px; animation: bounceArrow 1.2s infinite 0.2s;">🖱️</div>
+        <div style="font-size:14px; font-weight:bold; color:#e74c3c; margin-top:10px; text-align:center;">
+          Please scroll down to read<br>请向下滑动阅读
+        </div>
+      </div>
+    </div>
+
+    <!-- 状态栏 -->
+    <div id="privacyStatusBar" style="text-align:center; margin-bottom:10px; font-weight:bold; font-size:14px; color:#e74c3c; height:20px; flex-shrink:0;">
+      请滑动阅读完整声明
+    </div>
+
+    <!-- 勾选与操作 -->
+    <div style="flex-shrink:0; display:flex; flex-direction:column; gap:10px;">
+      <label id="privacyCheckboxLabel" style="display:flex; align-items:center; gap:10px; cursor:pointer; opacity:0.4; pointer-events:none;">
+        <input type="checkbox" id="privacyAgreeCheckbox" style="width:20px; height:20px; accent-color: var(--primary);">
+        <span id="privacyCheckboxText" style="font-size:15px; font-weight:500;">I have read and understood...</span>
+      </label>
+      <button class="btn primary" id="privacySubmitBtn" style="width:100%; padding:14px; font-size:17px; border-radius:999px; opacity:0.5;" disabled>Agree & Continue</button>
+    </div>
+  </div>
+</div>
+
+<script src="/privacy-texts.js"></script>
+<script src="/theme-app.js"></script>
+<script src="/ui-enhance.js"></script>
+<script src="/config.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
