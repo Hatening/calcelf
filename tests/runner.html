@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  html,body{margin:0;height:100%;background:#0d1228;overflow:hidden;font-family:system-ui,sans-serif;}
+  #stage{display:block;width:100vw;height:100vh;}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script type="module">
+import { render as motion } from '../public/renderer/modes/motion.js';
+import { render as numberline } from '../public/renderer/modes/numberline.js';
+import { render as bars } from '../public/renderer/modes/bars.js';
+const MAP = { motion, numberline, bars };
+const params = new URLSearchParams(location.search);
+window.__errors = [];
+window.addEventListener('error', e => window.__errors.push(String(e.message)));
+function boot(){
+  const raw = params.get('data');
+  if(!raw){ document.body.innerHTML='no data'; return; }
+  const anim = JSON.parse(raw); // URLSearchParams.get 已解码，勿再 decodeURIComponent
+  const fn = MAP[anim.type];
+  if(!fn){ document.body.innerHTML='unknown type '+anim.type; return; }
+  window.__engine = fn(document.getElementById('stage'), anim);
+  window.__ready = true;
+}
+boot();
+</script>
+</body>
+</html>

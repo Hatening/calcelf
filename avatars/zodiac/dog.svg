@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="CalcElf Dog">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DCD5FF"/><stop offset="1" stop-color="#9EB1FF"/></linearGradient>
+<filter id="shadow" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#24313A" flood-opacity=".16"/></filter>
+<filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+<style>
+.out{stroke:#24313A;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
+.line{fill:none;stroke:#24313A;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.eye{fill:#fff;stroke:#24313A;stroke-width:10}
+.pupil{fill:#1E2933}
+.hi{fill:#fff}
+.blush{fill:#F58AA1;opacity:.65}
+</style></defs>
+<circle cx="256" cy="256" r="226" fill="url(#bg)" filter="url(#shadow)"/>
+<circle cx="256" cy="256" r="226" fill="none" stroke="#FFFFFF" stroke-opacity=".48" stroke-width="8"/>
+<path d="M82 112h18M91 103v18M422 108h14M429 101v14" class="line" stroke="#fff" stroke-width="7" opacity=".7"/><circle cx="113" cy="386" r="7" fill="#fff" opacity=".7"/>
+<!-- body --> <ellipse cx="259" cy="368" rx="77" ry="64" fill="#B7835D" class="out"/><path d="M197 349q59 31 126-2" class="line" stroke="#FF5F82" stroke-width="18"/>
+<!-- ears --> <path d="M179 195q-70-24-55 61 9 52 59 28 24-33 10-76Z" fill="#916042" class="out"/><path d="M331 185q70-18 56 65-10 50-57 26-21-37 1-91Z" fill="#916042" class="out"/>
+<!-- head tilted --> <path d="M160 244q4-95 95-104 93 9 105 93-4 91-103 98-85-9-97-87Z" fill="#B7835D" class="out" transform="rotate(7 256 245)"/>
+<!-- muzzle --> <ellipse cx="258" cy="279" rx="61" ry="40" fill="#D7B18B" class="out" transform="rotate(7 258 279)"/>
+<!-- eyes --> <ellipse cx="216" cy="228" rx="27" ry="35" class="eye" transform="rotate(7 216 228)"/><ellipse cx="295" cy="239" rx="27" ry="35" class="eye" transform="rotate(7 295 239)"/><ellipse cx="222" cy="233" rx="11" ry="20" class="pupil"/><ellipse cx="301" cy="244" rx="11" ry="20" class="pupil"/><circle cx="227" cy="224" r="6" class="hi"/><circle cx="306" cy="235" r="6" class="hi"/>
+<ellipse cx="257" cy="274" rx="19" ry="14" class="pupil"/><path d="M244 293q13 17 28 0" class="line" stroke-width="8"/>
+<!-- paw wave --> <ellipse cx="355" cy="309" rx="28" ry="40" fill="#B7835D" class="out" transform="rotate(-25 355 309)"/><circle cx="357" cy="292" r="6" fill="#fff" opacity=".75"/>
+</svg>

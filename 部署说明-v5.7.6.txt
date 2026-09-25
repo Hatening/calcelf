@@ -1,0 +1,22 @@
+CalcElf v5.7.6 部署说明 —— 固定动画新增「运动相遇」场景（motion）
+
+【本版改了什么】
+1. anim-player.js（固定渲染器，根目录 + public/ 两份）
+   新增场景 t:"motion"：固定横向轨道（两端 A/B 节点）、移动对象用固定 SVG 圆脸
+   （蓝/琥珀两色，非 emoji）、方向箭头、相遇点 Meet 徽章、底部时间算式。
+   覆盖：相向而行/相遇、追及、同向/背向等行程问题。
+2. lib/anim-plan.js（服务端分镜校验，仅 /lib/）
+   - 新增题型 problemType:"motion"，motion 进入白名单与全局视觉门禁
+   - 位置 4..96 夹取、对象最多 2 个、距离 1..999999、相遇点可选，服务端强校验
+   - prompt：行程/相遇/追及题分类为 motion，节奏 show → motion → answer
+   - 分镜版本升 ce-anim-1.5，自动隔离旧缓存
+
+【部署步骤】
+1. anim-player.js → 仓库根目录（覆盖）
+2. public/anim-player.js → public/（覆盖）
+3. lib/anim-plan.js → lib/（覆盖；public 下不需要 lib）
+4. Commit & Push，Vercel 自动部署
+5. 找一道相遇/追及题实测：应出现轨道与移动圆脸，在相遇点会合。
+
+【说明】
+- 本版只动以上 3 个文件；物理受力/化学原子等其余图形仍为后续学科包，本版不含。

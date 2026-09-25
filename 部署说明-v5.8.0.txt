@@ -1,0 +1,25 @@
+CalcElf v5.8.0 部署说明 —— 放弃固定库，动画完全开放（模型自由返回 HTML）
+
+【本版改了什么】
+1. 动画改为“完全开放”：模型直接生成整段自包含 HTML/CSS/JS 动画（即 DeepSeek 那种
+   题目物体当主角、按状态分场景的效果），不再从固定白名单/图标库里硬套天平、方程。
+2. 节奏放慢：每个场景（step）精确停留 5000ms（5 秒）再平滑切换；动作更慢更柔和。
+3. 输出上限放宽到 7500 tokens；主模型失败自动用兜底模型重跑一次。
+4. 安全不变：返回的 HTML 只注入 sandbox='allow-scripts' 的沙箱 iframe（不开放同源权限）；
+   服务端仍会剥离代码围栏、检测源码泄漏，不合格就退回“清晰步骤卡”，绝不把源码显示给用户。
+
+【本次只变更 4 个文件，覆盖即可】
+1. api/animation.js            → 放到 api/
+2. public/api/animation.js     → 放到 public/api/
+3. app.js                      → 放到根目录
+4. public/app.js               → 放到 public/
+（vercel.json 未改；anim-player.js、api/animation-plan.js 不再被调用，保留即可，无需删除。）
+
+【部署步骤】
+1. 按上面 4 个路径分别覆盖（注意根目录和 public/ 都要）。
+2. Commit & Push，Vercel 自动部署，等 Deployments 状态 Ready。
+3. 登录后解一道题、勾选动画实测：动画应自由呈现，每步停留 5 秒。
+
+【说明】
+- 自由生成 token 成本高于固定库（每段约 3–7k tokens），但画面最贴合、最灵活。
+- 沙箱无法连模型，端到端效果需部署后线上验收；若某次生成失败，会自动静默兜底或显示步骤卡。

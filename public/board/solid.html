@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>立体几何交互教学</title>
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --accent: #d946ef;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --surface-soft: #f1f5f9;
+            --text: #0f172a;
+            --muted: #475569;
+            --border: #e2e8f0;
+            --ring: rgba(14, 165, 233, 0.24);
+            --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+            --panel-shadow: 0 18px 42px rgba(15, 23, 42, 0.09);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; overflow: hidden;
+            font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #edf3f8; color: var(--text);
+            display: flex; gap: 10px; height: 100vh; padding: 10px;
+        }
+        button { font: inherit; }
+        .skip-link { position: fixed; left: 16px; top: 16px; z-index: 999; padding: 10px 14px; border-radius: 8px; background: var(--text); color: white; text-decoration: none; transform: translateY(-140%); transition: transform 0.2s ease; }
+        .skip-link:focus { transform: translateY(0); outline: 3px solid var(--ring); }
+        #sidebar { width: 420px; background: var(--surface); border: 1px solid rgba(226,232,240,0.95); border-radius: 24px; display: flex; flex-direction: column; z-index: 10; overflow: hidden; box-shadow: var(--panel-shadow); }
+        #canvas-container { flex: 1; position: relative; background: #f8fafc; min-width: 0; border: 1px solid rgba(226,232,240,0.95); border-radius: 24px; overflow: hidden; box-shadow: var(--panel-shadow); }
+        #canvas-container canvas { display: block; }
+        .content-wrapper { flex: 1; display: grid; grid-template-rows: auto minmax(0,1fr); grid-template-columns: minmax(0,1fr); gap: 12px; min-height: 0; min-width: 0; overflow: hidden; padding: 16px; }
+        .lesson-header { display: grid; gap: 12px; }
+        .content-card { min-width: 0; padding: 14px; border: 1px solid rgba(226,232,240,0.95); border-radius: 14px; background: #fff; box-shadow: 0 10px 28px rgba(15,23,42,0.05); }
+        .problem-card { display: grid; gap: 10px; }
+        .lesson-meta { display: flex; align-items: center; gap: 8px; color: var(--primary-dark); font-size: 12px; font-weight: 800; }
+        .lesson-meta::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--primary); box-shadow: 0 0 0 4px rgba(14,165,233,0.12); }
+        h1 { font-size: 21px; font-weight: 700; margin: 0; color: var(--text); line-height: 1.4; }
+        .answer-card { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; border: 1px solid #bae6fd; background: #f8fbff; box-shadow: var(--shadow-soft); }
+        .answer-card span { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
+        .answer-card strong { display: block; color: var(--text); font-size: 14px; font-weight: 700; line-height: 1.45; }
+        .answer-value { min-width: 96px; padding: 9px 12px; border-radius: 10px; background: var(--text); color: white; text-align: center; font-size: 20px; font-weight: 800; box-shadow: 0 10px 22px rgba(15,23,42,0.18); }
+        .btn:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+        .step-badge { justify-self: start; display: inline-block; background: var(--primary-dark); color: white; padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 600; margin-bottom: 0; }
+        .solution-card { display: grid; grid-template-rows: auto minmax(0,1fr); grid-template-columns: minmax(0,1fr); gap: 12px; min-height: 0; min-width: 0; overflow: hidden; }
+        #step-container { min-height: 0; min-width: 0; overflow: auto; padding-right: 6px; scroll-margin-top: 16px; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(14,165,233,0.7) rgba(226,232,240,0.75); -webkit-overflow-scrolling: touch; opacity: 1; transform: translateY(0); transition: opacity 0.28s ease, transform 0.28s ease; }
+        #step-container::-webkit-scrollbar { width: 10px; height: 10px; }
+        #step-container::-webkit-scrollbar-track { background: rgba(226,232,240,0.72); border-radius: 999px; }
+        #step-container::-webkit-scrollbar-thumb { min-height: 36px; border: 2px solid rgba(226,232,240,0.72); border-radius: 999px; background: linear-gradient(180deg, rgba(14,165,233,0.86), rgba(2,132,199,0.86)); }
+        #step-container::-webkit-scrollbar-corner { background: transparent; }
+        #step-container.is-changing { opacity: 0; transform: translateY(6px); }
+        .step-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--primary-dark); }
+        .step-content { font-size: 15px; line-height: 1.8; color: #334155; }
+        .step-content mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+        .step-content mjx-container[display="true"].is-scrollable { overflow-x: scroll; padding-bottom: 10px; scrollbar-width: thin; cursor: grab; touch-action: pan-x; }
+        .step-content mjx-container[display="true"].is-scrollable.is-dragging { cursor: grabbing; user-select: none; -webkit-user-select: none; }
+        .step-content p, .step-content li { overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; scrollbar-color: rgba(14,165,233,0.6) transparent; }
+        .math-term { background: var(--surface-soft); padding: 2px 6px; border-radius: 4px; color: var(--primary-dark); font-weight: 500; font-size: 0.9em; }
+        .nav-bar { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); }
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s; border: none; font-size: 14px; }
+        .btn-prev { background: #f1f5f9; color: #64748b; }
+        .btn-prev:hover { background: #e2e8f0; color: #475569; }
+        .btn-next { background: var(--primary-dark); color: white; box-shadow: 0 4px 12px rgba(14,165,233,0.2); }
+        .btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(14,165,233,0.3); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .label { font-size: 14px; font-weight: 700; color: var(--text); text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff; pointer-events: none; user-select: none; font-family: sans-serif; }
+        .measure-label { font-size: 13px; font-weight: 700; color: var(--primary-dark); background: rgba(255,255,255,0.86); padding: 1px 7px; border-radius: 7px; border: 1px solid #bae6fd; box-shadow: 0 2px 8px rgba(15,23,42,0.08); pointer-events: none; user-select: none; white-space: nowrap; line-height: 1.4; }
+        #measure-toggle { position: absolute; left: 20px; top: 20px; z-index: 100; padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; background: rgba(255,255,255,0.92); color: var(--muted); font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(15,23,42,0.08); transition: background 0.2s, color 0.2s, box-shadow 0.2s; }
+        #measure-toggle.is-on { background: var(--primary-dark); color: #fff; border-color: var(--primary-dark); }
+        .tip-bubble { position: absolute; top: 20px; right: 20px; background: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); font-size: 13px; color: #64748b; display: flex; align-items: center; gap: 8px; pointer-events: none; z-index: 100; }
+        .readout-panel { position: absolute; left: 20px; bottom: 20px; background: rgba(255,255,255,0.96); padding: 12px 14px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.10); font-size: 13px; color: #334155; min-width: 190px; z-index: 100; }
+        .readout-title { font-size: 12px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
+        .readout-row { display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; }
+        .readout-row b { color: var(--text); font-variant-numeric: tabular-nums; }
+        #waiting-overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #edf3f8; color: #64748b; font-size: 1.1rem; z-index: 999; }
+        @media (max-width: 768px) {
+            body { flex-direction: column-reverse; gap: 8px; padding: 8px; }
+            #sidebar { width: 100%; flex: 0 0 52vh; border-radius: 20px; }
+            #canvas-container { flex: 1 1 auto; height: auto; border-radius: 20px; }
+        }
+    </style>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "../vendor/jsm/three.module.js",
+            "three/addons/": "../vendor/jsm/"
+        }
+    }
+    </script>
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$']], displayMath: [['$$','$$']], processEscapes: true, processEnvironments: true },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] },
+            startup: { pageReady: () => MathJax.startup.defaultPageReady() }
+        };
+    </script>
+    <script id="MathJax-script" async src="../vendor/mathjax/tex-mml-chtml.min.js"></script>
+
+    <script id="lesson-data" type="application/json">{}</script>
+</head>
+<body>
+    <div id="waiting-overlay">等待数据…</div>
+
+    <a class="skip-link" id="skip-link" href="#step-container">跳到解题步骤</a>
+
+    <aside id="sidebar" aria-label="立体几何解题步骤面板">
+        <div class="content-wrapper">
+            <header class="lesson-header">
+                <section class="problem-card content-card" aria-labelledby="lesson-title">
+                    <div class="lesson-meta" id="lesson-meta">交互解题</div>
+                    <h1 id="lesson-title"></h1>
+                </section>
+                <section class="answer-card content-card" id="answer-card" aria-label="最终答案">
+                    <div>
+                        <span id="answer-title">最终答案</span>
+                        <strong id="answer-summary"></strong>
+                    </div>
+                    <div class="answer-value" id="answer-value"></div>
+                </section>
+            </header>
+            <section class="solution-card content-card" id="solution-card" aria-label="解题步骤">
+                <div id="step-indicator" class="step-badge"></div>
+                <div id="step-container" role="region" aria-live="polite" tabindex="-1"></div>
+            </section>
+        </div>
+        <div class="nav-bar">
+            <button id="prev-btn" class="btn btn-prev" type="button" disabled>上一步</button>
+            <button id="next-btn" class="btn btn-next" type="button">下一步</button>
+        </div>
+    </aside>
+
+    <div id="canvas-container" role="img" aria-label="三维交互演示">
+        <div class="tip-bubble">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+            <span id="interaction-tip">左键旋转 · 滚轮缩放 · 右键平移</span>
+        </div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+        const COLORS = {
+            frame: 0x64748b, aux: 0x94a3b8, emphasis: 0xd946ef,
+            normal: 0xef4444, plane: 0x0ea5e9, point: 0x0f172a
+        };
+        function colorOf(name, fallback) { return (name != null && COLORS[name] != null) ? COLORS[name] : fallback; }
+
+        let _cleanupFns = [];
+        let _animId = null;
+
+        function initBoard(payload) {
+            const overlay = document.getElementById('waiting-overlay');
+            if (overlay) overlay.style.display = 'none';
+
+            // Cleanup old
+            _cleanupFns.forEach(fn => { try{fn();}catch(e){} });
+            _cleanupFns = [];
+            if (_animId) { cancelAnimationFrame(_animId); _animId = null; }
+
+            const lesson = payload.lesson || {};
+            const steps = payload.steps || [];
+            const model = payload.model || {};
+
+            const defaultUI = {
+                pageTitle: lesson.title, skipToSteps: "跳到解题步骤",
+                sidebarLabel: "立体几何解题步骤面板", answerCardLabel: "最终答案",
+                answerTitle: "最终答案", solutionCardLabel: "解题步骤",
+                sceneLabel: "立体几何三维交互演示",
+                interactionTip: "左键旋转 · 滚轮缩放 · 右键平移",
+                previous: "上一步", next: "下一步", finish: "完成",
+                stepTemplate: "步骤 {current} / {total}", finishAria: "完成解题",
+                nextAriaTemplate: "进入步骤 {step}", previousAriaTemplate: "返回步骤 {step}",
+                firstStepAria: "已经是第一步",
+                measureToggleOn: "长度标注：开", measureToggleOff: "长度标注：关"
+            };
+            const ui = { ...defaultUI, ...(lesson.ui || {}) };
+
+            const SCALE = model.scale || 1;
+            function threeFromMath(p) { return new THREE.Vector3(p[0]*SCALE, p[2]*SCALE, p[1]*SCALE); }
+
+            let scene, camera, renderer, labelRenderer, controls;
+            let currentStep = 0;
+            let measuresOn = true;
+            const objects = {};
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const cameraTargetPoint = new THREE.Vector3(...(model.target || [0, 0.45, 0]));
+            let targetCameraPosition = null;
+
+            function initializeLessonText() {
+                document.documentElement.lang = lesson.language || 'zh-CN';
+                document.title = ui.pageTitle || lesson.title;
+                document.getElementById('skip-link').textContent = ui.skipToSteps;
+                document.getElementById('answer-title').textContent = ui.answerTitle;
+                document.getElementById('interaction-tip').textContent = ui.interactionTip;
+                document.getElementById('prev-btn').textContent = ui.previous;
+                document.getElementById('lesson-meta').textContent = lesson.meta || '';
+                document.getElementById('lesson-title').textContent = lesson.title;
+                document.getElementById('answer-summary').textContent = lesson.answerLabel || '';
+                document.getElementById('answer-value').textContent = lesson.answerValue || '';
+            }
+
+            function markScrollableMath(root) {
+                root.querySelectorAll('.step-content mjx-container[display="true"]').forEach((el) => {
+                    const overflowing = el.scrollWidth - el.clientWidth > 1;
+                    el.classList.toggle('is-scrollable', overflowing);
+                });
+            }
+            function typesetMath(container) {
+                const run = () => {
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([container]).then(() => markScrollableMath(container)).catch(()=>{});
+                    } else { setTimeout(run, 120); }
+                };
+                run();
+            }
+
+            function goToStep(index) {
+                currentStep = Math.max(0, Math.min(index, steps.length - 1));
+                updateUI();
+            }
+
+            const container = document.getElementById('canvas-container');
+            // Clear old canvas children (but keep tip-bubble)
+            const oldCanvas = container.querySelector('canvas');
+            if (oldCanvas) oldCanvas.remove();
+            const oldLabelDiv = container.querySelector('.css2d-container');
+            if (oldLabelDiv) oldLabelDiv.remove();
+            const oldReadout = document.getElementById('readout-panel');
+            if (oldReadout) oldReadout.remove();
+            const oldMeasureToggle = document.getElementById('measure-toggle');
+            if (oldMeasureToggle) oldMeasureToggle.remove();
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf8fafc);
+            scene.fog = new THREE.Fog(0xf8fafc, 10, 50);
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+            const ic = model.initialCamera || [5, 4, 5];
+            camera.position.set(ic[0], ic[1], ic[2]);
+
+            try {
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, failIfMajorPerformanceCaveat: false });
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.shadowMap.enabled = true;
+                container.appendChild(renderer.domElement);
+                labelRenderer = new CSS2DRenderer();
+                labelRenderer.setSize(container.clientWidth, container.clientHeight);
+                labelRenderer.domElement.style.position = 'absolute';
+                labelRenderer.domElement.style.top = '0px';
+                labelRenderer.domElement.style.pointerEvents = 'none';
+                container.appendChild(labelRenderer.domElement);
+            } catch(e) {
+                container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ef4444;font-size:18px;text-align:center;padding:20px">⚠ 3D 渲染初始化失败</div>';
+                return;
+            }
+            if (!renderer) return;
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = !prefersReducedMotion;
+            controls.dampingFactor = 0.05;
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(5, 10, 7);
+            dirLight.castShadow = true;
+            scene.add(dirLight);
+            const gridHelper = new THREE.GridHelper(20, 20, 0xcbd5e1, 0xe2e8f0);
+            scene.add(gridHelper);
+
+            function v3(arr) { return new THREE.Vector3(arr[0], arr[1], arr[2]); }
+            const POINTS = {};
+            function pt(nameOrCoords) {
+                if (Array.isArray(nameOrCoords)) return v3(nameOrCoords);
+                return POINTS[nameOrCoords].clone();
+            }
+            function createTubeSegment(p1, p2, radius, material) {
+                const direction = new THREE.Vector3().subVectors(p2, p1);
+                const length = direction.length();
+                const geometry = new THREE.CylinderGeometry(radius, radius, length, 14);
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.copy(new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5));
+                mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+                return mesh;
+            }
+            function makeLine(p1, p2, color, dashed, emphasis) {
+                const material = new THREE.MeshBasicMaterial({ color });
+                if (dashed) {
+                    const group = new THREE.Group();
+                    const direction = new THREE.Vector3().subVectors(p2, p1);
+                    const length = direction.length();
+                    const unit = direction.clone().normalize();
+                    const dashSize = 0.22, gapSize = 0.13, radius = 0.0055;
+                    for (let start = 0; start < length; start += dashSize + gapSize) {
+                        const end = Math.min(start + dashSize, length);
+                        const dashStart = p1.clone().add(unit.clone().multiplyScalar(start));
+                        const dashEnd = p1.clone().add(unit.clone().multiplyScalar(end));
+                        group.add(createTubeSegment(dashStart, dashEnd, radius, material));
+                    }
+                    return group;
+                }
+                const radius = emphasis ? 0.012 : 0.0075;
+                return createTubeSegment(p1, p2, radius, material);
+            }
+            function makePlane(points) {
+                const geo = new THREE.BufferGeometry();
+                const flat = [];
+                points.forEach((p) => { flat.push(p.x, p.y, p.z); });
+                geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(flat), 3));
+                if (points.length === 3) geo.setIndex([0, 1, 2]);
+                else if (points.length === 4) geo.setIndex([0, 1, 2, 0, 2, 3]);
+                const mat = new THREE.MeshBasicMaterial({ color: COLORS.plane, side: THREE.DoubleSide, transparent: true, opacity: 0.2 });
+                return new THREE.Mesh(geo, mat);
+            }
+
+            function createElementObj(el) {
+                let obj = null;
+                if (el.type === 'line') {
+                    obj = makeLine(pt(el.a), pt(el.b), colorOf(el.color, COLORS.emphasis), !!el.dashed, true);
+                } else if (el.type === 'plane') {
+                    obj = makePlane((el.pts || []).map((p) => pt(p)));
+                } else if (el.type === 'arrow') {
+                    const dir = v3(el.dir).normalize();
+                    const origin = pt(el.origin);
+                    const head = el.head || [0.2, 0.1];
+                    obj = new THREE.ArrowHelper(dir, origin, el.length || 1.5, colorOf(el.color, COLORS.normal), head[0], head[1]);
+                } else if (el.type === 'sphere') {
+                    const center = pt(el.center);
+                    const radius = el.radius || 1;
+                    const col = colorOf(el.color, COLORS.plane);
+                    const group = new THREE.Group();
+                    const solid = new THREE.Mesh(
+                        new THREE.SphereGeometry(radius, 40, 32),
+                        new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: el.opacity != null ? el.opacity : 0.12, side: THREE.DoubleSide, depthWrite: false })
+                    );
+                    const wire = new THREE.LineSegments(
+                        new THREE.WireframeGeometry(new THREE.SphereGeometry(radius, 24, 16)),
+                        new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: 0.25 })
+                    );
+                    group.add(solid); group.add(wire);
+                    group.position.copy(center);
+                    obj = group;
+                } else if (el.type === 'axes') {
+                    obj = new THREE.AxesHelper(el.size || 3);
+                } else if (el.type === 'measure') {
+                    const mid = pt(el.a).add(pt(el.b)).multiplyScalar(0.5);
+                    const target = v3(model.target || [0, 0.45, 0]);
+                    let dir = mid.clone().sub(target);
+                    if (dir.lengthSq() < 1e-6) dir.set(0, 1, 0);
+                    dir.normalize().multiplyScalar(el.offset != null ? el.offset : 0.24);
+                    const div = document.createElement('div');
+                    div.className = 'measure-label';
+                    div.innerHTML = '$' + (el.label != null ? el.label : '') + '$';
+                    obj = new CSS2DObject(div);
+                    obj.position.copy(mid.add(dir));
+                }
+                return obj;
+            }
+
+            function buildModel() {
+                for (const [name, coords] of Object.entries(model.points || {})) {
+                    POINTS[name] = v3(coords);
+                }
+                const sphereNames = model.spheres || Object.keys(model.points || {});
+                const dragName = model.draggable ? model.draggable.point : null;
+                sphereNames.forEach((name) => {
+                    const isDrag = name === dragName;
+                    const geometry = new THREE.SphereGeometry(isDrag ? 0.12 : 0.06, 18, 18);
+                    const material = new THREE.MeshBasicMaterial({ color: isDrag ? COLORS.emphasis : COLORS.point });
+                    const sphere = new THREE.Mesh(geometry, material);
+                    sphere.position.copy(POINTS[name]);
+                    scene.add(sphere);
+                    objects[`Point_${name}`] = sphere;
+                    const div = document.createElement('div');
+                    div.className = 'label';
+                    div.textContent = name;
+                    div.style.marginTop = '-1em';
+                    const label = new CSS2DObject(div);
+                    label.position.set(0, 0.15, 0);
+                    sphere.add(label);
+                });
+
+                const frame = new THREE.Group();
+                (model.edges || []).forEach((e) => {
+                    const line = makeLine(pt(e.a), pt(e.b), colorOf(e.color, COLORS.frame), !!e.dashed);
+                    frame.add(line);
+                    if (e.name) objects[e.name] = line;
+                });
+                scene.add(frame);
+                objects['Frame'] = frame;
+
+                const elements = model.elements || {};
+                for (const [key, el] of Object.entries(elements)) {
+                    const obj = createElementObj(el);
+                    if (obj) { obj.visible = false; scene.add(obj); objects[key] = obj; }
+                }
+                if (model.draggable) setupDraggable();
+            }
+
+            const MATH = {};
+            function setupDraggable() {
+                const dg = model.draggable;
+                for (const [k, v] of Object.entries(model.mathPoints || {})) MATH[k] = v.slice();
+                const moving = new Set([dg.point, ...(dg.dependent || []).map((d) => d.name)]);
+                const refsMoving = (el) => {
+                    const names = [el.a, el.b, el.origin, ...(el.pts || [])].filter(Boolean);
+                    return names.some((n) => moving.has(n));
+                };
+                const depElements = Object.entries(model.elements || {})
+                    .filter(([, el]) => refsMoving(el)).map(([k]) => k);
+                const segA = threeFromMath(MATH[dg.along[0]]);
+                const segB = threeFromMath(MATH[dg.along[1]]);
+                const raycaster = new THREE.Raycaster();
+                const pointer = new THREE.Vector2();
+                let dragging = false;
+
+                function setParam(t) {
+                    t = Math.max(0, Math.min(1, t));
+                    const a = MATH[dg.along[0]], b = MATH[dg.along[1]];
+                    MATH[dg.point] = [a[0]+t*(b[0]-a[0]), a[1]+t*(b[1]-a[1]), a[2]+t*(b[2]-a[2])];
+                    (dg.dependent || []).forEach((d) => {
+                        if (d.kind === 'midpoint') {
+                            const p = MATH[d.of[0]], q = MATH[d.of[1]];
+                            MATH[d.name] = [(p[0]+q[0])/2, (p[1]+q[1])/2, (p[2]+q[2])/2];
+                        }
+                    });
+                    moving.forEach((n) => {
+                        POINTS[n] = threeFromMath(MATH[n]);
+                        if (objects[`Point_${n}`]) objects[`Point_${n}`].position.copy(POINTS[n]);
+                    });
+                    depElements.forEach((key) => {
+                        const old = objects[key];
+                        const vis = old ? old.visible : false;
+                        if (old) scene.remove(old);
+                        const obj = createElementObj(model.elements[key]);
+                        if (obj) { obj.visible = vis; scene.add(obj); objects[key] = obj; }
+                    });
+                    updateReadouts(t);
+                }
+                function pointerNDC(e) {
+                    const r = renderer.domElement.getBoundingClientRect();
+                    pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+                    pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+                }
+                const pd = (e) => {
+                    pointerNDC(e);
+                    raycaster.setFromCamera(pointer, camera);
+                    const hit = raycaster.intersectObject(objects[`Point_${dg.point}`], true);
+                    if (hit.length) { dragging = true; controls.enabled = false; renderer.domElement.style.cursor = 'grabbing'; }
+                };
+                const pm = (e) => {
+                    if (!dragging) return;
+                    pointerNDC(e);
+                    raycaster.setFromCamera(pointer, camera);
+                    const closest = new THREE.Vector3();
+                    raycaster.ray.distanceSqToSegment(segA, segB, null, closest);
+                    const seg = new THREE.Vector3().subVectors(segB, segA);
+                    const t = new THREE.Vector3().subVectors(closest, segA).dot(seg) / seg.lengthSq();
+                    setParam(t);
+                };
+                const pu = () => { dragging = false; controls.enabled = true; renderer.domElement.style.cursor = ''; };
+                renderer.domElement.addEventListener('pointerdown', pd);
+                window.addEventListener('pointermove', pm);
+                window.addEventListener('pointerup', pu);
+                _cleanupFns.push(() => {
+                    renderer.domElement.removeEventListener('pointerdown', pd);
+                    window.removeEventListener('pointermove', pm);
+                    window.removeEventListener('pointerup', pu);
+                });
+
+                function mv(name) { return MATH[name]; }
+                function vsub(a, b) { return [a[0]-b[0], a[1]-b[1], a[2]-b[2]]; }
+                function vdot(a, b) { return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]; }
+                function vcross(a, b) { return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]; }
+                function vnorm(a) { return Math.sqrt(vdot(a, a)); }
+                function computeReadout(r) {
+                    if (r.type === 'volume_tetra') {
+                        const [P0,P1,P2,P3] = r.pts.map(mv);
+                        return Math.abs(vdot(vsub(P1,P0), vcross(vsub(P2,P0), vsub(P3,P0)))) / 6;
+                    }
+                    if (r.type === 'length') return vnorm(vsub(mv(r.pts[1]), mv(r.pts[0])));
+                    if (r.type === 'line_plane_angle_sin') {
+                        const v = vsub(mv(r.line[1]), mv(r.line[0]));
+                        const n = vcross(vsub(mv(r.plane[1]), mv(r.plane[0])), vsub(mv(r.plane[2]), mv(r.plane[0])));
+                        return Math.abs(vdot(v, n)) / (vnorm(v) * vnorm(n));
+                    }
+                    return null;
+                }
+                function updateReadouts(t) {
+                    const panel = document.getElementById('readout-panel');
+                    if (!panel) return;
+                    const atStd = dg.t != null && Math.abs(t - dg.t) < 0.01;
+                    const rows = (dg.readouts || []).map((r) => {
+                        const val = computeReadout(r);
+                        const num = (val == null) ? '—' : (Math.round(val * 1000) / 1000);
+                        return `<div class="readout-row"><span>${r.label}</span><b>${num}</b></div>`;
+                    });
+                    const hint = (dg.standardLabel || '题目设定位') + (atStd ? ' ✓' : '');
+                    panel.innerHTML = `<div class="readout-title">拖动点 ${dg.point} 探索 · ${hint}</div>` + rows.join('');
+                }
+                if (!(dg.readouts || []).length) {
+                    // no readouts needed
+                } else {
+                    const panel = document.createElement('div');
+                    panel.id = 'readout-panel';
+                    panel.className = 'readout-panel';
+                    container.appendChild(panel);
+                }
+                setParam(dg.t != null ? dg.t : 0.5);
+            }
+
+            function buildMeasureToggle() {
+                const elements = model.elements || {};
+                const hasMeasure = Object.values(elements).some((el) => el.type === 'measure');
+                if (!hasMeasure) return;
+                const btn = document.createElement('button');
+                btn.id = 'measure-toggle';
+                btn.type = 'button';
+                const sync = () => {
+                    btn.textContent = measuresOn ? ui.measureToggleOn : ui.measureToggleOff;
+                    btn.classList.toggle('is-on', measuresOn);
+                };
+                sync();
+                btn.onclick = () => { measuresOn = !measuresOn; sync(); updateSceneState(); };
+                container.appendChild(btn);
+            }
+
+            function updateUI() {
+                const stepData = steps[currentStep];
+                document.getElementById('step-indicator').textContent = ui.stepTemplate
+                    .replace('{current}', currentStep + 1).replace('{total}', steps.length);
+                const stepContainer = document.getElementById('step-container');
+                stepContainer.innerHTML = `<div class="step-title">${stepData.title}</div><div class="step-content">${stepData.content}</div>`;
+                stepContainer.scrollTop = 0;
+                typesetMath(document.getElementById('sidebar'));
+                document.getElementById('prev-btn').disabled = currentStep === 0;
+                document.getElementById('next-btn').textContent = currentStep === steps.length - 1 ? ui.finish : ui.next;
+                updateSceneState();
+            }
+
+            function updateSceneState() {
+                const data = steps[currentStep];
+                const elements = model.elements || {};
+                for (const key of Object.keys(elements)) {
+                    if (objects[key]) objects[key].visible = false;
+                }
+                if (Array.isArray(data.highlight)) {
+                    data.highlight.forEach((key) => {
+                        if (!objects[key]) return;
+                        const el = elements[key];
+                        if (el && el.type === 'measure' && !measuresOn) return;
+                        objects[key].visible = true;
+                    });
+                }
+                if (data.cameraPos) {
+                    const targetPos = new THREE.Vector3(data.cameraPos.x, data.cameraPos.y, data.cameraPos.z);
+                    if (prefersReducedMotion) {
+                        camera.position.copy(targetPos);
+                        controls.target.copy(cameraTargetPoint);
+                        controls.update();
+                    } else { targetCameraPosition = targetPos; }
+                }
+                labelRenderer.render(scene, camera);
+                typesetMath(document.getElementById('canvas-container'));
+            }
+
+            function onWindowResize() {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                if (renderer) renderer.setSize(container.clientWidth, container.clientHeight);
+                if (labelRenderer) labelRenderer.setSize(container.clientWidth, container.clientHeight);
+                markScrollableMath(document.getElementById('sidebar'));
+            }
+            window.addEventListener('resize', onWindowResize);
+            _cleanupFns.push(() => window.removeEventListener('resize', onWindowResize));
+
+            function animate() {
+                _animId = requestAnimationFrame(animate);
+                if (!renderer || !labelRenderer) return;
+                if (targetCameraPosition) {
+                    camera.position.lerp(targetCameraPosition, 0.07);
+                    controls.target.lerp(cameraTargetPoint, 0.07);
+                    if (camera.position.distanceTo(targetCameraPosition) < 0.015) {
+                        camera.position.copy(targetCameraPosition);
+                        controls.target.copy(cameraTargetPoint);
+                        targetCameraPosition = null;
+                    }
+                }
+                controls.update();
+                renderer.render(scene, camera);
+                labelRenderer.render(scene, camera);
+            }
+
+            document.getElementById('prev-btn').onclick = () => { if (currentStep > 0) goToStep(currentStep - 1); };
+            document.getElementById('next-btn').onclick = () => { if (currentStep < steps.length - 1) goToStep(currentStep + 1); };
+
+            initializeLessonText();
+            buildModel();
+            updateUI();
+            labelRenderer.render(scene, camera);
+            typesetMath(document.getElementById('canvas-container'));
+            buildMeasureToggle();
+            animate();
+        }
+
+        window.initBoard = initBoard;
+        window.addEventListener('message', function(e) {
+            const d = e.data || {};
+            if (d.lesson || d.steps || d.model) initBoard(d);
+        });
+        window.addEventListener('load', function() {
+            try {
+                const raw = document.getElementById('lesson-data').textContent.trim();
+                if (raw && raw !== '{}') {
+                    const d = JSON.parse(raw);
+                    if (d.lesson || d.steps || d.model) initBoard(d);
+                }
+            } catch(e) { }
+        });
+    </script>
+</body>
+</html>

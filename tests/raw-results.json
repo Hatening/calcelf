@@ -1,0 +1,512 @@
+{
+  "golden": [
+    {
+      "file": "lesson-pyramid.json",
+      "host": "solid",
+      "screenshot": "tests/golden/lesson-pyramid-solid.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "canvas": {
+          "hasContent": true,
+          "nonBgRatio": 1.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-einstein-pythagoras.json",
+      "host": "2d",
+      "screenshot": "tests/golden/solution-einstein-pythagoras-2d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "#geometry-canvas": {
+          "hasContent": true,
+          "nonBgRatio": 0.002,
+          "distinctColors": 2
+        },
+        "#draw-canvas": {
+          "hasContent": false,
+          "nonBgRatio": 0.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-garfield-proof.json",
+      "host": "2d",
+      "screenshot": "tests/golden/solution-garfield-proof-2d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "#geometry-canvas": {
+          "hasContent": true,
+          "nonBgRatio": 0.002,
+          "distinctColors": 2
+        },
+        "#draw-canvas": {
+          "hasContent": false,
+          "nonBgRatio": 0.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-garfield-pythagoras.json",
+      "host": "2d",
+      "screenshot": "tests/golden/solution-garfield-pythagoras-2d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "#geometry-canvas": {
+          "hasContent": true,
+          "nonBgRatio": 0.004,
+          "distinctColors": 3
+        },
+        "#draw-canvas": {
+          "hasContent": false,
+          "nonBgRatio": 0.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-logic.json",
+      "host": "2d",
+      "screenshot": "tests/golden/solution-logic-2d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "#geometry-canvas": {
+          "hasContent": true,
+          "nonBgRatio": 0.031,
+          "distinctColors": 2
+        },
+        "#draw-canvas": {
+          "hasContent": false,
+          "nonBgRatio": 0.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-lorentz-force.json",
+      "host": "3d",
+      "screenshot": "tests/golden/solution-lorentz-force-3d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "canvas": {
+          "hasContent": true,
+          "nonBgRatio": 1.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-normal-distribution.json",
+      "host": "2d",
+      "screenshot": "tests/golden/solution-normal-distribution-2d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "#geometry-canvas": {
+          "hasContent": true,
+          "nonBgRatio": 0.031,
+          "distinctColors": 2
+        },
+        "#draw-canvas": {
+          "hasContent": false,
+          "nonBgRatio": 0.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-physics-projectile.json",
+      "host": "2d",
+      "screenshot": "tests/golden/solution-physics-projectile-2d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "#geometry-canvas": {
+          "hasContent": true,
+          "nonBgRatio": 0.047,
+          "distinctColors": 9
+        },
+        "#draw-canvas": {
+          "hasContent": false,
+          "nonBgRatio": 0.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-quadratic.json",
+      "host": "2d",
+      "screenshot": "tests/golden/solution-quadratic-2d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "#geometry-canvas": {
+          "hasContent": true,
+          "nonBgRatio": 0.053,
+          "distinctColors": 6
+        },
+        "#draw-canvas": {
+          "hasContent": false,
+          "nonBgRatio": 0.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-rutherford.json",
+      "host": "2d",
+      "screenshot": "tests/golden/solution-rutherford-2d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "#geometry-canvas": {
+          "hasContent": true,
+          "nonBgRatio": 0.062,
+          "distinctColors": 2
+        },
+        "#draw-canvas": {
+          "hasContent": false,
+          "nonBgRatio": 0.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-space-angles.json",
+      "host": "solid",
+      "screenshot": "tests/golden/solution-space-angles-solid.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "canvas": {
+          "hasContent": true,
+          "nonBgRatio": 1.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-sr-minkowski.json",
+      "host": "3d",
+      "screenshot": "tests/golden/solution-sr-minkowski-3d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "canvas": {
+          "hasContent": true,
+          "nonBgRatio": 1.0,
+          "distinctColors": 1
+        }
+      }
+    },
+    {
+      "file": "solution-vector-addition.json",
+      "host": "2d",
+      "screenshot": "tests/golden/solution-vector-addition-2d.png",
+      "rendered": true,
+      "errors": [],
+      "console_error_count": 0,
+      "console_errors": [],
+      "canvas": {
+        "#geometry-canvas": {
+          "hasContent": true,
+          "nonBgRatio": 0.031,
+          "distinctColors": 2
+        },
+        "#draw-canvas": {
+          "hasContent": false,
+          "nonBgRatio": 0.0,
+          "distinctColors": 1
+        }
+      }
+    }
+  ],
+  "docs": [
+    {
+      "file": "solution-lorentz-force.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/solution-lorentz-force.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://cdn.tailwindcss.com",
+        "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+        "https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "solution-normal-distribution.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/solution-normal-distribution.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://cdn.tailwindcss.com",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/contrib/auto-render.min.js"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "solution-physics-projectile.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/solution-physics-projectile.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://cdn.tailwindcss.com",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/contrib/auto-render.min.js"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "solution-einstein-pythagoras.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/solution-einstein-pythagoras.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://cdn.tailwindcss.com",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/contrib/auto-render.min.js"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "solution-garfield-proof.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/solution-garfield-proof.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://cdn.tailwindcss.com",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/contrib/auto-render.min.js"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "lesson-pyramid.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/lesson-pyramid.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://cdn.tailwindcss.com",
+        "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "shell-sort.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/shell-sort.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://en.wikipedia.org/wiki/Shellsort",
+        "https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/Shell.html",
+        "https://oeis.org/A033622",
+        "https://www.compsci.hunter.cuny.edu/~sweiss/course_materials/csci335/lecture_notes/chapter07.pdf"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "grf.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/grf.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://en.wikipedia.org/wiki/Pythagorean_theorem",
+        "https://www.scientificamerican.com/blog/observations/presidential-pythagorean-proof/",
+        "https://web.williams.edu/Mathematics/sjmiller/public_html/383Fa23/addcomments/Hill_GarfieldAndPythag.pdf",
+        "https://www.cambridge.org/core/books/abs/icons-of-mathematics/garfields-trapezoid/B73835D939DC51EC426EDE87039FAFA8",
+        "https://www.manvilleschools.org/cms/lib/NJ01912793/Centricity/Domain/1821/pythag%20thrm%20proof%20by%20Garfield.pdf"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "ms.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/ms.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://en.wikipedia.org/wiki/Mass%E2%80%93energy_equivalence",
+        "http://hyperphysics.phy-astr.gsu.edu/hbase/Relativ/relmom.html",
+        "https://www.feynmanlectures.caltech.edu/I_15.html",
+        "https://fourmilab.ch/etexts/einstein/E_mc2/e_mc2.pdf",
+        "https://www.eia.gov/tools/faqs/faq.php?id=97&t=3"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "mg-burn.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/mg-burn.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://en.wikipedia.org/wiki/Magnesium",
+        "https://www.webelements.com/magnesium/",
+        "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1309484&Mask=2",
+        "https://simple.wikipedia.org/wiki/Magnesium_oxide",
+        "https://scienceline.ucsb.edu/getkey.php?key=5555"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "reaction-cu-reduction.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/reaction-cu-reduction.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://cdn.tailwindcss.com",
+        "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+        "https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "reaction-fe-cuso4.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/reaction-fe-cuso4.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://cdn.tailwindcss.com",
+        "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+        "https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "bub.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/bub.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://en.wikipedia.org/wiki/Bubble_sort",
+        "https://clrs.skanev.com/02/02.html",
+        "https://www.sorting-algorithms.com/bubble-sort",
+        "https://visualgo.net/en/sorting",
+        "https://www.geeksforgeeks.org/bubble-sort-algorithm/"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "file": "cardio.html",
+      "category": "other",
+      "screenshot": "tests/docs-sample/cardio.png",
+      "has_cdn": true,
+      "cdn_deps": [
+        "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+        "https://en.wikipedia.org/wiki/Cardiac_output",
+        "https://lmu.pressbooks.pub/humanphysiology/chapter/12-4-gas-exchange/",
+        "https://en.wikipedia.org/wiki/Transport_of_gases_in_human_blood",
+        "https://www.merckmanuals.com/home/lung-and-airway-disorders/biology-of-the-lungs-and-airways/gas-exchange"
+      ],
+      "rendered": true,
+      "console_error_count": 0,
+      "console_errors": [],
+      "failed_requests": []
+    }
+  ],
+  "renderer": {
+    "screenshot": "tests/golden/renderer-axis_motion.png",
+    "axis_motion_rendered": true,
+    "canvas": {
+      "#stage": {
+        "hasContent": false,
+        "nonBgRatio": 0.0,
+        "distinctColors": 1
+      },
+      "canvas": {
+        "hasContent": false,
+        "nonBgRatio": 0.0,
+        "distinctColors": 1
+      }
+    },
+    "console_error_count": 1,
+    "console_errors": [
+      "[warning] Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+    ],
+    "page_errors": [],
+    "showRatingWidget_present": true,
+    "ratingStars_html_present": true
+  }
+}

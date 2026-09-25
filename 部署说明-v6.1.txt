@@ -1,0 +1,165 @@
+CalcElf v6.1 部署说明
+======================
+版本：v6.1.0（edulab 板播放器接入高中学科/实验族 + 全量 Vendor 本地化）
+日期：2026-09-25
+
+============================================================
+一、本次新增/修改的文件
+============================================================
+
+【新增】
+  board/2d.html                         2D 板播放器（圆锥曲线/函数/解析几何/矢量/读数/涂鸦）
+  board/3d.html                         3D 物理板（Three.js r128 + OrbitControls）
+  board/reaction.html                   化学反应板（分子 morph）
+  board/solid.html                      立体几何板（Three.js r160 + MathJax）
+  vendor/                               本地静态资源（92 文件，零 CDN）
+    ├── three.min.js / orbit-controls.js   Three.js r128
+    ├── katex.min.css / katex.min.js / auto-render.min.js  KaTeX 0.16.8
+    ├── fonts/                            KaTeX 字体 60 个
+    ├── board.css                         手写 Tailwind 替代 CSS
+    ├── jsm/                              Three.js r160 ES module（solid 用）
+    └── mathjax/                          MathJax 3.2.2（solid 用）
+  lib/board-schema.js                   board JSON 校验器（constant/trace 对象、枚举、必填）
+  lib/board-prompts.js                  10 族 board 提示词（含 few-shot）
+  lib/board-router.js                   board 族分类 + LLM 生成 + 校验重试
+  CHANGELOG-v6.1.md                     变更日志
+  部署说明-v6.1.txt                     本文件
+
+【修改】
+  api/kard.js                           区分 board/renderer 返回形状，board 写 kard_cache
+  lib/kards/orchestrator.js             renderer 不命中后接 tryBoard()
+  app.js                                animation() 新增 host 分支 + presentBoard/openBoardFullscreen
+  public/app.js                         镜像同步
+  public/board/                         board/ 镜像（4 文件）
+  public/vendor/                        vendor/ 镜像（92 文件）
+
+【未改动】
+  supabase/                             无新增 SQL（复用 kard_cache）
+  vercel.json                           无变更
+  renderer/                             v6.0 既有渲染器完全不变
+  其余 v6.0 文件                        全部保持
+
+============================================================
+二、部署步骤（按顺序执行）
+============================================================
+
+步骤 1：确认数据库（无需新迁移）
+------------------------------------------------------------
+  v6.1 复用 v6.0 已建的 kard_cache 表，无需跑新 SQL。
+  如尚未跑 v6.0 迁移，先执行 supabase/v6.0_rating_warehouse.sql。
+  验证：
+    select * from public.kard_cache limit 1;  -- 列存在即可
+
+步骤 2：确认环境变量（无需新增）
+------------------------------------------------------------
+  v6.1 不新增环境变量。复用现有：
+    SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY
+    DEEPSEEK_API_KEY（或 OPENAI_API_KEY，视 lib/openai.js 配置）
+    SOLVE_MODEL（默认 deepseek-flash）/ SOLVE_STRONG_MODEL（默认 deepseek-v4-pro）
+    CRON_SECRET
+  board-router 用 SOLVE_MODEL → SOLVE_STRONG_MODEL 兜底，不写死模型名。
+
+步骤 3：上传代码到 GitHub
+------------------------------------------------------------
+  1. 解压 calcelf-v6.1.zip
+  2. 全选解压后的所有文件与文件夹（不要选外层目录）
+  3. 拖到 GitHub 仓库 Hatening/calcelf 根目录，提交
+  4. 或用 git：
+       cd /path/to/unzipped
+       git add -A
+       git commit -m "v6.1: edulab board players + vendor localization"
+       git push -u origin main
+
+  注意：vendor/ 目录含 92 个文件（约 3-4MB），属正常静态资源，
+  不要 .gitignore。board/ 和 vendor/ 在根目录和 public/ 各有一份，
+  两份逐字节一致，部署后 /board/ 和 /vendor/ 路径均可访问。
+
+步骤 4：Vercel 自动部署
+------------------------------------------------------------
+  推送后 Vercel 自动构建部署（无构建步骤，纯静态 + Serverless Functions）。
+  部署完成后访问 https://calcelf.vercel.app
+  新路径：
+    /board/2d.html       2D 板播放器
+    /board/3d.html       3D 板播放器
+    /board/reaction.html 化学反应板
+    /board/solid.html    立体几何板
+    /vendor/*            本地静态资源
+  POST /api/kard 响应新增 host 字段（board 族），向后兼容。
+
+============================================================
+三、验证方式
+============================================================
+
+【功能验证】
+  1. 打开 https://calcelf.vercel.app，登录
+  2. 输入高中学科题，例如：
+     - "求函数 f(x)=x²-2x+3 的最小值"（board_function_graph → 2d）
+     - "椭圆 x²/4+y²/3=1 的离心率"（board_conics → 2d）
+     - "正四棱锥 P-ABCD 的体积"（board_solid_geometry → solid）
+     - "带电粒子在匀强磁场中的运动"（board_physics_3d → 3d）
+     - "2Mg+O₂→2MgO 的反应"（board_chemistry → reaction）
+  3. 点开始解题，动画区域应加载对应板播放器（iframe）
+  4. 板播放器应渲染出交互式图形（滑块可拖动、读数实时变化）
+  5. 动画下方应出现 5 颗星（board 族同样显示评分）
+  6. 全屏按钮应能放大板播放器
+
+  小学题回归（应仍走 /renderer）：
+     - "从3出发向右跳5格"（axis_motion）
+     - "天平左边3个苹果右边6个苹果"（balance）
+
+【本地无头回测（开发者）】
+  沙箱内已通过：
+    cd _v6base
+    python3 -m http.server 8899 &
+    # playwright 脚本加载 13 lesson JSON × 4 模板配对渲染
+  截图在 tests/golden/、tests/board-smoke/
+  报告在 tests/TEST-REPORT-v6.1.md
+
+【零 CDN 验证】
+  浏览器 DevTools → Network → 过滤 "cdn"，应无外部请求。
+  所有 vendor 资源（three.min.js、katex、fonts）均从 /vendor/ 加载。
+
+============================================================
+四、覆盖范围
+============================================================
+  ✅ 4 个板播放器静态托管（/board/2d.html / 3d.html / reaction.html / solid.html）
+  ✅ 每个板播放器支持 postMessage 动态注入数据（initBoard 幂等）
+  ✅ 全量 Vendor 本地化（Three.js r128/r160、KaTeX 0.16.8+60字体、MathJax 3.2.2、board.css）
+  ✅ 零外部 CDN（grep 验证无 cdn/cdnjs/unpkg/tailwindcss 引用）
+  ✅ board-schema 校验器（constant/trace 对象、view/conics/derived/readouts 枚举与必填）
+  ✅ 10 族 board 提示词（含 few-shot，从 13 lesson 提炼）
+  ✅ board-router（关键词分类 + LLM 生成 + 校验重试 + 超时 + 优雅降级）
+  ✅ kard 端点 host 选择器（board/renderer 双路径，向后兼容）
+  ✅ 客户端 presentBoard/openBoardFullscreen（iframe + postMessage）
+  ✅ board 族 5 星评分 + 流程上报
+  ✅ 根/public 镜像逐字节一致（board/ vendor/ app.js）
+  ✅ 复用 kard_cache，未新增必需 SQL
+  ✅ 现有 renderer 八族回归正常
+  ✅ 小学/CPA 题仍走 /renderer（stage 门控）
+  ✅ 模型不写死、读环境变量
+  ✅ 不扣费（board 路径 0 Credits）
+
+============================================================
+五、已知缺口与后续建议
+============================================================
+  1. 沙箱无有效模型 API key，board-router 的真实 LLM 出字未做端到端验证；
+     分类、校验、重试、降级路径均已单测覆盖。部署后需用真实账号验证
+     模型返回的 board JSON 合格率。
+  2. 70 个 edulab 预生成 docs 成品可作为"精确命中题目直接出成品"的最快路径，
+     但部分 docs 仍引用 CDN，需 vendor 化后才能离线部署。当前作为黄金帧参考。
+  3. 重叠族（function-graph/geometry/motion）按"高中→board、小学→renderer"分配，
+     后续可按真实流量无头对比择优，调整分类阈值。
+  4. solid.html 用 Three.js r160 ES module（与 2d/3d/reaction 的 r128 全局构建
+     并存于 vendor/），体积略大但互不冲突。后续可统一到一个版本。
+  5. 蒸馏优化（Gemini/ChatGPT）属后续迭代：等 board 管线跑通、积累真实
+     "题目→board JSON"配对后，用蒸馏数据优化提示词或微调模型。
+  6. 登录/验证码/支付流程未改动，需 interaction.request_action。
+
+============================================================
+六、回滚方案
+============================================================
+  如部署后出现问题：
+  1. GitHub revert 本次 commit，Vercel 自动回滚到 v6.0
+  2. 新增文件（board/ vendor/ lib/board-*.js）不影响旧代码，可保留或删除
+  3. kard_cache 表为 v6.0 已有，board 族写入的数据不影响 renderer 族读取
+  4. app.js 的 host 分支：host 缺失时完全走原 renderer 流程，天然向后兼容

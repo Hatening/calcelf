@@ -1,0 +1,142 @@
+/* =========================================================
+   CalcElf v5.6.3 · 全站弹窗「放大 + 圆润」统一排版
+   最后加载，仅作用于弹窗/浮层，不影响首页主界面。
+   圆体：标题/按钮 Baloo 2，正文 Fredoka；日文 M PLUS Rounded，
+   中文 ZCOOL KuaiLe 回退。字号在原基础上整体放大约 1.5 倍。
+   ========================================================= */
+:root{--calf-round-font:"Baloo 2","Fredoka","M PLUS Rounded 1c","ZCOOL KuaiLe","PingFang SC","Microsoft YaHei UI",ui-rounded,sans-serif;--calf-body-font:"Fredoka","Nunito","M PLUS Rounded 1c","PingFang SC","Microsoft YaHei UI",ui-rounded,sans-serif;}
+
+/* ---------- 通用弹窗容器 ---------- */
+.modalbox,#themePanel .modalbox{font-family:var(--calf-body-font);border-radius:28px!important;padding:26px 24px;}
+.modalbox h2{font-family:var(--calf-round-font)!important;font-weight:800!important;font-size:27px!important;line-height:1.18;}
+.modalbox h3{font-family:var(--calf-round-font)!important;font-weight:800!important;font-size:19px!important;}
+.modalbox p,.modalbox .muted,.modalbox label{font-size:15px;line-height:1.5;}
+.modalbox .close,#themePanel .close,#settingsPanel .sp-close,#avatarPicker .ap-close,#levelsModal .close{width:38px;height:38px;font-size:24px!important;border-radius:50%;}
+
+/* Explorer Profile 标题：再 +10%（36px）并上移 */
+#accountModalTitle{margin-top:-6px;margin-bottom:8px!important;}
+.explorer-word{font-size:36px!important;font-family:var(--calf-round-font)!important;font-weight:800!important;}
+#accountModalDesc{font-size:15px!important;line-height:1.45;margin-bottom:18px!important;}
+@media (min-width:560px){#accountModalDesc{white-space:nowrap;}}
+
+/* ---------- 表单控件 ---------- */
+.modalbox input,.modalbox select,.modalbox textarea,
+#settingsPanel .sp-input,#settingsPanel .sp-select{
+  font-family:var(--calf-body-font)!important;font-size:18px!important;font-weight:600;
+  padding:15px 17px!important;border-radius:17px!important;}
+.modalbox select{appearance:none;}
+.modalbox input::placeholder,.modalbox textarea::placeholder{font-weight:500;}
+
+/* ---------- 选项卡 ---------- */
+.auth-tabs{border-radius:18px;padding:7px;gap:8px;}
+.auth-tab{font-family:var(--calf-round-font)!important;font-weight:700!important;font-size:18px!important;padding:13px 10px!important;border-radius:13px;}
+
+/* ---------- 按钮：胶囊、厚底、圆体 ---------- */
+.modalbox .btn,#settingsPanel .sp-save{
+  font-family:var(--calf-round-font)!important;font-weight:800!important;font-size:19px!important;
+  min-height:54px!important;padding:14px 22px!important;border-radius:999px!important;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.1;}
+.modalbox .btn.primary,#signupBtn,#loginWithPasswordBtn{font-size:20px!important;}
+.modalbox .btn.google-btn{font-size:17.5px!important;font-weight:700!important;}
+.modalbox .btn.secondary{font-size:17px!important;}
+#settingsPanel .sp-save{width:100%;margin-top:22px;}
+
+/* 密码强度（宝石 + 进度条 + 规则） */
+.pw-gems{gap:9px;}
+.pw-gems .gem{width:30px!important;height:13px!important;border-radius:99px;}
+.pw-bar{height:10px!important;border-radius:99px;}
+.pw-rules>summary{font-size:14.5px!important;line-height:1.45;}
+.pw-check{font-size:14.5px!important;line-height:1.5;}
+.modalbox input[type=checkbox].kcbx,.modalbox .kcbx{width:27px;height:27px;border-radius:10px;}
+
+/* 方案/价格卡片 */
+.plan b,.plan .plan-name{font-family:var(--calf-round-font);font-size:18px;}
+.plan .price{font-family:var(--calf-round-font);font-size:26px;}
+.plan{border-radius:20px;}
+
+/* ---------- 外观主题弹窗 ---------- */
+#themePanel .modalbox h2{font-size:30px!important;}
+#themePanel .modalbox h3{font-size:19px!important;}
+#themePanel .modalbox .muted{font-size:16px;}
+.theme-opt{border-radius:22px!important;padding:18px 12px!important;}
+.theme-opt .swatch{width:58px!important;height:58px!important;margin-bottom:10px!important;}
+.theme-opt .nm{font-family:var(--calf-round-font)!important;font-weight:800!important;font-size:20px!important;}
+.theme-opt .tg{font-size:16px!important;margin-top:3px;}
+#themePanel .theme-opt img{width:52px!important;height:52px!important;}
+#tpSave,#tpCancel{min-height:52px!important;font-size:19px!important;}
+
+/* ---------- 学习设置弹窗 ---------- */
+#settingsPanel .sp-box{font-family:var(--calf-body-font);border-radius:28px;padding:26px 24px;}
+#settingsPanel .sp-title{font-family:var(--calf-round-font)!important;font-weight:800;font-size:24px!important;}
+#settingsPanel .sp-sec{font-size:20px!important;font-weight:800;}
+#settingsPanel .sp-label{font-size:17px!important;}
+#settingsPanel .sp-hint{font-size:15px!important;line-height:1.5;}
+#settingsPanel .sp-chip{font-size:16px!important;padding:9px 17px!important;border-radius:999px!important;}
+#settingsPanel .sp-segbtn{font-size:16px!important;padding:12px 8px!important;border-radius:14px!important;}
+#settingsPanel .sp-switch{font-size:16px!important;}
+
+/* ---------- 头像选择器 ---------- */
+#avatarPicker .ap-box{font-family:var(--calf-body-font);border-radius:28px;padding:24px;}
+#avatarPicker .ap-title{font-family:var(--calf-round-font)!important;font-weight:800;font-size:26px!important;}
+#avatarPicker .ap-cell{border-radius:20px!important;padding:9px!important;}
+#avatarPicker .ap-iconcell .calf-av-img{border-radius:15px!important;}
+
+/* ---------- 等级与特权弹窗 ---------- */
+#levelsModal .lv-box{font-family:var(--calf-body-font);border-radius:30px;padding:26px 24px;}
+#levelsModal .lv-title{font-family:var(--calf-round-font)!important;font-weight:800;font-size:27px!important;}
+#levelsModal .lv-sub{font-size:15px!important;line-height:1.5;}
+#levelsModal .lv-free{font-size:15px!important;line-height:1.5;border-radius:16px;}
+#levelsModal .lv-tab{font-family:var(--calf-round-font)!important;font-weight:800;font-size:18px!important;padding:13px 8px!important;border-radius:15px;}
+#levelsModal .lv-row{border-radius:18px;padding:14px;}
+#levelsModal .lv-badge{width:52px;height:52px;flex-basis:52px;border-radius:17px;font-size:22px!important;}
+#levelsModal .lv-head b{font-family:var(--calf-round-font)!important;font-size:18px!important;}
+#levelsModal .lv-rule{font-size:15px!important;line-height:1.45;}
+#levelsModal .lv-desc{font-size:14.5px!important;line-height:1.5;}
+#levelsModal .lv-perk{font-size:13.5px!important;padding:3px 11px;}
+#levelsModal .lv-prog{height:9px;}
+#levelsModal .lv-prog-t{font-size:13px!important;}
+#levelsModal .lv-meta{font-size:15px!important;border-radius:12px;}
+#levelsModal .lv-note{font-size:14px!important;line-height:1.55;}
+
+/* ---------- 小屏：弹窗内部滚动，标题/关闭始终可见 ---------- */
+@media (max-width:560px){
+  .modalbox,#themePanel .modalbox,#settingsPanel .sp-box,#avatarPicker .ap-box,#levelsModal .lv-box{padding:20px 16px;border-radius:24px!important;}
+  .explorer-word{font-size:31px!important;}
+  .modalbox h2,#levelsModal .lv-title{font-size:24px!important;}
+  .modalbox .btn{font-size:18px!important;min-height:52px!important;}
+  .modalbox input,.modalbox select,.modalbox textarea{font-size:17px!important;padding:14px 15px!important;}
+}
+
+/* =========================================================
+   v5.6.3 强化补丁
+   ① 弹窗内所有节点强制圆体，杜绝机械字体（再对标题/按钮/标签用 Baloo）
+   ② 密码强度指示块去掉钻石旋转，改水平胶囊
+   ③ 同意/COPPA/机器人校验字号放大并圆润（盖过 JS 内联样式）
+   ========================================================= */
+.modalbox *,#themePanel .modalbox *,#settingsPanel .sp-box *,#avatarPicker .ap-box *,#levelsModal .lv-box *{font-family:var(--calf-body-font)!important;}
+.modalbox h1,.modalbox h2,.modalbox h3,.modalbox h4,.modalbox h5,.modalbox label,.modalbox b,.modalbox strong,.modalbox .btn,.auth-tab,.explorer-word,
+#themePanel h2,#themePanel h3,.theme-opt .nm,
+#settingsPanel .sp-title,#settingsPanel .sp-sec,#settingsPanel .sp-label,#settingsPanel .sp-save,#settingsPanel .sp-segbtn,#settingsPanel .sp-chip,
+#avatarPicker .ap-title,#levelsModal .lv-title,#levelsModal .lv-tab,#levelsModal .lv-head b{font-family:var(--calf-round-font)!important;}
+
+/* 密码强度：4 个水平胶囊指示块（去除 rotate45），保留逐块点亮配色 */
+.pw-gems{gap:10px;}
+.pw-gems .gem{transform:none!important;width:36px!important;height:13px!important;border-radius:999px!important;background:#e5e7eb!important;box-shadow:none!important;border:0;}
+.pw-gems .gem.ok{background:linear-gradient(135deg,#a78bfa,#22d3ee)!important;box-shadow:0 0 8px rgba(124,58,237,.40)!important;}
+.pw-gems .gem.ok:nth-child(2){background:linear-gradient(135deg,#38bdf8,#22d3ee)!important;box-shadow:0 0 8px rgba(56,189,248,.40)!important;}
+.pw-gems .gem.ok:nth-child(3){background:linear-gradient(135deg,#34d399,#a3e635)!important;box-shadow:0 0 8px rgba(52,211,153,.40)!important;}
+.pw-gems .gem.ok:nth-child(4){background:linear-gradient(135deg,#fbbf24,#fb7185)!important;box-shadow:0 0 10px rgba(251,191,36,.5)!important;}
+.pw-bar{height:10px!important;border-radius:999px!important;}
+.pw-rules>summary{font-family:var(--calf-body-font)!important;font-size:15px!important;line-height:1.5;}
+.pw-check{font-family:var(--calf-body-font)!important;font-size:15px!important;line-height:1.6;}
+
+/* 两行同意 + COPPA */
+#signupForm label{font-size:16px!important;line-height:1.55!important;}
+#agreePrivacyText,#agreeCoppaText{font-size:16px!important;font-weight:700;}
+.coppa-row{border-radius:16px!important;padding:13px 15px!important;}
+
+/* 机器人校验 */
+#captchaQuestion{font-size:16px!important;font-family:var(--calf-round-font)!important;font-weight:700;color:#334155!important;}
+#captchaRefresh{font-size:15px!important;font-family:var(--calf-body-font)!important;font-weight:600;}
+#captchaAnswer{font-size:18px!important;padding:14px 16px!important;border-radius:15px!important;}
+#signupGuardMsg{font-size:15px!important;}

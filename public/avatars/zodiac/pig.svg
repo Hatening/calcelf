@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="CalcElf Pig">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFD7E8"/><stop offset="1" stop-color="#7EE3E0"/></linearGradient>
+<filter id="shadow" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#24313A" flood-opacity=".16"/></filter>
+<filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+<style>
+.out{stroke:#24313A;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
+.line{fill:none;stroke:#24313A;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.eye{fill:#fff;stroke:#24313A;stroke-width:10}
+.pupil{fill:#1E2933}
+.hi{fill:#fff}
+.blush{fill:#F58AA1;opacity:.65}
+</style></defs>
+<circle cx="256" cy="256" r="226" fill="url(#bg)" filter="url(#shadow)"/>
+<circle cx="256" cy="256" r="226" fill="none" stroke="#FFFFFF" stroke-opacity=".48" stroke-width="8"/>
+<path d="M82 112h18M91 103v18M422 108h14M429 101v14" class="line" stroke="#fff" stroke-width="7" opacity=".7"/><circle cx="113" cy="386" r="7" fill="#fff" opacity=".7"/>
+<!-- curly tail --> <path d="M330 345q52 7 36 49-17 34-43 4" class="line" stroke="#E58BA4" stroke-width="17"/>
+<!-- body --> <ellipse cx="261" cy="368" rx="83" ry="63" fill="#F4A7B8" class="out"/>
+<!-- ears --> <path d="M183 185q-49-44-28-65 38 8 61 50m111 12q16-50 52-50 12 27-27 64" fill="#F4A7B8" class="out"/>
+<!-- head --> <ellipse cx="255" cy="246" rx="108" ry="102" fill="#F4A7B8" class="out"/>
+<!-- eyes --> <ellipse cx="214" cy="234" rx="27" ry="35" class="eye"/><path d="M293 238q20-23 37 0" class="line" stroke-width="10"/><ellipse cx="220" cy="239" rx="11" ry="20" class="pupil"/><circle cx="225" cy="230" r="6" class="hi"/>
+<ellipse cx="197" cy="278" rx="15" ry="10" class="blush"/><ellipse cx="315" cy="276" rx="15" ry="10" class="blush"/>
+<!-- snout --> <ellipse cx="256" cy="280" rx="56" ry="38" fill="#F184A0" class="out"/><ellipse cx="236" cy="279" rx="10" ry="8" class="pupil"/><ellipse cx="278" cy="279" rx="10" ry="8" class="pupil"/><path d="M245 301q13 12 26 0" class="line" stroke-width="8"/>
+<!-- ingot --> <path d="M326 346q31-16 55 0l-11 30-36 0Z" fill="#FFD257" class="out"/><path d="M336 349q19 10 37 0" class="line" stroke="#E4AE2E" stroke-width="7"/>
+</svg>

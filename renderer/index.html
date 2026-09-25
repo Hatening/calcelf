@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body { margin: 0; height: 100%; background: #0d1228; overflow: hidden;
+    font-family: system-ui, "PingFang SC", sans-serif; color: #eeeefb; }
+  #stage { display: block; width: 100%; height: 100%; }
+  .fallback { color: #5b6a83; text-align: center; margin-top: 60px; font-size: 14px; padding: 20px; }
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script type="module">
+import { render as axisMotion } from './modes/axis-motion.js';
+import { render as motion } from './modes/motion.js';
+import { render as numberline } from './modes/numberline.js';
+import { render as bars } from './modes/bars.js';
+import { render as grid } from './modes/grid.js';
+import { render as balance } from './modes/balance.js';
+import { render as geometry } from './modes/geometry.js';
+import { render as functionGraph } from './modes/function-graph.js';
+import { render as sequence } from './modes/sequence.js';
+
+// 按 animation.type 分发到对应模式；以后加新模式只需在这里注册。
+const MAP = {
+  axis_motion: axisMotion,
+  motion: motion,
+  numberline: numberline,
+  bars: bars,
+  grid: grid,
+  balance: balance,
+  geometry: geometry,
+  'function-graph': functionGraph,
+  sequence: sequence,
+};
+
+let currentEngine = null;
+
+function renderAnimation(anim) {
+  if (currentEngine) { try { currentEngine.destroy(); } catch(e){} currentEngine = null; }
+  const fn = MAP[anim && anim.type];
+  if (!fn) {
+    document.body.innerHTML = '<div class="fallback">本次无动画演示</div>';
+    return;
+  }
+  document.body.innerHTML = '<canvas id="stage"></canvas>';
+  const canvas = document.getElementById('stage');
+  try {
+    currentEngine = fn(canvas, anim);
+    // v6.0：通知父窗口动画高度（父页面据此自适应 iframe 高度）
+    try { parent.postMessage({__calfAnimHeight: 520}, '*'); } catch(e){}
+  } catch (e) {
+    console.error('[renderer] mode error:', anim.type, e);
+    document.body.innerHTML = '<div class="fallback">动画渲染出错，已回退文字讲解</div>';
+  }
+}
+
+window.addEventListener('message', (e) => {
+  const data = e.data || {};
+  const anim = data.animation || data;
+  if (anim && anim.type) renderAnimation(anim);
+});
+
+// 也支持 URL 参数直接加载（用于无头回测）
+const params = new URLSearchParams(location.search);
+if (params.get('data')) {
+  try { renderAnimation(JSON.parse(decodeURIComponent(params.get('data')))); } catch(e){}
+}
+</script>
+</body>
+</html>

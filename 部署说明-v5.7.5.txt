@@ -1,0 +1,32 @@
+CalcElf v5.7.5 部署说明 —— 固定动画新增 10 种教学图形（diagram 场景）
+
+【本版改了什么】
+1. anim-player.js（前端固定渲染器，根目录 + public/ 两份）
+   新增场景类型 t:"diagram"，含 10 种确定性教学图形（粗圆描边、无外部依赖）：
+   - number_line  数轴（整数/绝对值/正负数）
+   - coordplane   坐标系 + 点（坐标、点的位置）
+   - linegraph    一次函数图像 y=mx+b（斜率/截距）
+   - angle        角（角度标注）
+   - triangle     三角形（三边标注）
+   - rectangle    矩形（长×宽）
+   - circle       圆（半径标注）
+   - areagrid     面积格（面积/乘法，单位方格）
+   - spinner      概率转盘
+   - arraydots    乘法点阵（行列阵列）
+2. lib/anim-plan.js（服务端分镜校验，仅 /lib/）
+   - diagram 进入白名单与全局视觉门禁（VISUAL_TYPES）
+   - 每种图形参数服务端强校验（范围/夹取/点数上限），非法参数丢弃
+   - prompt 白名单与节奏更新：几何/坐标/整数/面积/概率/阵列优先用 diagram
+   - 分镜版本升 ce-anim-1.4，自动隔离旧缓存（animation_plans 旧键不再命中）
+
+【部署步骤】
+1. 解压本包；
+2. anim-player.js → 仓库根目录（覆盖同名文件）
+3. public/anim-player.js → 仓库 public/ 目录（覆盖同名文件）
+4. lib/anim-plan.js → 仓库 lib/ 目录（覆盖同名文件；public 下没有也不需要 lib）
+5. Commit & Push（Vercel 自动部署）；
+6. 部署完成后，找一道几何/坐标/整数/概率题实测：动画应出现对应图形而非纯文字。
+
+【说明】
+- 物理（17 元素）、化学（13）、生物（5）图形为后续"学科包"，需各自校验与样题，本版不含，不会放假图形。
+- 本版只动以上 3 个文件，其他文件无需改动。

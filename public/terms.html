@@ -1,8 +1,82 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CalcElf Terms</title><style>body{max-width:880px;margin:40px auto;padding:0 20px;font:16px/1.75 system-ui;color:#18283e}h1{font-size:30px}h2{margin-top:28px}</style></head><body>
-<h1>CalcElf Terms of Use</h1><p><b>Template only:</b> obtain jurisdiction-specific legal review before accepting payments.</p>
-<h2>Educational assistance</h2><p>CalcElf provides automated learning assistance. AI outputs can contain mistakes and are not official grading decisions or professional advice.</p>
-<h2>Credits</h2><p>Credits are service units for defined CalcElf features. They are not model-provider tokens, cash, cryptocurrency or API keys. Credits may be limited by plan, service type and fair-use controls.</p>
-<h2>Subscriptions</h2><p>Subscription terms, renewal, cancellation, taxes, refunds and included Credits are shown at checkout. Management is available through the billing portal where supported.</p>
-<h2>Abuse</h2><p>Automated bulk use, account farming, bypassing limits, payment fraud and attacks on the service may lead to temporary or permanent suspension.</p>
-<h2>Children</h2><p>Where the product requires an adult/parent/guardian account under applicable law or CalcElf safety policy, use must occur under that account.</p>
-</body></html>
+<!doctype html>
+<html lang="en" data-theme="elf">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Terms of Service · CalcElf</title>
+<link rel="icon" href="/brand/favicon-32.png">
+<meta name="robots" content="noindex">
+<style>
+  body{margin:0;font-family:'Nunito','Baloo 2',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC','Noto Sans TC','Noto Sans JP','Noto Sans KR','Noto Sans Arabic',system-ui,sans-serif;background:linear-gradient(180deg,#f0fdfa,#f8fafc);color:#1f2937;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .box{background:#fff;border:1px solid #e2e8f0;border-radius:24px;padding:34px 30px;max-width:560px;width:100%;box-shadow:0 10px 34px rgba(15,118,110,.08);text-align:center}
+  h1{margin:0 0 6px;color:#0f3e3a;font-size:24px}
+  p.sub{color:#64748b;margin:0 0 22px;font-size:14.5px}
+  .langs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .pill{border:2px solid #e2e8f0;border-radius:999px;padding:9px 18px;font-weight:700;font-size:14px;color:#0f766e;text-decoration:none;background:#fff;transition:transform .12s}
+  .pill:hover{transform:translateY(-1px);background:#ccfbf1}
+  .links{margin-top:22px;font-size:14px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .links a{color:#0f766e;font-weight:700}
+  .spin{display:inline-block;width:18px;height:18px;border:3px solid #99f6e4;border-top-color:#0f766e;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-3px;margin-right:8px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>📜 Terms of Service</h1>
+  <p class="sub"><span class="spin"></span><span id="msg">Loading the Terms of Service in your language…</span></p>
+  <noscript>
+    <div class="langs">
+      <a class="pill" href="/legal/terms.en.html">English</a>
+      <a class="pill" href="/legal/terms.zh-CN.html">简体中文</a>
+      <a class="pill" href="/legal/terms.zh-TW.html">繁體中文</a>
+      <a class="pill" href="/legal/terms.ja.html">日本語</a>
+      <a class="pill" href="/legal/terms.ko.html">한국어</a>
+      <a class="pill" href="/legal/terms.fr.html">Français</a>
+      <a class="pill" href="/legal/terms.de.html">Deutsch</a>
+      <a class="pill" href="/legal/terms.es.html">Español</a>
+      <a class="pill" href="/legal/terms.it.html">Italiano</a>
+      <a class="pill" href="/legal/terms.ar.html">العربية</a>
+      <a class="pill" href="/legal/terms.fa.html">فارسی</a>
+    </div>
+  </noscript>
+  <div id="manual" class="langs" hidden></div>
+  <div class="links">
+    <a href="/privacy-center.html">🔒 Privacy Notice</a>
+    <a href="/legal/regional-matrix.html">🌐 Regional legal matrix</a>
+    <a href="/">← Back to CalcElf</a>
+  </div>
+</div>
+<script>
+(function(){
+  var SUPPORTED=['en','zh-CN','zh-TW','ja','ko','fr','de','es','it','ar','fa'];
+  function norm(raw){
+    if(!raw) return 'en';
+    raw=String(raw).replace('_','-');
+    var low=raw.toLowerCase();
+    if(low.indexOf('zh-hant')===0||low==='zh-tw'||low==='zh-hk'||low==='zh-mo') return 'zh-TW';
+    if(low.indexOf('zh')===0) return 'zh-CN';
+    var base=low.split('-')[0];
+    if(SUPPORTED.indexOf(base)>=0) return base;
+    if(SUPPORTED.indexOf(raw)>=0) return raw;
+    return 'en';
+  }
+  try{
+    var params=new URLSearchParams(location.search);
+    var ql=params.get('lang');
+    var saved=null;
+    try{saved=localStorage.getItem('calcelf_lang');}catch(e){}
+    var lang=norm(ql||saved||(navigator.languages&&navigator.languages[0])||navigator.language||'en');
+    location.replace('/legal/terms.'+lang+'.html');
+  }catch(e){
+    var msg=document.getElementById('msg');
+    if(msg) msg.textContent='Please choose your language:';
+    var manual=document.getElementById('manual');
+    manual.hidden=false;
+    [['en','English'],['zh-CN','简体中文'],['zh-TW','繁體中文'],['ja','日本語'],['ko','한국어'],['fr','Français'],['de','Deutsch'],['es','Español'],['it','Italiano'],['ar','العربية'],['fa','فارسی']].forEach(function(p){
+      var a=document.createElement('a');a.className='pill';a.href='/legal/terms.'+p[0]+'.html';a.rel='alternate';a.hreflang=p[0];a.textContent=p[1];manual.appendChild(a);
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+CalcElf v5.7.1 部署说明（模型级联备选 + 提速 + 聊天思考动画）
+============================================================
+
+【本包改了什么】
+1. 解题三级模型级联：deepseek-v4.1-flash（主）→ deepseek-v4-pro（强）→ glm-5.3（跨厂兜底）。
+   - 流式首字 8 秒没出字 / 字间停顿 15 秒 / 连接报错(429、5xx、断连)：立即切换，不死等。
+   - 已经流出讲解后只静默补结构化 JSON，不打断阅读。
+   - JSON 解析失败、答案验证不一致：自动升级到 pro 重算，再失败用 glm-5.3。
+2. 追问 chat / 批改 grade / 练习 practice：主模型失败或 20 秒无响应自动切 qwen3.8-flash；
+   彻底修掉原来写死的、阿里云上不存在的 gpt-5.6-luna（之前这三个功能线上大概率直接报错）。
+   模型全部失败时自动退还本次扣的 Credits。
+3. 动画分镜：单次请求 12 秒超时即切 qwen3-coder-plus；两轮共约 25 秒仍无合格分镜，
+   前端直接显示静态步骤卡（原来要等 58 秒）。
+4. Ask CalcElf 追问面板：发出问题后，左侧助理气泡位立即出现蓝→紫→橙三点渐变"思考中"动画，
+   答案返回后消失；发送期间按钮临时禁用防重复发送；阿拉伯语等 RTL 语言自动镜像。
+
+【文件清单（共 11 个文件，按原目录覆盖即可）】
+app.js ............................. 根目录（前端，三点动画 + 动画 28s 超时）
+components.css ..................... 根目录（三点动画样式）
+api/solve.js ...................... /api（解题级联）
+api/chat.js ....................... /api（追问级联，整文件重写）
+api/grade.js ...................... /api（批改级联）
+api/practice.js ................... /api（练习级联）
+api/animation-plan.js ............. /api（分镜 12s 超时）
+lib/openai.js ..................... /lib（★必传：统一备选链 + 首字超时，新依赖）
+public/ 下同名文件 ................ 与根目录一一对应，按相同相对路径覆盖
+（public/api 只有 solve.js / grade.js / animation-plan.js 的静态副本，属历史结构，照传即可）
+
+【部署步骤】
+1. GitHub 网页端或本地把以上文件按目录逐个覆盖提交（Vercel 会自动部署）。
+   ★ lib/openai.js 这次一定要传，否则 chat/grade/practice 会报 responsesWithFallback 不是函数。
+2. Vercel → 本项目 → Settings → Environment Variables，按下表配置（不配也能跑，代码里已内置默认值）。
+3. 改完环境变量必须重新部署才生效：Deployments → 最新一条右侧 ··· → Redeploy。
+4. 部署后验证：
+   - 打开首页拍一道题，讲解应在几秒内开始逐字出现（不再长时间转圈）；
+   - Ask CalcElf 发一条追问，立刻能看到左侧三点动画，随后出答案；
+   - Vercel → Functions 日志里若出现 [ai fallback] / [solve] primary stream failed，
+     说明级联在工作（属正常保护，不是报错）。
+
+【Vercel 环境变量清单】
+必填（你应该已经有了）：
+  OPENAI_API_KEY            阿里云百炼 MaaS 兼容端点的 API Key（一把 key 内含 DeepSeek/千问/GLM/Kimi）
+
+模型选择（全部可选，括号内为代码内置默认值）：
+  SOLVE_MODEL               解题主模型（deepseek-v4.1-flash）
+  SOLVE_STRONG_MODEL        解题升级档/重算（deepseek-v4-pro）
+  SOLVE_SAFETY_MODEL        解题跨厂兜底（glm-5.3）
+  CHAT_MODEL                追问/批改/练习主模型（默认跟随 SOLVE_MODEL）
+  LIGHT_FALLBACK_MODEL      轻任务备选（qwen3.8-flash）
+  ANIMATION_MODEL           动画分镜主模型（qwen3-coder-flash）
+  ANIMATION_FALLBACK_MODEL  动画分镜备选（qwen3-coder-plus）
+  VISION_FALLBACK_MODEL     图片识别失败时的专用视觉模型（qwen3-vl-flash，v5.7.1 预留）
+  TRANSCRIBE_MODEL          语音转写（暂不生效，待确认百炼 Paraformer 后再配）
+
+超时（毫秒，全部可选）：
+  AI_STREAM_FIRST_TOKEN_MS  解题流式首字超时（8000）
+  AI_STREAM_IDLE_MS         解题流式字间空闲超时（15000）
+  AI_LIGHT_TIMEOUT_MS       追问/批改/练习/精简 JSON 单次超时（20000）
+  ANIMATION_PLAN_TIMEOUT_MS 动画分镜单次超时（12000）
+  AI_FETCH_TIMEOUT_MS       其它非流式请求总超时（60000）
+  ANIMATION_PLAN_MAX_TOKENS 分镜最大 token（2500）
+
+提示：先用默认值上线，观察一周 Vercel 日志。某一档频繁触发 fallback，再按日志调大/调小对应超时或更换型号。

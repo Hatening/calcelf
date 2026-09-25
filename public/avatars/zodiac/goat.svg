@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="CalcElf Goat">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAF5FF"/><stop offset="1" stop-color="#A8D4FF"/></linearGradient>
+<filter id="shadow" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#24313A" flood-opacity=".16"/></filter>
+<filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+<style>
+.out{stroke:#24313A;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
+.line{fill:none;stroke:#24313A;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.eye{fill:#fff;stroke:#24313A;stroke-width:10}
+.pupil{fill:#1E2933}
+.hi{fill:#fff}
+.blush{fill:#F58AA1;opacity:.65}
+</style></defs>
+<circle cx="256" cy="256" r="226" fill="url(#bg)" filter="url(#shadow)"/>
+<circle cx="256" cy="256" r="226" fill="none" stroke="#FFFFFF" stroke-opacity=".48" stroke-width="8"/>
+<path d="M82 112h18M91 103v18M422 108h14M429 101v14" class="line" stroke="#fff" stroke-width="7" opacity=".7"/><circle cx="113" cy="386" r="7" fill="#fff" opacity=".7"/>
+<!-- horns --> <path d="M204 170q-45-61-9-69 32 17 37 67m86 0q16-50 51-54 12 34-35 72" fill="none" stroke="#A18B83" stroke-width="22" class="out"/>
+<!-- body --> <ellipse cx="260" cy="368" rx="79" ry="62" fill="#F1EAE7" class="out"/>
+<!-- head --> <ellipse cx="258" cy="247" rx="106" ry="102" fill="#F3ECE9" class="out"/>
+<!-- ears --> <path d="M163 210q-49-22-47 22 8 33 51 29m181-52q48-23 50 19-8 37-49 33" fill="#F3ECE9" class="out"/>
+<!-- eyes --> <ellipse cx="216" cy="239" rx="27" ry="35" class="eye"/><ellipse cx="301" cy="239" rx="27" ry="35" class="eye"/><ellipse cx="220" cy="239" rx="8" ry="22" class="pupil"/><ellipse cx="305" cy="239" rx="8" ry="22" class="pupil"/><circle cx="224" cy="229" r="6" class="hi"/><circle cx="309" cy="229" r="6" class="hi"/>
+<!-- beard --> <path d="M229 291q30 47 60 0 2 52-30 60-31-8-30-60Z" fill="#FFF" class="out"/><path d="M247 274q11-13 23 0-12 13-23 0Z" fill="#AA8C82" class="out"/>
+</svg>

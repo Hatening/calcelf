@@ -1,0 +1,22 @@
+[
+  {"problem":"一只小青蛙在数轴上从 2 出发，向右跳 4 格，它现在在哪个数？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"6"},
+  {"problem":"小青蛙从 -3 出发，向左跳 2 格，现在是几？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"-5","edgeCase":"负数继续向左"},
+  {"problem":"一只小鸟在数轴上从 5 出发，向左跳 7 格，现在在哪个数？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"-2","edgeCase":"跨过0点到负数"},
+  {"problem":"小兔从 0 出发，向右跳 6 格，现在是几？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"6"},
+  {"problem":"小球从 4 出发，向左跳 4 格，现在在哪个数？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"0","edgeCase":"恰好落在0"},
+  {"problem":"松鼠从 -1 出发，向右跳 5 格，现在是几？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"4"},
+  {"problem":"小熊从 -6 出发，向右跳 3 格，现在在哪个数？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"-3"},
+  {"problem":"A frog starts at -2 on the number line and hops 3 spaces to the right. Where is it now?","language":"en","expectedFamily":"numberline","expectedAnswer":"1"},
+  {"problem":"A rabbit starts at 7 and jumps 4 spaces to the left. Where does it land?","language":"en","expectedFamily":"numberline","expectedAnswer":"3"},
+  {"problem":"小青蛙从 3 出发，向左跳 8 格，现在在哪个数？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"-5","edgeCase":"正数跳成负数"},
+  {"problem":"小鸟从 -4 出发，向左跳 1 格，现在是几？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"-5"},
+  {"problem":"比较分数 3/4 和 2/3，哪个大？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"3/4 更大"},
+  {"problem":"比较 1/2 和 3/4，哪个更大？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"3/4 更大"},
+  {"problem":"比较 2/5 和 1/5，哪个大？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"2/5 更大"},
+  {"problem":"比较分数 5/6 和 4/5，哪个大？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"5/6 更大","edgeCase":"交叉相乘较接近"},
+  {"problem":"比较分数 1/2 和 2/4，哪个大？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"一样大","edgeCase":"两个分数相等"},
+  {"problem":"小狗从 2 出发，向右跳 7 格，现在是几？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"9"},
+  {"problem":"小猴从 -2 出发，向右跳 6 格，现在在哪个数？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"4"},
+  {"problem":"小兔从 8 出发，向左跳 10 格，现在是几？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"-2","edgeCase":"长距离跨0"},
+  {"problem":"比较 3/8 和 5/8，哪个大？","language":"zh-CN","expectedFamily":"numberline","expectedAnswer":"5/8 更大"}
+]

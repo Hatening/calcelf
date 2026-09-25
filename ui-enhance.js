@@ -276,13 +276,56 @@
   }
 
   const AUTH_LABEL={'zh-CN':'登录/注册','zh-TW':'登入/註冊',en:'Log in / Sign up',ja:'ログイン / 登録',ko:'로그인 / 가입',fr:'Connexion / Inscription',de:'Anmelden',es:'Entrar / Registro',it:'Accedi / Registrati',ar:'تسجيل الدخول',fa:'ورود / ثبت‌نام'};
+  const MENU_I18N={
+    en:{avatar:'Change avatar',profile:'Profile & journey',levels:'Levels & progress',theme:'Appearance theme',credits:'Credits balance',membership:'Membership',logout:'Log out',account:'My account'},
+    'zh-CN':{avatar:'更换头像',profile:'个人中心',levels:'我的等级与进度',theme:'外观主题',credits:'Credits 余额',membership:'会员状态',logout:'退出登录',account:'我的账户'},
+    'zh-TW':{avatar:'更換頭像',profile:'個人中心',levels:'我的等級與進度',theme:'外觀主題',credits:'Credits 餘額',membership:'會員狀態',logout:'登出',account:'我的帳戶'},
+    ja:{avatar:'アバター変更',profile:'プロフィール',levels:'レベルと進捗',theme:'テーマ設定',credits:'Credits 残高',membership:'メンバーシップ',logout:'ログアウト',account:'マイアカウント'},
+    ko:{avatar:'아바타 변경',profile:'프로필',levels:'레벨 및 진행',theme:'테마 설정',credits:'Credits 잔액',membership:'멤버십',logout:'로그아웃',account:'내 계정'},
+    fr:{avatar:'Changer d’avatar',profile:'Profil & parcours',levels:'Niveaux et progrès',theme:'Thème d’apparence',credits:'Solde Credits',membership:'Abonnement',logout:'Se déconnecter',account:'Mon compte'},
+    de:{avatar:'Avatar ändern',profile:'Profil & Weg',levels:'Level & Fortschritt',theme:'Design-Theme',credits:'Credits-Guthaben',membership:'Mitgliedschaft',logout:'Abmelden',account:'Mein Konto'},
+    es:{avatar:'Cambiar avatar',profile:'Perfil y recorrido',levels:'Niveles y progreso',temav:'Tema de apariencia',theme:'Tema de apariencia',credits:'Saldo de Credits',membership:'Membresía',logout:'Cerrar sesión',account:'Mi cuenta'},
+    it:{avatar:'Cambia avatar',profile:'Profilo e percorso',levels:'Livelli e progressi',theme:'Tema aspetto',credits:'Saldo Credits',membership:'Abbonamento',logout:'Esci',account:'Il mio account'},
+    ar:{avatar:'تغيير الصورة الرمزية',profile:'الملف والرحلة',levels:'المستويات والتقدم',theme:'مظهر الواجهة',credits:'رصيد Credits',membership:'العضوية',logout:'تسجيل الخروج',account:'حسابي'},
+    fa:{avatar:'تغییر تصویرک',profile:'پروفایل و مسیر',levels:'سطح‌ها و پیشرفت',theme:'پوسته ظاهری',credits:'موجودی Credits',membership:'عضویت',logout:'خروج',account:'حساب من'}
+  };
+  function curLang(){ try{ return (window.CALF_LANG||localStorage.getItem('calcelf_lang')||'en'); }catch(e){ return 'en'; } }
+  function mi(k){ const d=MENU_I18N[curLang()]||MENU_I18N.en; return d[k]||MENU_I18N.en[k]; }
+  const ZK=['rat','ox','tiger','rabbit','dragon','snake','horse','goat','monkey','rooster','dog','pig'];
+  function faceHtml(key,size){
+    size=size||30;
+    if(ZK.includes(key)) return `<img src="/avatars/zodiac/${key}.svg" alt="" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;background:#fff">`;
+    return `<img src="${BRAND}/mascot-teal-cut.png" alt="" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;background:#fff">`;
+  }
   function setAnonymousLabel(lang){
     const el=$('avatarLabel'); if(!el) return;
-    const realName = el.dataset.realName;
-    if(realName){ el.textContent=realName; return; }
+    if(el.dataset.realName){ el.textContent=el.dataset.realName; return; }
     el.textContent = AUTH_LABEL[lang]||AUTH_LABEL.en;
   }
-  window.calfRefreshI18n=function(lang){ setAnonymousLabel(lang); };
+  function localizeMenu(){
+    const lang=curLang();
+    setAnonymousLabel(lang);
+    const map={profile:'profile',levels:'levels',theme:'theme',credits:'credits',membership:'membership',logout:'logout'};
+    document.querySelectorAll('#avatarDrop .ad-item[data-action]').forEach(b=>{ const k=map[b.dataset.action]; if(k) b.textContent=mi(k); });
+    const ap=$('avatarPickItem'); if(ap) ap.textContent='🧑‍🎨 '+mi('avatar');
+  }
+  window.calfRefreshI18n=function(){ try{ localizeMenu(); }catch(e){} };
+  document.addEventListener('calf:langchanged',function(){ try{ localizeMenu(); }catch(e){} });
+
+  // 登录态头部同步：注册/登录用户显示生肖头像+昵称；匿名显示吉祥物+登录胶囊
+  window.calfHeaderSetUser=function(profile){
+    const face=$('avatarBtnFace'), lab=$('avatarLabel'); if(!face||!lab) return;
+    const key=(profile&&profile.avatar)||localStorage.getItem('calfelf_avatar')||'rabbit';
+    face.innerHTML=faceHtml(ZK.includes(key)?key:null,30);
+    const mdName=profile&&(profile.display_name||profile.name);
+    const name=mdName||(profile&&profile.email)||mi('account');
+    lab.dataset.realName=name; lab.textContent=name;
+  };
+  window.calfHeaderSetAnonymous=function(){
+    const face=$('avatarBtnFace'), lab=$('avatarLabel'); if(!face||!lab) return;
+    face.innerHTML=faceHtml(null,30); delete lab.dataset.realName;
+    setAnonymousLabel(curLang());
+  };
 
   // ============================================================
   // 3. 顶部头像下拉菜单
@@ -290,68 +333,74 @@
   function buildAvatarDropdown(){
     const actions = document.querySelector('.top-actions');
     if(!actions) return;
-    // 单一账户入口：隐藏 v4.2 原生 Account 按钮与顶部 emoji 头像，统一为品牌吉祥物胶囊
     const oldAcct = document.getElementById('accountBtn');
     if(oldAcct) oldAcct.style.display='none';
     const oldAvatar = document.getElementById('profileAvatarDisplay');
     if(oldAvatar) oldAvatar.style.display='none';
+    if($('avatarMenu')) { localizeMenu(); return; }
 
     const avatar = document.createElement('div');
     avatar.id='avatarMenu';
     avatar.style.cssText='position:relative';
     avatar.innerHTML = `
-      <button id="avatarBtn" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:5px 12px 5px 6px;color:#fff;cursor:pointer">
-        <img src="${BRAND}/mascot-teal-cut.png" style="width:28px;height:28px;border-radius:50%;object-fit:cover;background:#fff">
-        <span style="font-size:12px;font-weight:700" id="avatarLabel"></span>
+      <button id="avatarBtn" class="calf-avatar-btn" type="button" aria-haspopup="menu" aria-expanded="false"
+        style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);border-radius:99px;padding:5px 14px 5px 5px;color:#fff;cursor:pointer;font-weight:800">
+        <span id="avatarBtnFace" class="ab-face" style="width:30px;height:30px;display:inline-flex;border-radius:50%;overflow:hidden;flex:0 0 auto;background:#fff">${faceHtml(null,30)}</span>
+        <span style="font-size:13px;font-weight:800;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="avatarLabel"></span>
       </button>
-      <div id="avatarDrop" style="display:none;position:absolute;top:calc(100%+8px);right:0;min-width:200px;background:var(--card);color:var(--ink);border-radius:14px;box-shadow:0 16px 44px rgba(0,0,0,.18);z-index:80;padding:6px">
-        <button class="ad-item" data-action="profile" style="width:100%;border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px">👤 个人中心</button>
-        <button class="ad-item" data-action="levels" style="width:100%;border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px">🏅 我的等级与进度</button>
-        <button class="ad-item" data-action="theme" style="width:100%;border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px">🎨 外观主题</button>
-        <button class="ad-item" data-action="credits" style="width:100%;border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px">🪙 Credits 余额</button>
-        <button class="ad-item" data-action="membership" style="width:100%;border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px">💎 会员状态</button>
+      <div id="avatarDrop" role="menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:210px;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:16px;box-shadow:0 16px 44px rgba(0,0,0,.18);z-index:90;padding:6px">
+        <button class="ad-item" data-action="profile" role="menuitem"></button>
+        <button class="ad-item" data-action="levels" role="menuitem"></button>
+        <button class="ad-item" data-action="theme" role="menuitem"></button>
+        <button class="ad-item" data-action="credits" role="menuitem"></button>
+        <button class="ad-item" data-action="membership" role="menuitem"></button>
         <div style="height:1px;background:var(--line);margin:4px 0"></div>
-        <button class="ad-item" data-action="logout" style="width:100%;border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px;color:var(--danger)">🚪 退出登录</button>
+        <button class="ad-item" data-action="logout" role="menuitem" style="color:var(--danger,#e11d48)"></button>
       </div>`;
     if(oldAcct && oldAcct.parentNode===actions) actions.insertBefore(avatar, oldAcct);
     else actions.appendChild(avatar);
 
-    const btn = $('avatarBtn');
-    const drop = $('avatarDrop');
-    btn.onclick = async (e)=>{
+    const btn=$('avatarBtn'), drop=$('avatarDrop');
+    btn.onclick=async(e)=>{
       e.stopPropagation();
-      let s=null;
-      try{ s = (typeof session==='function') ? await session() : null; }catch(_){}
-      const real = s && s.user && !s.user.is_anonymous;
-      if(real){ drop.style.display = drop.style.display==='block'?'none':'block'; }
+      let s=null; try{ s=(typeof session==='function')?await session():null; }catch(_){}
+      const real=s&&s.user&&!s.user.is_anonymous;
+      if(real){ const open=drop.style.display==='block'; drop.style.display=open?'none':'block'; btn.setAttribute('aria-expanded',open?'false':'true'); }
       else if(typeof auth==='function'){ auth(); }
     };
-    document.addEventListener('click', ()=>drop.style.display='none');
-    drop.onclick = (e)=>e.stopPropagation();
-
+    document.addEventListener('click',()=>{drop.style.display='none';btn.setAttribute('aria-expanded','false');});
+    drop.onclick=(e)=>e.stopPropagation();
     drop.querySelectorAll('.ad-item').forEach(item=>{
-      item.onclick = async ()=>{
-        const a = item.dataset.action;
-        drop.style.display='none';
-        if(a==='theme' && window.openThemePanel) window.openThemePanel();
-        else if((a==='credits'||a==='membership') && typeof openModal==='function') openModal('plansModal');
-        else if((a==='profile'||a==='levels') && document.getElementById('membershipCard')) document.getElementById('membershipCard').scrollIntoView({behavior:'smooth'});
+      item.style.cssText='width:100%;border:0;background:transparent;text-align:start;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:700;font-size:13.5px;color:inherit';
+      item.onmouseenter=()=>item.style.background='var(--card-soft,#f1f5f9)';
+      item.onmouseleave=()=>item.style.background='transparent';
+      item.onclick=async()=>{
+        const a=item.dataset.action; drop.style.display='none';
+        if(a==='theme'&&window.openThemePanel) window.openThemePanel();
+        else if((a==='credits'||a==='membership')&&typeof openModal==='function') openModal('plansModal');
+        else if((a==='profile'||a==='levels')&&document.getElementById('membershipCard')) document.getElementById('membershipCard').scrollIntoView({behavior:'smooth'});
         else if(a==='logout'){
-          try{ if(window.sb) await window.sb.auth.signOut(); }catch(_){}
-          location.reload();
+          if(typeof window.calfSignOut==='function') window.calfSignOut();
+          else { try{ if(window.sb) await window.sb.auth.signOut(); }catch(_){} location.reload(); }
         }
       };
     });
 
-    // 已登录真实用户：胶囊显示其名称
+    // 菜单就绪：通知头像选择器 / 学习设置插入各自入口
+    document.dispatchEvent(new Event('calf:avatar-menu-ready'));
+    localizeMenu();
+
+    // 启动时根据登录态设置头像/昵称
     (async()=>{
       try{
-        const s = (typeof session==='function') ? await session() : null;
-        if(s && s.user && !s.user.is_anonymous){
-          const md=s.user.user_metadata||{};
-          const rn=md.display_name || md.name || s.user.email || '我的账户'; const lab=$('avatarLabel'); lab.dataset.realName=rn; lab.textContent=rn;
-        }
-      }catch(_){}
+        const s=(typeof session==='function')?await session():null;
+        if(s&&s.user&&!s.user.is_anonymous){
+          let prof=null;
+          try{ const r=await fetch('/api/profile',{headers:{Authorization:'Bearer '+s.access_token}}); if(r.ok) prof=(await r.json()).profile; }catch(_){}
+          const key=(prof&&prof.avatar)||localStorage.getItem('calfelf_avatar');
+          window.calfHeaderSetUser(Object.assign({email:s.user.email,display_name:(s.user.user_metadata||{}).display_name||(s.user.user_metadata||{}).name},prof||{},key?{avatar:key}:{}));
+        } else { window.calfHeaderSetAnonymous(); }
+      }catch(_){ setAnonymousLabel(curLang()); }
     })();
   }
 
@@ -395,7 +444,7 @@
   function init(){
     buildAvatarDropdown();
     setAnonymousLabel(localStorage.getItem('calcelf_lang')||'en');
-    hijackSolveButton();
+    // v5.5.7: 解题统一走 app.js 的本地化 SSE solve()，不再在此劫持按钮（旧实现中文硬编码且无鉴权头）
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
   else init();

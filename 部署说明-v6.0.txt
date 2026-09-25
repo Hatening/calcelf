@@ -1,0 +1,168 @@
+CalcElf v6.0 部署说明
+======================
+版本：v6.0.0（知识卡接入主程序 + 动画评分 + 题目仓库 + 每周蒸馏）
+日期：2026-09-25
+
+============================================================
+一、本次新增/修改的文件
+============================================================
+
+【新增】
+  supabase/v6.0_rating_warehouse.sql   — 数据库迁移（4表+4视图，幂等）
+  api/rate-animation.js                — POST 动画评分端点
+  api/log-animation.js                 — POST 动画流程回补端点
+  api/cron-distill.js                  — GET 每周蒸馏 cron 端点
+  renderer/                            — 根目录 renderer 镜像（与 public/renderer 逐字节一致）
+  CHANGELOG-v6.0.md                    — 变更日志
+  部署说明-v6.0.txt                    — 本文件
+
+【修改】
+  api/solve.js                         — 解题后插入 asked_questions，响应带 qid
+  api/kard.js                          — turnstile 改为可选（动画流程调用无需重复验证）
+  vercel.json                          — crons 增加 /api/cron-distill（每周一 14:30 UTC）
+  app.js                               — animation() 改 kard 优先；新增评分/流程上报函数
+  components.css                       — kard-frame + 评分组件样式
+  public/app.js                        — 镜像同步
+  public/components.css                — 镜像同步
+  public/renderer/index.html           — 渲染成功后发送 __calfAnimHeight 消息
+
+============================================================
+二、部署步骤（按顺序执行）
+============================================================
+
+步骤 1：跑数据库迁移（必须，否则新端点报错）
+------------------------------------------------------------
+  1. 登录 Supabase → 选项目 → SQL Editor
+  2. 新建 query，把 supabase/v6.0_rating_warehouse.sql 全文粘贴进去
+  3. 点 Run（或 Ctrl+Enter）
+  4. 看到 "Success. No rows returned" 即成功
+  5. 此文件幂等，重复执行安全
+  6. 验证：在 SQL Editor 跑：
+       select * from public.asked_questions limit 1;   -- 应返回空表（列存在即可）
+       select * from public.animation_ratings limit 1;
+       select * from public.distill_batches limit 1;
+       select * from public.v_coverage;                -- 视图应可查询
+
+步骤 2：配置环境变量（Vercel）
+------------------------------------------------------------
+  进入 Vercel → calcelf 项目 → Settings → Environment Variables
+  确认以下变量存在（新增的标 ★）：
+    SUPABASE_URL                  （已有）
+    SUPABASE_SERVICE_ROLE_KEY     （已有）
+    CRON_SECRET                   （已有，cron-distill 复用同一密钥）
+  ★ ADMIN_EMAIL                   （可选，蒸馏报告接收邮箱；不设则不发邮件只存库）
+    RESEND_API_KEY                （已有则蒸馏报告会发邮件）
+    RESEND_FROM                   （可选）
+    SOLVE_MODEL / SOLVE_STRONG_MODEL / SOLVE_SAFETY_MODEL （已有，无需改）
+
+  注意：CRON_SECRET 必须与 cron-weekly-report 用同一个。
+  Vercel 会自动在 cron 调用时注入 Authorization: Bearer $CRON_SECRET。
+
+步骤 3：上传代码到 GitHub
+------------------------------------------------------------
+  1. 解压 calcelf-v6.0.zip
+  2. 全选解压后的所有文件与文件夹（不要选外层目录）
+  3. 拖到 GitHub 仓库 Hatening/calcelf 根目录，提交
+  4. 或用 git：
+       cd /path/to/unzipped
+       git init（如尚未初始化）
+       git remote add origin https://github.com/Hatening/calcelf.git
+       git add -A
+       git commit -m "v6.0: kard integration + rating + question warehouse + distill"
+       git push -u origin main
+
+步骤 4：Vercel 自动部署
+------------------------------------------------------------
+  - 推送后 Vercel 自动构建部署
+  - 部署完成后访问 https://calcelf.vercel.app
+  - 新端点路径：
+      POST /api/kard            （已有，现在 turnstile 可选）
+      POST /api/rate-animation  （新增）
+      POST /api/log-animation   （新增）
+      GET  /api/cron-distill    （新增，cron 自动调用，也可手动带 CRON_SECRET 调用）
+
+============================================================
+三、验证方式
+============================================================
+
+【功能验证】
+  1. 打开 https://calcelf.vercel.app，登录
+  2. 输入一道知识卡可识别的题，例如：
+     - "从3出发向右跳5格"（数轴族）
+     - "天平左边3个苹果右边6个苹果，怎样平衡"（天平族）
+     - "3行4列一共多少个"（阵列/乘法族）
+  3. 点开始解题，等结果出来后动画应自动开始
+  4. 动画区域应显示 Canvas 动画（深色背景、数轴/天平/阵列等），而非旧的 free HTML 白页
+  5. 动画下方应出现 5 颗星，点击后显示致谢
+  6. 全屏按钮应能放大 Canvas 动画
+
+【数据库验证】
+  在 Supabase SQL Editor：
+    -- 查看最近收集的题目
+    select qid, problem_text, family, kard_eligible, anim_source, created_at
+    from public.asked_questions order by created_at desc limit 10;
+
+    -- 查看评分
+    select * from public.animation_ratings order by created_at desc limit 10;
+
+    -- 覆盖率
+    select * from public.v_coverage;
+
+【cron 验证】
+  手动触发一次蒸馏（需 CRON_SECRET）：
+    curl -X GET https://calcelf.vercel.app/api/cron-distill \
+      -H "Authorization: Bearer $CRON_SECRET"
+  应返回 {"ok":true,"period":"2026-Wxx",...}
+
+【本地无头回测（开发者）】
+  沙箱内已通过：python3 tests/v6-backtest.py
+  11/11 项通过，截图在 tests/v6-frames/
+
+============================================================
+四、覆盖范围
+============================================================
+  ✅ 知识卡接入主程序动画流程（kard 优先，free→plan→static 兜底）
+  ✅ kard Canvas 通过 iframe + postMessage 渲染（ES module 相对路径正常）
+  ✅ 全屏按钮对 kard 生效
+  ✅ 高度自适应（__calfAnimHeight，minH 420/620）
+  ✅ 5 星评分 UI（悬停预览、点击提交、致谢、可改一次）
+  ✅ 评分 11 语言本地化
+  ✅ animation_ratings 表 + 部分唯一索引 + upsert
+  ✅ rate-animation 端点（登录/游客双模式、限流、不扣费）
+  ✅ asked_questions 表 + solve 自动写入 + qid 回传
+  ✅ log-animation 端点（按 qid 回补 family/eligible/source）
+  ✅ hash 口径统一（sha256 + 空白归一）
+  ✅ distill_batches 表 + cron-distill 端点 + CRON_SECRET 鉴权
+  ✅ 四个分析视图（v_questions_by_family / v_low_rated / v_top_questions / v_coverage）
+  ✅ vercel.json crons 配置
+  ✅ 迁移 SQL 幂等
+  ✅ root/renderer 与 public/renderer 双份镜像
+  ✅ app.js / components.css root 与 public 双份镜像
+
+============================================================
+五、已知缺口与后续建议
+============================================================
+  1. 沙箱无法连接真实模型端点，无头回测用 stub API 验证前端流程；
+     真实出字/解题质量需在部署后用真实账号验证。
+  2. cron-distill 的邮件模板较简单（纯文本汇总），后续可美化 HTML。
+  3. 评分数据目前只入库 + 视图，尚未在管理后台展示；可后续加 admin 面板。
+  4. kard 八族覆盖常见 K12 题型，长尾题仍走 free HTML 兜底；
+     蒸馏报告的 gaps 字段可指导后续新增知识卡族。
+  5. 登录/验证码/支付流程需 interaction.request_action，本次未改动。
+  6. public/api/ 目录为历史部分镜像（10/25 文件），新端点仅放 root/api/，
+     符合"真正端点在 root/api"的约定。
+
+============================================================
+六、回滚方案
+============================================================
+  如部署后出现问题：
+  1. GitHub revert 本次 commit，Vercel 自动回滚到上一版本
+  2. 数据库表可保留（新表不影响旧代码），也可手动 drop：
+     drop view if exists public.v_coverage;
+     drop view if exists public.v_top_questions;
+     drop view if exists public.v_low_rated;
+     drop view if exists public.v_questions_by_family;
+     drop table if exists public.distill_batches;
+     drop table if exists public.asked_questions;
+     drop table if exists public.animation_ratings;
+     -- kard_cache 是 Phase1 就需要的，不要删

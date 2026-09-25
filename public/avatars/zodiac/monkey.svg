@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="CalcElf Monkey">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DFFFBE"/><stop offset="1" stop-color="#8FE06D"/></linearGradient>
+<filter id="shadow" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#24313A" flood-opacity=".16"/></filter>
+<filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+<style>
+.out{stroke:#24313A;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
+.line{fill:none;stroke:#24313A;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.eye{fill:#fff;stroke:#24313A;stroke-width:10}
+.pupil{fill:#1E2933}
+.hi{fill:#fff}
+.blush{fill:#F58AA1;opacity:.65}
+</style></defs>
+<circle cx="256" cy="256" r="226" fill="url(#bg)" filter="url(#shadow)"/>
+<circle cx="256" cy="256" r="226" fill="none" stroke="#FFFFFF" stroke-opacity=".48" stroke-width="8"/>
+<path d="M82 112h18M91 103v18M422 108h14M429 101v14" class="line" stroke="#fff" stroke-width="7" opacity=".7"/><circle cx="113" cy="386" r="7" fill="#fff" opacity=".7"/>
+<!-- vine --> <path d="M358 112q76 47 31 131-22 39-53 9" class="line" stroke="#58B768" stroke-width="18"/>
+<!-- body --> <ellipse cx="256" cy="368" rx="76" ry="63" fill="#A96F46" class="out"/><path d="M310 351q57-10 45-64" class="line" stroke="#A96F46" stroke-width="25"/>
+<!-- head --> <ellipse cx="256" cy="244" rx="105" ry="100" fill="#A96F46" class="out"/><circle cx="157" cy="248" r="39" fill="#A96F46" class="out"/><circle cx="355" cy="248" r="39" fill="#A96F46" class="out"/><circle cx="157" cy="248" r="21" fill="#F4B19C"/><circle cx="355" cy="248" r="21" fill="#F4B19C"/>
+<!-- face patch --> <ellipse cx="256" cy="275" rx="71" ry="57" fill="#D09A73" class="out"/>
+<!-- eyes --> <ellipse cx="218" cy="228" rx="27" ry="35" class="eye"/><ellipse cx="296" cy="228" rx="27" ry="35" class="eye"/><ellipse cx="223" cy="233" rx="11" ry="20" class="pupil"/><ellipse cx="301" cy="233" rx="11" ry="20" class="pupil"/><circle cx="228" cy="224" r="6" class="hi"/><circle cx="306" cy="224" r="6" class="hi"/>
+<path d="M256 268q17-14 26 0-12 13-26 0Z" fill="#704638" class="out"/><path d="M245 289q12 17 25 0" class="line" stroke-width="8"/>
+<!-- banana --> <path d="M315 346q34 6 36 37-22 23-41 1-10-19 5-38Z" fill="#FFD45A" class="out"/>
+</svg>

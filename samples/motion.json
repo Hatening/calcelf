@@ -1,0 +1,22 @@
+[
+  {"problem":"甲、乙两车从相距 300 千米的两地同时出发，相向而行，甲车每小时行 60 千米，乙车每小时行 40 千米，经过几小时两车相遇？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"3 小时"},
+  {"problem":"两城相距 480 千米，客车每小时行 70 千米，货车每小时行 50 千米，两车同时相向开出，几小时相遇？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"4 小时"},
+  {"problem":"两人相距 420 米，小明每分钟走 40 米，小红每分钟走 30 米，相向而行，几分钟后相遇？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"6 分钟"},
+  {"problem":"两地相距 360 千米，甲车每小时行 50 千米，乙车每小时行 70 千米，两车相向而行，几小时相遇？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"3 小时"},
+  {"problem":"两站相距 255 千米，慢车每小时行 40 千米，快车每小时行 45 千米，两车同时相向而行，几小时相遇？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"3 小时"},
+  {"problem":"Two cars start from places 240 km apart, driving toward each other. Car A drives 55 km per hour, Car B drives 65 km per hour. After how many hours do they meet?","language":"en","expectedFamily":"motion","expectedAnswer":"2 小时"},
+  {"problem":"弟弟每分钟走 50 米，先走 100 米后哥哥才出发，哥哥每分钟走 70 米，哥哥几分钟追上弟弟？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"5 分钟","edgeCase":"追及用速度差而非速度和"},
+  {"problem":"乌龟每分钟爬 50 米，先走 500 米后兔子才出发，兔子每分钟跑 300 米，兔子几分钟追上乌龟？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"2 分钟"},
+  {"problem":"乙在甲前面 200 米，两人同向而行，甲每分钟行 80 米，乙每分钟行 60 米，甲几分钟追上乙？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"10 分钟"},
+  {"problem":"卡车在轿车前面 80 千米，同向行驶，卡车每小时行 40 千米，轿车每小时行 60 千米，轿车几小时追上卡车？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"4 小时"},
+  {"problem":"小明和小红从同一地点同时背向而行，小明每分钟走 60 米，小红每分钟走 50 米，5 分钟后两人相距多少米？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"550 米"},
+  {"problem":"两人从同一点同时背向而行，小华每分钟走 70 米，小乐每分钟走 50 米，8 分钟后两人相距多少米？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"960 米"},
+  {"problem":"两人从车站同时背向出发，一人每小时行 5 千米，另一人每小时行 4 千米，3 小时后两人相距多少千米？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"27 千米"},
+  {"problem":"Two people walk away from the same point. One walks 60 meters per minute, the other 40 meters per minute. How far apart after 10 minutes?","language":"en","expectedFamily":"motion","expectedAnswer":"1000"},
+  {"problem":"两地相距 150 千米，甲车每小时行 40 千米，乙车每小时行 35 千米，两车相向而行，几小时相遇？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"2 小时","edgeCase":"速度和为小数和"},
+  {"problem":"哥哥每分钟走 90 米，弟弟每分钟走 60 米，弟弟先走 120 米，哥哥几分钟追上弟弟？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"4 分钟","edgeCase":"易错：误把距离除以速度和"},
+  {"problem":"两人从同一点背向而行，甲每分钟走 30 米，乙每分钟走 20 米，2 分钟后两人相距多少米？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"100 米"},
+  {"problem":"Two cyclists start 18 km apart, riding toward each other. One rides 10 km per hour, the other 8 km per hour. After how long do they meet?","language":"en","expectedFamily":"motion","expectedAnswer":"1 小时"},
+  {"problem":"两人相距 200 米，相向而行，甲每秒行 3 米，乙每秒行 2 米，几秒后相遇？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"40 秒"},
+  {"problem":"爸爸每分钟走 80 米，小明每分钟走 60 米，小明先走 60 米，爸爸几分钟追上小明？","language":"zh-CN","expectedFamily":"motion","expectedAnswer":"3 分钟"}
+]

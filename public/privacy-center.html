@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-theme="elf">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Center · CalcElf</title>
+<link rel="icon" href="/brand/favicon-32.png">
+<meta name="robots" content="noindex">
+<style>
+  body{margin:0;font-family:'Nunito',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC','Noto Sans TC','Noto Sans JP','Noto Sans KR','Noto Sans Arabic',system-ui,sans-serif;background:linear-gradient(180deg,#f0fdfa,#f8fafc);color:#1f2937;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .box{background:#fff;border:1px solid #e2e8f0;border-radius:24px;padding:34px 30px;max-width:560px;width:100%;box-shadow:0 10px 34px rgba(15,118,110,.08);text-align:center}
+  h1{margin:0 0 6px;color:#0f3e3a;font-size:24px}
+  p.sub{color:#64748b;margin:0 0 22px;font-size:14.5px}
+  .langs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .pill{border:2px solid #e2e8f0;border-radius:999px;padding:9px 18px;font-weight:700;font-size:14px;color:#0f766e;text-decoration:none;background:#fff;transition:transform .12s}
+  .pill:hover{transform:translateY(-1px);background:#ccfbf1}
+  .links{margin-top:22px;font-size:14px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .links a{color:#0f766e;font-weight:700}
+  .spin{display:inline-block;width:18px;height:18px;border:3px solid #99f6e4;border-top-color:#0f766e;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-3px;margin-right:8px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>🔒 Privacy Center</h1>
+  <p class="sub"><span class="spin"></span><span id="msg">Loading the privacy notice in your language…</span></p>
+  <noscript>
+    <div class="langs">
+      <a class="pill" href="/legal/privacy.en.html">English</a>
+      <a class="pill" href="/legal/privacy.zh-CN.html">简体中文</a>
+      <a class="pill" href="/legal/privacy.zh-TW.html">繁體中文</a>
+      <a class="pill" href="/legal/privacy.ja.html">日本語</a>
+      <a class="pill" href="/legal/privacy.ko.html">한국어</a>
+      <a class="pill" href="/legal/privacy.fr.html">Français</a>
+      <a class="pill" href="/legal/privacy.de.html">Deutsch</a>
+      <a class="pill" href="/legal/privacy.es.html">Español</a>
+      <a class="pill" href="/legal/privacy.it.html">Italiano</a>
+      <a class="pill" href="/legal/privacy.ar.html">العربية</a>
+      <a class="pill" href="/legal/privacy.fa.html">فارسی</a>
+    </div>
+  </noscript>
+  <div id="manual" class="langs" hidden></div>
+  <div class="links">
+    <a href="/legal/regional-matrix.html">🌐 Regional legal matrix</a>
+    <a href="/terms.html">📜 Terms of Service</a>
+    <a href="/">← Back to CalcElf</a>
+  </div>
+</div>
+<script src="/privacy-texts.js"></script>
+<script>
+(function(){
+  try{
+    var params = new URLSearchParams(location.search);
+    var ql = params.get('lang');
+    var lang;
+    if(ql && window.PRIVACY_TEXTS.normalizeLang){
+      lang = window.PRIVACY_TEXTS.normalizeLang(ql);
+    } else if(window.PRIVACY_TEXTS.resolveLang){
+      lang = window.PRIVACY_TEXTS.resolveLang();
+    } else {
+      var saved = localStorage.getItem('calcelf_lang');
+      lang = (saved || (navigator.languages&&navigator.languages[0]) || navigator.language || 'en').replace('_','-');
+    }
+    // 选语言时自动链接到对应语种的独立法律文件（按需加载，不占主程序）
+    location.replace('/legal/privacy.' + lang + '.html');
+  }catch(e){
+    var msg=document.getElementById('msg');
+    if(msg) msg.textContent = 'Please choose your language:';
+    var manual=document.getElementById('manual');
+    manual.hidden=false;
+    var list=[['en','English'],['zh-CN','简体中文'],['zh-TW','繁體中文'],['ja','日本語'],['ko','한국어'],['fr','Français'],['de','Deutsch'],['es','Español'],['it','Italiano'],['ar','العربية'],['fa','فارسی']];
+    list.forEach(function(p){var a=document.createElement('a');a.className='pill';a.href='/legal/privacy.'+p[0]+'.html';a.rel='alternate';a.hreflang=p[0];a.textContent=p[1];manual.appendChild(a);});
+  }
+})();
+</script>
+</body>
+</html>

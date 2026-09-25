@@ -1,0 +1,161 @@
+/* ============================================================
+ * CalcElf v5.6.5  UI 强化（加载动画 / 动画面板 / 圆润字体 / 间距）
+ * 在 components.css、ui-type-scale.css 之后最后加载。
+ * ============================================================ */
+:root{
+  --calf-round-font:"Baloo 2","Fredoka","M PLUS Rounded 1c","ZCOOL KuaiLe","PingFang SC","Microsoft YaHei UI",ui-rounded,sans-serif;
+  --calf-body-font:"Fredoka","Nunito","M PLUS Rounded 1c","PingFang SC","Microsoft YaHei UI",ui-rounded,sans-serif;
+}
+
+/* ---------- 自绘 SVG 图标 ---------- */
+.ic{width:1.05em;height:1.05em;vertical-align:-.16em;flex:0 0 auto;display:inline-block}
+.card .head h2{display:flex;align-items:center;gap:9px}
+.ticon{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:10px;
+  background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(124,58,237,.12));color:var(--primary,#2563eb);font-size:18px}
+.ticon .ic{width:19px;height:19px}
+#solveBtn .ic{width:1.15em;height:1.15em;vertical-align:-.2em;margin-right:4px}
+
+/* ---------- Start solving 加大 15% ---------- */
+#solveBtn{font-size:18.4px!important;font-weight:800!important;min-height:52px;border-radius:16px!important;
+  font-family:var(--calf-round-font)!important;letter-spacing:.2px}
+@media (max-width:640px){#solveBtn{font-size:16px!important;min-height:48px}}
+
+/* ---------- “正在分析”与 Start solving 拉开间距、整体下移 ---------- */
+section.card.loading#loading{margin-top:20px}
+#loadingText{margin-top:20px;font-size:17px}
+.lddots{margin-top:2px}
+
+/* ---------- 思考中：头顶三个鲜艳问号“转动” ---------- */
+.thinker{width:140px;margin-top:2px}
+.thinker-img{width:78px;height:78px;margin-top:10px}
+.qrow{gap:30px;height:30px;margin-bottom:6px}
+.qm{font-size:28px;line-height:1;opacity:0;animation:qmSpin 1.15s linear infinite}
+.q1{color:#ff5d5d;animation-delay:0s}
+.q2{color:#3b82f6;animation-delay:.18s}
+.q3{color:#f59e0b;animation-delay:.36s}
+@keyframes qmSpin{
+  0%{opacity:0;transform:translateY(8px) scale(.5) rotate(0deg)}
+  25%{opacity:1;transform:translateY(-2px) scale(1.15) rotate(120deg)}
+  55%{opacity:1;transform:translateY(-9px) scale(1) rotate(220deg)}
+  80%{opacity:.9;transform:translateY(-14px) scale(.92) rotate(320deg)}
+  100%{opacity:0;transform:translateY(-18px) scale(.7) rotate(360deg)}
+}
+/* 三条骨架条：长短明显、上下呼吸、带颜色流动 */
+.think-bars{width:min(280px,72%);gap:10px;margin-top:2px}
+.tb{height:11px;border-radius:999px;background:linear-gradient(90deg,#c7d7ff,#9db9fb,#c7d7ff);
+  background-size:200% 100%;animation:tbFlow 1.15s ease-in-out infinite}
+.b1{width:64%}.b2{width:90%;animation-delay:.22s}.b3{width:46%;animation-delay:.44s}
+@keyframes tbFlow{
+  0%{transform:scaleX(.32);opacity:.5;background-position:0 0}
+  50%{transform:scaleX(1);opacity:1;background-position:100% 0}
+  100%{transform:scaleX(.32);opacity:.5;background-position:0 0}
+}
+
+/* ---------- 主内容区圆润字体 + 字号 ---------- */
+#question,.question,.solution,.step,.chat .msg,#practiceArea,.grade-card,
+#chatInput,textarea,input[type=text],input[type=email],input[type=password]{
+  font-family:var(--calf-body-font)!important}
+.solution b,.solution .num,.grade-head,.grade-answer{font-family:var(--calf-round-font)!important}
+.solution{font-size:16px;line-height:1.85}
+.step .num{font-size:16px}
+#question,.question{font-size:16.5px;line-height:1.8}
+.card .head h2{font-family:var(--calf-round-font)!important;font-weight:800}
+
+/* Ask CalcElf 对话框拉长、字体圆润加大 */
+.chat{height:340px}
+.chat .msg{font-size:15.5px;line-height:1.75;border-radius:16px}
+#chatInput{min-height:52px;font-size:15.5px;border-radius:14px}
+#chat .actions{margin-top:14px;gap:10px}
+#sendChat{min-height:48px;padding:0 26px;font-family:var(--calf-round-font)!important;font-weight:700;font-size:16px;border-radius:14px}
+
+/* Send / 练习等级 与上方元素留白，比例更舒展 */
+#practiceDesc{margin:10px 0 18px}
+#practiceArea{margin-top:14px}
+.card #practice1,.card #practice2,.card #practice3{margin:6px 6px 4px 0;min-height:46px;font-family:var(--calf-round-font)!important;font-weight:700;font-size:15px;border-radius:999px}
+#practiceArea .btn#gradeBtn{min-height:48px;font-family:var(--calf-round-font)!important;font-weight:700;font-size:16px;border-radius:14px}
+#practiceArea textarea{font-size:16px}
+
+/* ---------- Visual animation 面板：展开为等高大框 ---------- */
+#animCard .anim{min-height:0;width:100%}
+#animBox.anim-busy{min-height:500px;display:flex;align-items:center;justify-content:center}
+.anim-loading{width:100%;min-height:500px;border-radius:18px;
+  background:linear-gradient(180deg,#f3f7ff,#eef4ff);
+  border:1.5px dashed #bcd0ff;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:30px 20px;text-align:center}
+.anim-ring-wrap{position:relative;width:96px;height:96px}
+.anim-ring{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(#3b82f6 0 70%,#c7d7ff 70% 100%);
+  -webkit-mask:radial-gradient(circle,transparent 56%,#000 58%);mask:radial-gradient(circle,transparent 56%,#000 58%);
+  animation:ringSpin 1.1s linear infinite}
+.ring-star{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#f59e0b;animation:ringPulse 1.6s ease-in-out infinite}
+.ring-star .ic{width:34px;height:34px}
+.ic-lock{width:.95em;height:.95em;vertical-align:-.12em}
+.thinker-img,.anim-mascot{border-radius:20px;background:#fff;padding:3px;box-shadow:0 6px 18px rgba(37,99,235,.12)}
+@keyframes ringSpin{to{transform:rotate(360deg)}}
+@keyframes ringPulse{0%,100%{transform:scale(.82)}50%{transform:scale(1.22)}}
+.anim-mascot{width:84px;height:84px;object-fit:contain;animation:thinkerBob 1.6s ease-in-out infinite}
+.anim-msg{font-family:var(--calf-round-font);font-weight:800;font-size:19px;color:#1e3a8a;line-height:1.4}
+.anim-sub{font-family:var(--calf-body-font);color:#5b76b8;font-size:14.5px;max-width:380px;line-height:1.6}
+.anim-dots{display:flex;gap:12px;margin-top:4px;height:16px;align-items:center}
+.anim-dots i{width:12px;height:12px;border-radius:50%;background:#7aa0f7;animation:dotChase 1.15s linear infinite}
+.anim-dots i:nth-child(2){animation-delay:.18s}
+.anim-dots i:nth-child(3){animation-delay:.36s}
+@keyframes dotChase{
+ 0%{transform:translateX(-24px) scale(.85);background:#60a5fa}
+ 33%{transform:translateX(0) scale(1);background:#a78bfa}
+ 66%{transform:translateX(12px) scale(1.05);background:#fbbf24}
+ 100%{transform:translateX(26px) scale(.85);background:#60a5fa}
+}
+/* 精灵施法场景 */
+.anim-stage{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.awz{position:relative;width:204px;height:168px;margin:0 auto}
+.awz-swirl{position:absolute;inset:0;width:100%;height:100%;animation:awzSpin 7s linear infinite}
+.awz-cloud{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:150px;filter:drop-shadow(0 8px 10px rgba(37,99,235,.12))}
+.awz-mascot{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:92px;height:92px;object-fit:contain;border-radius:24px;background:#fff;padding:4px;box-shadow:0 10px 24px rgba(37,99,235,.18);animation:awzBob 2.6s ease-in-out infinite}
+.awz-wand{position:absolute;right:2px;top:2px;width:66px;height:76px;transform-origin:32% 88%;animation:awzCast 1.7s ease-in-out infinite;filter:drop-shadow(0 5px 7px rgba(245,158,11,.4)}
+.awz-g{transform-box:fill-box;transform-origin:center;animation:awzFloat 2.8s ease-in-out infinite}
+.awz-g.g2{animation-delay:.5s}.awz-g.g3{animation-delay:1s}.awz-g.g4{animation-delay:1.5s}
+@keyframes awzSpin{to{transform:rotate(360deg)}}
+@keyframes awzBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-7px)}}
+@keyframes awzCast{0%,100%{transform:rotate(-16deg)}50%{transform:rotate(14deg)}}
+@keyframes awzFloat{0%,100%{transform:translateY(0);opacity:.75}50%{transform:translateY(-9px);opacity:1}}
+@keyframes dotHop{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-9px);opacity:1}}
+.anim-retry{margin-top:6px}
+iframe.calfAnimFrame{width:100%;border:0;border-radius:18px;background:#fff;display:block;min-height:620px;box-shadow:0 10px 30px rgba(37,99,235,.10)}
+@media(max-width:640px){iframe.calfAnimFrame{min-height:420px}#animBox.anim-busy{min-height:420px}.anim-loading{min-height:420px}}
+/* v5.10 练习第一关引导手指 */
+.lvl-finger{animation:calfFingerPulse 1.2s ease-in-out infinite}
+@keyframes calfFingerPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+#animFs{font-family:var(--calf-round-font)!important;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+#animFs .ic{width:1em;height:1em}
+
+/* ---------- 练习判题结果：圆润大字 + SVG 图标 ---------- */
+.grade-card{border-radius:20px;padding:18px 18px 16px;font-family:var(--calf-body-font);font-size:16.5px;line-height:1.85}
+.grade-head{font-size:20px;gap:9px}
+.grade-head .ic{width:26px;height:26px}
+.grade-card.ok .grade-head .ic{color:#16a34a}
+.grade-card.bad .grade-head .ic{color:#f59e0b}
+.grade-answer{display:flex;align-items:flex-start;gap:9px;font-size:16.5px;border-radius:14px;padding:12px 14px;line-height:1.7}
+.grade-answer .ic{width:20px;height:20px;margin-top:3px;color:#2563eb}
+.grade-steps-title{display:flex;align-items:center;gap:8px;font-family:var(--calf-round-font);font-weight:800;margin:10px 0 4px;color:#1e3a8a}
+.grade-steps-title .ic{width:20px;height:20px}
+.grade-steps{padding-left:4px;list-style:none;margin:0}
+.grade-steps li{position:relative;padding-left:30px;margin:8px 0;min-height:22px}
+.grade-steps li::before{content:attr(data-n);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(135deg,#3b82f6,#7c3aed);color:#fff;font-family:var(--calf-round-font);font-weight:800;
+  font-size:13px;display:flex;align-items:center;justify-content:center}
+.grade-stars{display:inline-flex;gap:4px;margin-left:6px}
+.grade-stars .ic{width:26px;height:26px;color:#f59e0b;filter:drop-shadow(0 2px 3px rgba(245,158,11,.35));animation:starPop .45s ease backwards}
+.grade-stars .ic:nth-child(2){animation-delay:.12s}.grade-stars .ic:nth-child(3){animation-delay:.24s}
+@keyframes starPop{0%{transform:scale(0) rotate(-30deg);opacity:0}70%{transform:scale(1.25) rotate(8deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+
+/* 解题方法标题里的灯泡/推荐星图标 */
+.solution .sol-head{display:flex;gap:9px;align-items:center}
+.solution .sol-head .ic{width:21px;height:21px;color:#2563eb}
+.sol-rec .ic{color:#f59e0b}
+
+/* 邮箱确认弹窗 */
+#verifyModal .modalbox{max-width:430px;text-align:center}
+#verifyModal .vm-mail{width:64px;height:64px;color:#2563eb;margin:4px auto 6px}
+#verifyModal .vm-mail .ic{width:64px;height:64px}
+#verifyModal p{font-family:var(--calf-body-font);font-size:16px;line-height:1.7;color:#374151}

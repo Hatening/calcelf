@@ -53,6 +53,26 @@
     return pool[next];
   }
 
+  const WC_I18N={
+    en:{t:'Welcome to CalcElf!',d:'Your {n} Credits are ready!',b:'Start my journey'},
+    'zh-CN':{t:'欢迎来到 CalcElf！',d:'你的 {n} 个 Credits 已准备好！',b:'开始我的旅程'},
+    'zh-TW':{t:'歡迎來到 CalcElf！',d:'你的 {n} 個 Credits 已準備好！',b:'開始我的旅程'},
+    ja:{t:'CalcElf へようこそ！',d:'{n} Credits の準備ができました！',b:'旅を始める'},
+    ko:{t:'CalcElf에 오신 것을 환영해요!',d:'Credits {n}개가 준비되었어요!',b:'여행 시작하기'},
+    fr:{t:'Bienvenue sur CalcElf !',d:'Vos {n} Credits sont prêts !',b:'Commencer mon aventure'},
+    de:{t:'Willkommen bei CalcElf!',d:'Deine {n} Credits sind bereit!',b:'Reise starten'},
+    es:{t:'¡Bienvenido a CalcElf!',d:'¡Tus {n} Credits están listos!',b:'Empezar mi viaje'},
+    it:{t:'Benvenuto su CalcElf!',d:'I tuoi {n} Credits sono pronti!',b:'Inizia il mio viaggio'},
+    ar:{t:'مرحبًا بك في CalcElf!',d:'أرصدتك البالغة {n} Credits جاهزة!',b:'ابدأ رحلتي'},
+    fa:{t:'به CalcElf خوش آمدید!',d:'{n} اعتبار شما آماده است!',b:'شروع سفر من'}
+  };
+  function wcLang(){ try{ return window.CALF_LANG||localStorage.getItem('calcelf_lang')||'en'; }catch(e){ return 'en'; } }
+  function localizeWelcome(credits){
+    const root=currentRoot; if(!root) return; const d=WC_I18N[wcLang()]||WC_I18N.en;
+    const tt=root.querySelector('#calcelfWelcomeTitle'), dd=root.querySelector('#calcelfWelcomeDesc'), bb=root.querySelector('#calcelfWelcomeBtn');
+    if(tt)tt.textContent=d.t; if(dd)dd.textContent=d.d.replace('{n}',credits==null?'100':credits); if(bb)bb.textContent=d.b;
+  }
+
   function ensureRoot() {
     if (currentRoot) return currentRoot;
 
@@ -82,8 +102,7 @@
 
   function showContent(credits) {
     const root = ensureRoot();
-    const desc = root.querySelector("#calcelfWelcomeDesc");
-    if (credits) desc.textContent = "Your " + credits + " Credits are ready!";
+    localizeWelcome(credits);
     root.classList.add("show-content");
     if (window.CalcElfConfetti) {
       window.CalcElfConfetti.burst({ count: 180, duration: 3200 });

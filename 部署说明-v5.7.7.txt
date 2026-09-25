@@ -1,0 +1,28 @@
+CalcElf v5.7.7 部署说明 —— B 混合模式 + 元素库一次性扩到最全（adaptive-first）
+
+【本版改了什么】
+1. anim-player.js（根目录 + public/ 两份）
+   - 新增 adaptive「通用教学时间线」：模型自由组合标题/编号步骤/讲解/算式/前后状态，
+     渲染器固定圆润样式。任何题目都能用，不再硬套天平/方程。
+   - 新增 5 类学科场景（数据驱动、模型不写代码）：
+     geometry（任意点+线段，覆盖所有几何）、force（物体+受力箭头）、
+     circuit（元件+连线）、molecule（原子+化学键）、process（前后状态+流动粒子）。
+   - 保留原有固定场景（eq/bar/barstep/layers/compare/diagram/motion）作为“可选快捷键”。
+2. lib/anim-plan.js（仅 /lib/）
+   - PROBLEM_TYPES 扩到 14 类；6 个新场景全部服务端强校验（坐标 0..100、数量上限）。
+   - prompt 改为 adaptive-first：明确“不得硬套不匹配的隐喻”，但每份分镜仍必须有视觉。
+   - 分镜版本升 ce-anim-3.0（自动隔离 Supabase 旧缓存）。
+
+【部署步骤】
+1. anim-player.js → 仓库根目录（覆盖）
+2. public/anim-player.js → public/（覆盖）
+3. lib/anim-plan.js → lib/（覆盖；public 下不需要 lib）
+4. Commit & Push，Vercel 自动部署，等 Deployments 状态 Ready。
+
+【部署后“页面还是老样子”怎么查（按顺序，1 分钟定论）】
+1. 直接访问 https://calcelf.vercel.app/anim-player.js ，浏览器里 Ctrl+F 搜 “renderAdaptive”：
+   搜得到 = 新代码已上线；搜不到 = 文件没传全或没部署完。
+2. 确认根目录和 public/ 两份 anim-player.js 都已覆盖（Vercel 取哪份取决于配置，两份必须一致）。
+3. 硬刷新清缓存：Ctrl+Shift+R（Mac: Cmd+Shift+R），或在网址后加 ?v=3 再打开。
+4. Vercel → Deployments：最上面一条是否 Ready、commit 信息是否是你刚推的那次。
+5. 分镜缓存无需手动清：版本号已升到 ce-anim-3.0，会自动生成新缓存键。

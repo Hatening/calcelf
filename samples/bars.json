@@ -1,0 +1,22 @@
+[
+  {"problem":"一袋苹果有 20 个，吃掉了它的 1/4，吃掉了多少个？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"5"},
+  {"problem":"一包糖果有 24 颗，吃了它的 3/8，吃了多少颗？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"9"},
+  {"problem":"一本书共 120 页，读了它的 1/3，读了多少页？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"40"},
+  {"problem":"一根绳子长 36 米，用去了它的 2/9，用去了多少米？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"8"},
+  {"problem":"一盒饼干有 30 块，吃了它的 2/5，吃了多少块？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"12"},
+  {"problem":"一筐梨有 40 个，卖出它的 3/10，卖出了多少个？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"12"},
+  {"problem":"一盒铅笔有 60 支，用掉它的 1/6，用掉了多少支？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"10"},
+  {"problem":"A bag has 20 apples. We eat 1/4 of them. How many apples did we eat?","language":"en","expectedFamily":"bars","expectedAnswer":"5"},
+  {"problem":"一本书共 120 页，已经读了 30%，读了多少页？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"36"},
+  {"problem":"全班有 40 人，其中 60% 是男生，男生有多少人？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"24"},
+  {"problem":"一件衣服原价 200 元，降价 15%，降价了多少元？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"30"},
+  {"problem":"播下种子 50 颗，其中 80% 发芽，发芽的有多少颗？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"40"},
+  {"problem":"储蓄罐里有 300 元，取出 25%，取出了多少元？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"75"},
+  {"problem":"甲、乙两数的和是 60，甲数是乙数的 3 倍，乙数是多少？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"15"},
+  {"problem":"兄弟俩共有 40 元，哥哥的钱是弟弟的 4 倍，弟弟有多少元？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"8"},
+  {"problem":"两个数的和是 72，大数是小数的 8 倍，小数是多少？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"8"},
+  {"problem":"甲、乙两班共有 120 人，甲班人数是乙班的 2 倍，乙班有多少人？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"40"},
+  {"problem":"一袋苹果有 20 个，吃掉了它的 2/5，吃掉了多少个？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"8","edgeCase":"易错：取2份不是1份"},
+  {"problem":"一批零件共 80 个，已经完成了 45%，完成了多少个？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"36"},
+  {"problem":"两个数的和是 90，大数是小数的 5 倍，小数是多少？","language":"zh-CN","expectedFamily":"bars","expectedAnswer":"15","edgeCase":"易错：总份数是6不是5"}
+]

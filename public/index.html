@@ -9,14 +9,17 @@
 <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@400;500;600;700&family=M+PLUS+Rounded+1c:wght@500;700;800&family=Nunito:wght@400;600;700;800;900&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/themes.css">
 <link rel="stylesheet" href="/components.css">
+<link rel="stylesheet" href="/ui-type-scale.css">
+<link rel="stylesheet" href="/v565.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 </head>
 <body data-stage="prefer_not" data-lifetime="1" data-monthly="1">
+<div id="appZoomWrap">
 
 <header class="top">
   <div class="topin">
@@ -71,7 +74,7 @@
             <label id="imgLabel">📷 Problem image</label>
             <div class="upload" id="upload"><b id="uploadBig">Tap to take a photo or choose an image</b><span id="uploadSmall" class="muted">JPG / PNG / WEBP · max 8 MB</span></div>
             <input id="file" class="hidden" type="file" accept="image/*" capture="environment">
-            <div id="preview" class="preview"><img id="previewImg"><div class="actions"><button class="btn secondary" id="removeBtn">Remove image</button></div></div>
+            <div id="preview" class="preview"><img id="previewImg"><div class="actions"><span id="imgNoteBadge" class="pill" style="display:none;background:#eef6ff;color:#1d4ed8;font-weight:700">📷 Photo attached — text is a note</span><button class="btn secondary" id="removeBtn">Remove image</button></div></div>
           </div>
           <div>
             <label id="textLabel">⌨️ Text input / correction</label>
@@ -81,19 +84,19 @@
         </div>
         <div id="turnstileBox" style="margin-top:10px"></div>
         <div id="privacyRow" class="switch" style="margin-top:12px; align-items:flex-start; gap:12px;">
-          <input id="agree" type="checkbox" style="width:22px; height:22px; margin-top:2px; accent-color: var(--primary); flex-shrink:0;">
+          <input id="agree" type="checkbox" class="kcbx">
           <span id="privacyLine" style="font-size:15px; font-weight:600; color:var(--ink); line-height:1.5; cursor:pointer; user-select:none;"></span>
         </div>
         <button id="solveBtn" class="btn primary" style="width:100%;margin-top:12px">🔍 Start solving</button>
         <div id="status" class="status"></div>
       </section>
 
-      <section class="card loading" id="loading"><div class="spin"></div><p id="loadingText">Analyzing…</p></section>
+      <section class="card loading" id="loading"><div class="thinker"><div class="qrow"><span class="qm q1">?</span><span class="qm q2">?</span><span class="qm q3">?</span></div><img src="calcelf-logo.png" alt="" class="thinker-img"></div><div class="think-bars"><span class="tb b1"></span><span class="tb b2"></span><span class="tb b3"></span></div><p id="loadingText">Analyzing…</p><span class="lddots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span><button id="solveStop" class="btn secondary" style="display:none;margin-top:10px"></button></section>
 
       <section class="result" id="result">
         <section class="card"><div class="head"><h2 id="resultTitle">📝 Recognized problem</h2><span id="subject" class="pill"></span></div><div id="question" class="question"></div></section>
         <section class="card"><div class="head"><h2 id="solutionTitle">💡 Solution walkthrough</h2><span id="count" class="pill"></span></div><div id="solutions"></div></section>
-        <section class="card" id="animCard"><div class="head"><h2 id="animTitle">🎬 Visual animation</h2><span id="animOptional" class="pill">Optional</span></div><div id="animBox" class="anim"></div></section>
+        <section class="card" id="animCard"><div class="head"><h2 id="animTitle">🎬 Visual animation</h2><button id="animFs" class="btn secondary" style="display:none;padding:5px 14px;font-size:13px">⛶ Fullscreen</button></div><div id="animBox" class="anim"></div></section>
         <section class="card"><div class="head"><h2 id="chatTitle">🗣️ Ask CalcElf</h2><span id="chatPill" class="pill">Current problem context</span></div><div id="chat" class="chat"></div><div class="actions" style="margin-top:8px"><input id="chatInput" placeholder="Why does step 2 work?"><button id="sendChat" class="btn primary">Send</button></div></section>
         <section class="card"><div class="head"><h2 id="practiceTitle">🎯 Practice this skill</h2><span id="practicePill" class="pill">Earn Stars by practicing</span></div><p id="practiceDesc" class="muted">Level 1 changes numbers. Level 2 changes context. Level 3 is a challenge unlocked after earlier success.</p><div class="actions"><button class="btn secondary" id="practice1">Level 1</button><button class="btn secondary" id="practice2">Level 2</button><button class="btn gold" id="practice3">Level 3 🔒</button></div><div id="practiceArea" style="margin-top:10px"></div></section>
       </section>
@@ -106,7 +109,7 @@
       <span class="ce-eyebrow" id="creditsEyebrow">AI TUTOR BALANCE</span>
       <div class="ce-title-line"><b id="creditsTitle">🪙 Credits</b><span id="planPill" class="pill">Free</span></div>
     </div>
-    <span id="creditStatusLabel" class="ce-status-pill tier-4">Plenty</span>
+    <button class="ce-topup-btn" id="creditActionBtn" type="button">Top up Credits</button>
   </div>
 
   <div id="creditMeterWidget" class="ce-credit-widget role-child tier-4" aria-live="polite">
@@ -126,14 +129,14 @@
         <rect width="400" height="160" fill="url(#ce2Sky)"/>
         <rect class="ce2-haze" width="400" height="160"/>
 
-        <!-- 太阳：光芒缓转 + 光晕呼吸 -->
-        <g transform="translate(350,30)">
-          <circle class="ce2-sunglow" r="27" fill="#ffd36a"/>
-          <g class="ce2-rays" stroke="#ffd36a" stroke-width="3.4" stroke-linecap="round">
-            <path d="M0 -23 v-9"/><path d="M0 23 v9"/><path d="M-23 0 h-9"/><path d="M23 0 h9"/>
-            <path d="M-16.5 -16.5 l-6.5 -6.5"/><path d="M16.5 -16.5 l6.5 -6.5"/><path d="M-16.5 16.5 l-6.5 6.5"/><path d="M16.5 16.5 l6.5 6.5"/>
+        <!-- 太阳：内移到安全区，窄卡片 slice 裁剪也完整可见；光芒缓转 + 光晕呼吸 -->
+        <g transform="translate(304,35)">
+          <circle class="ce2-sunglow" r="23" fill="#ffd36a"/>
+          <g class="ce2-rays" stroke="#ffd36a" stroke-width="3.2" stroke-linecap="round">
+            <path d="M0 -20 v-8"/><path d="M0 20 v8"/><path d="M-20 0 h-8"/><path d="M20 0 h8"/>
+            <path d="M-14.4 -14.4 l-5.8 -5.8"/><path d="M14.4 -14.4 l5.8 -5.8"/><path d="M-14.4 14.4 l-5.8 5.8"/><path d="M14.4 14.4 l5.8 5.8"/>
           </g>
-          <circle r="16" fill="url(#ce2Sun)"/>
+          <circle r="15" fill="url(#ce2Sun)"/>
         </g>
 
         <!-- 云：外层定位、中层缩放、内层横移 -->
@@ -268,11 +271,11 @@
     </div>
 
     <div class="ce-credit-readout">
-      <span id="credits" class="ce-credit-number">—</span>
+      <span id="credits" class="ce-credit-number">0</span>
       <span id="creditsLabel" class="ce-credit-unit">Credits</span>
+      <span id="creditStatusLabel" class="ce-status-pill tier-4">Plenty</span>
       <span id="creditSubline" class="ce-credit-subline">Ready for more learning.</span>
     </div>
-    <button class="ce-meter-action" id="creditActionBtn" type="button">Top up Credits</button>
   </div>
 
   <div class="ce-tier-rail" id="creditTierRail">
@@ -332,16 +335,18 @@
   </div>
 </main>
 
-<footer class="wrap muted"><a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <span id="footerText">CalcElf is a learning aid, not a grading authority.</span></footer>
+<footer class="wrap muted"><a href="/privacy.html" id="footerPrivacy">Privacy</a> · <a href="/terms.html" id="footerTerms">Terms</a> · <span id="footerText">CalcElf is a learning aid, not a grading authority.</span></footer>
 
 <!-- ============================================================
      认证模态框
      ============================================================ -->
+</div><!-- /#appZoomWrap -->
+
 <div class="modal" id="authModal">
   <div class="modalbox">
     <button class="close" data-close="authModal">×</button>
-    <h2 id="accountModalTitle" style="text-align:center; margin-bottom:10px;">Account</h2>
-    <p id="accountModalDesc" class="muted" style="text-align:center; margin-bottom:20px;">For minors, use an adult/parent/guardian account where required.</p>
+    <h2 id="accountModalTitle" style="text-align:center; margin-bottom:10px;"><span class="explorer-word" style="color:#FF9F1C;font-weight:800;letter-spacing:.3px;font-size:26px;">Explorer Profile</span></h2>
+    <p id="accountModalDesc" class="muted" style="text-align:center; margin-bottom:20px;">Minors: please register with a parent or guardian.</p>
 
     <!-- 头像选择区（仅在注册 Tab 显示） -->
     <div id="avatarSelectionArea" style="display:none; margin-bottom:15px;">
@@ -366,7 +371,7 @@
         <option value="parent">Parent / guardian</option>
         <option value="adult">Adult / learner</option>
       </select>
-      <button class="btn primary" id="signupBtn" style="width:100%">Sign Up</button>
+      <button class="btn primary" id="signupBtn" style="width:100%">Create</button>
     </div>
     <div class="auth-divider"><span id="authOr">or</span></div>
     <button class="btn google-btn" id="googleLoginBtn" style="width:100%">
@@ -424,6 +429,17 @@
   </div>
 </div>
 
+<!-- v5.6.5 注册后“去邮箱确认”弹窗 -->
+<div class="modal" id="verifyModal">
+  <div class="modalbox">
+    <button class="close" data-close="verifyModal">×</button>
+    <div class="vm-mail" id="vmIcon"></div>
+    <h2 id="vmTitle">Check your email</h2>
+    <p id="vmText">We sent a confirmation link to your inbox. Tap the link to activate your account, then come back and log in.</p>
+    <button class="btn primary" id="vmOk" style="width:100%;margin-top:14px">OK</button>
+  </div>
+</div>
+
 <!-- ============================================================
      Feedback Modal
      ============================================================ -->
@@ -433,6 +449,7 @@
     <h2 id="feedbackTitle">💌 Share Your Great Advice</h2>
     <p id="feedbackDesc" class="muted">If your suggestion is adopted, you'll receive Credits as a reward!</p>
     <textarea id="feedbackText" placeholder="Tell us your ideas to improve CalcElf..."></textarea>
+    <input id="feedbackEmail" type="email" placeholder="Your email (optional — so we can reply)" style="width:100%;box-sizing:border-box;margin:10px 0 0;padding:11px 14px;border:2px solid #d7e3dc;border-radius:14px;font:inherit;font-size:15px;">
     <div class="feedback-actions">
       <button class="btn gold" id="feedbackVoiceBtn">🎤 Voice</button>
       <button class="btn primary" id="submitFeedbackBtn" style="flex:1;">Send Feedback</button>
@@ -453,28 +470,33 @@
   bottom: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
+  height: 100dvh !important;
   background: rgba(0,0,0,0.75) !important;
   z-index: 2147483000 !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 20px !important;
+  padding: 16px !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
+  overscroll-behavior: contain !important;
   backdrop-filter: blur(8px);
 ">
   <div class="modalbox" style="
-    width: min(850px, 95vw) !important;
-    height: 85vh !important;
-    max-height: 85vh !important;
+    width: min(850px, 94vw) !important;
+    max-height: 92vh !important;
+    max-height: 92dvh !important;
+    height: 88vh !important;
+    height: min(88dvh, 860px) !important;
     background: #fff;
-    border-radius: 24px;
-    padding: 24px;
+    border-radius: clamp(16px, 3vw, 24px);
+    padding: clamp(16px, 2.5vw, 24px);
     display: flex;
     flex-direction: column;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     box-sizing: border-box;
     position: relative;
     margin: auto;
+    overflow: hidden;
   ">
     <button id="privacyCloseBtn" style="position:absolute; right:16px; top:16px; border:0; background:none; font-size:24px; color:#888; cursor:pointer; z-index:10;" aria-label="Close">×</button>
     <h2 id="privacyTitle" style="text-align:center; margin:0 0 12px 0; flex-shrink:0; font-size: 22px;">🔐 Privacy Notice</h2>
@@ -491,6 +513,8 @@
       position: relative;
       -webkit-overflow-scrolling: touch;
       min-height: 0;
+      flex: 1 1 auto;
+      overscroll-behavior: contain;
     ">
       <div id="privacyBody" style="line-height: 1.8; font-size: 16px; color: #222; text-align: left;"></div>
       <div id="privacyScrollEnd" style="height: 20px;"></div>
@@ -505,7 +529,7 @@
       ">
         <div class="arrow-icon" style="font-size:48px; animation: bounceArrow 1.2s infinite;">👇</div>
         <div class="mouse-icon" style="font-size:28px; animation: bounceArrow 1.2s infinite 0.2s;">🖱️</div>
-        <div style="font-size:14px; font-weight:bold; color:#e74c3c; margin-top:10px; text-align:center;">
+        <div style="font-size:14px; font-weight:bold; color:#e74c3c; margin-top:10px; text-align:center;" id="privacyOverlayText">
           Please scroll down to read<br>请向下滑动阅读
         </div>
       </div>
@@ -516,12 +540,19 @@
       请滑动阅读完整声明
     </div>
 
-    <!-- 勾选与操作 -->
+    <!-- 勾选与操作（法律文档要求两个独立动作：已读确认 + 家长/监护人同意） -->
     <div style="flex-shrink:0; display:flex; flex-direction:column; gap:10px;">
-      <label id="privacyCheckboxLabel" style="display:flex; align-items:center; gap:10px; cursor:pointer; opacity:0.4; pointer-events:none;">
-        <input type="checkbox" id="privacyAgreeCheckbox" style="width:20px; height:20px; accent-color: var(--primary);">
+      <label id="privacyCheckboxLabel" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; opacity:0.4; pointer-events:none;">
+        <input type="checkbox" id="privacyAgreeCheckbox" class="kcbx">
         <span id="privacyCheckboxText" style="font-size:15px; font-weight:500;">I have read and understood...</span>
       </label>
+      <label id="privacyParentLabel" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; opacity:0.4; pointer-events:none;">
+        <input type="checkbox" id="privacyParentCheckbox" class="kcbx">
+        <span style="font-size:15px; font-weight:500;"><span id="privacyParentText">I am the parent/guardian…</span><br><small id="privacyParentHint" style="color:#64748b;font-weight:400;"></small></span>
+      </label>
+      <div style="text-align:center;">
+        <a id="privacyCenterLink" href="/privacy-center.html" target="_blank" rel="noopener" style="font-size:13.5px; font-weight:700; color:var(--primary,#0f766e); text-decoration:underline;"></a>
+      </div>
       <button class="btn primary" id="privacySubmitBtn" style="width:100%; padding:14px; font-size:17px; border-radius:999px; opacity:0.5;" disabled>Agree & Continue</button>
     </div>
   </div>
@@ -529,8 +560,14 @@
 
 <script src="/privacy-texts.js"></script>
 <script src="/theme-app.js"></script>
+<script src="/avatar-picker.js"></script>
+<script src="/settings-panel.js"></script>
 <script src="/ui-enhance.js"></script>
 <script src="/config.js"></script>
+<script src="/v55-enhance.js"></script>
+<script src="/levels-info.js"></script>
+<script src="/icons.js"></script>
+<script src="/anim-player.js"></script>
 <script src="/app.js"></script>
 </body>
 </html>

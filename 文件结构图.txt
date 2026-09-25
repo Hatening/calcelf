@@ -1,0 +1,162 @@
+CalcElf v6.1 文件结构图（共 ~430 个文件，不含测试截图）
+edulab 板播放器接入 + 全量 Vendor 本地化
+根目录与 public/ 静态文件双份一致；lib/ 仅服务端；真正端点在 root/api。
+★ = v6.1 新增或修改；☆ = v6.0 既有
+============================================================
+├─ animations/                          （14 个 JSON 动画素材）
+├─ api/                                 （28 个 Serverless Functions，CommonJS）
+│  ├─ animation.js                      free HTML 动画端点
+│  ├─ animation-plan.js                 具象分镜端点
+│  ├─ captcha.js
+│  ├─ chat.js
+│  ├─ checkout.js
+│  ├─ credits.js
+│  ├─ creem-webhook.js
+│  ├─ cron-distill.js        ☆         每周蒸馏 cron
+│  ├─ cron-weekly-report.js
+│  ├─ customer-portal.js
+│  ├─ feedback.js
+│  ├─ grade.js
+│  ├─ guard.js
+│  ├─ health.js
+│  ├─ invite.js
+│  ├─ kard.js                ★修改      知识卡端点（新增 board host 选择器）
+│  ├─ level.js
+│  ├─ log-animation.js       ☆
+│  ├─ loyalty-reset.js
+│  ├─ practice.js
+│  ├─ profile.js
+│  ├─ public-config.js
+│  ├─ rate-animation.js      ☆
+│  ├─ rewards.js
+│  ├─ solve.js               ☆
+│  ├─ stripe-webhook.js
+│  ├─ transcribe.js
+│  └─ weekly-report.js
+├─ avatars/zodiac/                     （12 生肖 SVG）
+├─ board/                     ★新增      edulab 板播放器（4 文件，根+public 镜像）
+│  ├─ 2d.html                          2D 板（圆锥曲线/函数/解析几何/矢量/读数/涂鸦）
+│  ├─ 3d.html                          3D 物理板（Three.js r128 + OrbitControls）
+│  ├─ reaction.html                    化学反应板（分子 morph）
+│  └─ solid.html                       立体几何板（Three.js r160 + MathJax）
+├─ brand/                              （品牌图片素材）
+├─ config/plans.json
+├─ docs/
+├─ i18n/translations.js
+├─ legal/                              （11 语种隐私/条款 HTML）
+├─ lib/                                （仅服务端，不部署到 public/）
+│  ├─ anim-plan.js
+│  ├─ anim-parts.js
+│  ├─ board-schema.js       ★新增      board JSON 校验器（validateBoard）
+│  ├─ board-prompts.js      ★新增      10 族 board 提示词（BOARD_PROMPTS）
+│  ├─ board-router.js       ★新增      board 族分类+LLM生成+校验重试（tryBoard）
+│  ├─ credits.js
+│  ├─ kards/                           （知识卡八族 + 编排）
+│  │  ├─ axis_motion.js
+│  │  ├─ balance.js
+│  │  ├─ bars.js
+│  │  ├─ function-graph.js
+│  │  ├─ geometry.js
+│  │  ├─ grid.js
+│  │  ├─ motion.js
+│  │  ├─ numberline.js
+│  │  ├─ orchestrator.js   ★修改      renderer 不命中后接 tryBoard()
+│  │  └─ registry.js
+│  ├─ levels.js
+│  ├─ openai.js                        环境化模型客户端
+│  ├─ rate.js
+│  ├─ security.js
+│  ├─ supabase.js
+│  ├─ verify.js
+│  └─ weekly-report.js
+├─ public/                             （静态资源镜像，部署后可直接访问）
+│  ├─ animations/                      （镜像）
+│  ├─ api/                             （历史部分镜像）
+│  ├─ avatars/                         （镜像）
+│  ├─ board/               ★新增镜像   4 个板播放器（与根逐字节一致）
+│  ├─ brand/                           （镜像）
+│  ├─ i18n/                            （镜像）
+│  ├─ legal/                           （镜像）
+│  ├─ renderer/            ☆          Canvas 渲染器（v6.0 既有）
+│  ├─ supabase/                        （迁移文件镜像）
+│  ├─ vendor/              ★新增镜像   92 个本地静态资源（与根逐字节一致）
+│  ├─ app.js              ★修改镜像    animation() host 分支 + presentBoard
+│  └─ ...（其余静态文件镜像）
+├─ renderer/                ☆          根目录 renderer 镜像
+├─ samples/                             （知识卡测试样本，185 道）
+├─ supabase/
+│  ├─ schema.sql
+│  ├─ 2026_ui_redesign_migration.sql
+│  ├─ creem_migration.sql
+│  ├─ v5.5_migration.sql
+│  ├─ v5.5.9_settings_migration.sql
+│  ├─ v5.7.0_animation_cache.sql
+│  └─ v6.0_rating_warehouse.sql  ☆    4表+4视图（v6.1 复用，无新迁移）
+├─ tests/
+│  ├─ board-smoke/         ★新增      板播放器冒烟测试截图（4 张）
+│  ├─ golden/                ★新增      13 lesson 黄金集渲染截图
+│  ├─ docs-sample/           ★新增      70 docs 抽样验证
+│  ├─ TEST-REPORT-v6.1.md   ★新增      无头回测报告
+│  ├─ v6-backtest.py        ☆
+│  ├─ v6-frames/            ☆
+│  ├─ backtest.py
+│  ├─ run-kards.js
+│  ├─ frames/
+│  └─ rp/
+├─ vendor/                    ★新增      本地静态资源（92 文件，零 CDN）
+│  ├── three.min.js                    Three.js r128 全局构建
+│  ├── orbit-controls.js               r128 OrbitControls
+│  ├── katex.min.css                   KaTeX 0.16.8 样式
+│  ├── katex.min.js                    KaTeX 0.16.8 核心
+│  ├── auto-render.min.js              KaTeX auto-render
+│  ├── fonts/                          KaTeX 字体 60 个（woff2/woff/ttf）
+│  ├── board.css                       手写 Tailwind 替代 CSS（含 prose）
+│  ├── jsm/
+│  │   ├── three.module.js             Three.js r160 ES module（solid 用）
+│  │   ├── controls/OrbitControls.js
+│  │   └── renderers/CSS2DRenderer.js
+│  └── mathjax/
+│      ├── tex-mml-chtml.min.js        MathJax 3.2.2（solid 用）
+│      └── output/chtml/fonts/woff-v2/  22 个 woff 字体
+├─ app.js                  ★修改        主程序（animation host 分支 + presentBoard/openBoardFullscreen）
+├─ components.css           ☆
+├─ vercel.json              ☆
+├─ CHANGELOG-v6.1.md        ★新增      v6.1 变更日志
+├─ 部署说明-v6.1.txt        ★新增      本文件
+├─ 文件结构图.txt           ★更新      本文件
+├─ index.html
+├─ package.json
+├─ README.md / README.txt
+├─ DEPLOY.md / SETUP-v5.5.md / CREEM_SETUP.md
+├─ PRODUCT_RULES.md / REWARDS.md / ABUSE.md / ANTI_ABUSE.md
+├─ privacy*.html / privacy-guard.js / privacy-texts.js / privacy-center.html
+├─ terms.html
+├─ themes.css / themes-ceremony.css / theme-app.js / ui-type-scale.css
+├─ ui-enhance.js / v55-enhance.js / v565.css / settings-panel.js / welcome-ceremony.js
+├─ anim-player.js / confetti-lite.js / avatar-picker.js / icons.js / levels-info.js
+├─ config.js / calcelf-logo.png / calcelf-favicon.png / favicon.ico
+└─ CHANGELOG-*.md / 部署说明-v5.*.txt / 部署说明-v6.0.txt  （历史版本文档）
+
+============================================================
+v6.1 数据流（双渲染层）：
+  用户解题 → /api/solve → 插入 asked_questions → 返回 qid + result
+       ↓
+  animation() → POST /api/kard（10s）
+    ├─ renderer 族命中（axis_motion/motion/...）→ host="renderer"
+    │   → iframe /renderer/index.html → postMessage {animation:renderParams} → Canvas 动画
+    ├─ board 族命中（函数/圆锥/立体/化学/...）→ host="2d"|"3d"|"reaction"|"solid"
+    │   → iframe /board/{host}.html → postMessage {board,lesson,steps} → 交互式板
+    │   → board-router: 关键词分类 → LLM 生成 board JSON → validateBoard 校验 → 重试
+    └─ 均不命中 → /api/animation(free) → /api/animation-plan(plan) → static
+  所有成功路径 → 5星评分 → /api/rate-animation → /api/log-animation
+       ↓
+  每周一 14:30 UTC → /api/cron-distill → 聚合 → distill_batches
+
+============================================================
+族 → host 映射：
+  axis_motion / motion / numberline / bars / grid / balance / geometry → renderer（v6.0）
+  board_function_graph / board_conics / board_analytic_geometry /
+  board_vector / board_physics_motion / board_statistics / board_logic → 2d
+  board_physics_3d → 3d
+  board_solid_geometry → solid
+  board_chemistry → reaction

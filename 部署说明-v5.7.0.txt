@@ -1,0 +1,98 @@
+CalcElf v5.7.0 固定动画渲染器 + 流式讲解 + 数学验证 —— 部署说明
+================================================================
+
+一、本次更新解决什么问题
+----------------------------------------------------------------
+1. 解题“首字太慢”：改为流式输出。模型先逐字吐出儿童化讲解（页面上立刻
+   一个字一个字出现），讲解结束后再用分隔符 @@CALCELF_JSON@@ 输出结构化
+   JSON，页面随后渲染成完整的多解法卡片。模型若不遵守协议，后端会自动
+   兜底（整段 JSON 解析 → 仍失败则精简格式非流式重试），不会白屏。
+2. 动画质量不可控 / 源码泄漏 / 卡死：不再让模型自由生成整段 HTML。
+   模型现在只产出“分镜 JSON”（字段受白名单约束，任何 HTML/脚本都会被
+   剥离），由我们自己的固定渲染器 anim-player.js 确定性播放。
+   首批两个模板：
+     · 方程天平（linear_equation）：蓝色原式 → 琥珀色“两边同操作”胶囊
+       + 天平摇摆 → 绿色新式，最后代回检查、答案揭晓；
+     · 条形模型（fraction / ratio / percentage）：格子逐格弹出、
+       多色分段 + 图例，适合分数/比例/百分数应用题。
+   题型暂不支持时，不再报错，而是自动显示一张“清晰步骤卡”（编号步骤 +
+   公式 + 绿色答案条）。物理/化学/几何等学科模板以后按“学科包”追加，
+   架构不用改。
+3. 数学确定性验证：算术题和一元一次方程在后端用自研校验器复算答案；
+   模型答案与数学结果不一致时，自动用精简提示重算一次，避免“围着错误
+   步骤讲”。无法判定的题型（分数应用题等）标记 unverified，不强行改。
+4. 动画不另扣 Credits（沿用你已拍板的规则）；匿名用户不能生成动画，
+   提示注册。
+
+二、文件清单（压缩包内已按仓库目录结构放好，直接覆盖合并即可）
+----------------------------------------------------------------
+新增：
+  anim-player.js                 前端固定动画渲染器（根目录）
+  api/animation-plan.js          分镜接口（服务端）
+  lib/anim-plan.js               分镜提示词 + 校验/清洗（仅服务端）
+  lib/verify.js                  确定性数学验证器（仅服务端）
+  supabase/v5.7.0_animation_cache.sql  分镜缓存表（可选，见第四节）
+修改：
+  app.js                         逐字流式渲染 + 改调分镜接口 + 静态兜底卡
+  index.html                     引入 anim-player.js
+  api/solve.js                   流式三段协议 + 验证器接入
+  vercel.json                    登记 animation-plan 函数超时
+public/ 目录下均有对应的同名副本（本项目要求根目录与 public 两份保持
+逐字节一致，压缩包里已经放好，不要漏传 public 里的副本）：
+  public/anim-player.js、public/app.js、public/index.html
+  public/api/animation-plan.js、public/api/solve.js
+  public/supabase/v5.7.0_animation_cache.sql
+注意：lib/ 下两个文件只放在服务端 /lib，public/lib 保持为空，不要复制。
+旧的 api/animation.js 保留不删（回滚备用），前端已不再调用它。
+
+三、部署步骤（Vercel 连 GitHub 的方式）
+----------------------------------------------------------------
+1. 先在 GitHub 仓库网页上把当前版本下载一份 ZIP 备份（或 git commit 一次），
+   方便回滚。
+2. 解压本压缩包，把里面的文件按相同目录拖进 GitHub 网页上传
+   （Add file → Upload files），遇到同名文件选择覆盖/替换；
+   新增文件也要传：anim-player.js、api/animation-plan.js、
+   lib/anim-plan.js、lib/verify.js。
+   如果你是本地 git 推送：解压覆盖仓库根目录后
+   git add -A && git commit -m "v5.7.0 fixed renderer + streaming + verify"
+   && git push。
+3. 推送后 Vercel 会自动重新部署，等 Deployments 里最新一次显示 Ready
+   （通常 1–2 分钟）。
+4. 强刷网页验证（Ctrl+F5 / Cmd+Shift+R，避免缓存）：
+   a) 解一道一元一次方程，例如 2x+5=17：讲解应逐字出现，随后出现完整
+      解法卡片；勾选了动画时，播放“方程天平”动画，有上一步/播放/
+      下一步/重播按钮和顶部进度；
+   b) 解一道分数应用题（如“一本书240页，第一天看1/4，第二天看了
+      余下的2/3”）：应播放条形模型；
+   c) 解一道几何/物理等暂不支持动画的题：动画区显示静态“清晰步骤卡”，
+      不出现 Failed to fetch / 代码 / 思考过程。
+5. 若有异常，打开 Vercel → 对应 Deployment → Functions 日志，
+   过滤关键字 [solve] 与 [animation-plan]，把报错截图发我：
+   - verification mismatch = 验证器抓到模型算错并已自动重算（正常保护）；
+   - plan invalid / raw head = 模型分镜不合格，已自动回退静态卡；
+   - primary failed ... fallback = 千问 flash 失败后已自动切 plus。
+
+四、Supabase 缓存表（可选，但建议做一次）
+----------------------------------------------------------------
+作用：同一道题的分镜只生成一次，之后直接读缓存，更快更省。
+不做也完全不影响功能（接口检测到表不存在会自动跳过缓存）。
+1. 打开 Supabase → 左侧 SQL Editor → New query；
+2. 把 supabase/v5.7.0_animation_cache.sql 的内容整段粘贴进去；
+3. 点 Run，出现 Success. No rows returned 即完成；该语句幂等，
+   以后重复运行也无害。
+
+五、环境变量（一般不用动）
+----------------------------------------------------------------
+动画模型沿用现有阿里云 MaaS key（OPENAI_API_KEY），默认：
+  ANIMATION_MODEL=qwen3-coder-flash（主，便宜快）
+  ANIMATION_FALLBACK_MODEL=qwen3-coder-plus（失败兜底）
+  ANIMATION_PLAN_MAX_TOKENS=2500
+解题模型沿用 SOLVE_MODEL（默认 deepseek-v4.1-flash）。
+只有想换模型时才需要在 Vercel → Settings → Environment Variables 里
+新增/修改，改后重新 Deploy 一次。
+
+六、回滚
+----------------------------------------------------------------
+前端若要回滚，把 app.js、index.html、anim-player.js 恢复成上一版本并
+重新部署即可；旧接口 api/animation.js 一直保留。数据库缓存表为独立
+新表，不影响任何现有数据，无需回滚。

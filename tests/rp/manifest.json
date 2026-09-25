@@ -1,0 +1,86 @@
+[
+  {
+    "fam": "grid",
+    "idx": 0,
+    "file": "grid_0.json",
+    "problem": "3行4列的苹果一共有多少个？",
+    "answer": "12"
+  },
+  {
+    "fam": "grid",
+    "idx": 3,
+    "file": "grid_3.json",
+    "problem": "一个长方形长6厘米，宽4厘米，它的面积是多少平方厘米？",
+    "answer": "24"
+  },
+  {
+    "fam": "grid",
+    "idx": 13,
+    "file": "grid_13.json",
+    "problem": "4列3行的气球排成方阵，一共多少个气球？",
+    "answer": "12"
+  },
+  {
+    "fam": "balance",
+    "idx": 0,
+    "file": "balance_0.json",
+    "problem": "解方程：2x + 5 = 17，x 等于多少？",
+    "answer": "6"
+  },
+  {
+    "fam": "balance",
+    "idx": 4,
+    "file": "balance_4.json",
+    "problem": "天平左边放2个同样的盒子和5克砝码，右边放17克砝码，天平正好平衡。一个盒子重多少克？",
+    "answer": "6"
+  },
+  {
+    "fam": "balance",
+    "idx": 11,
+    "file": "balance_11.json",
+    "problem": "2x - 3 = 9，求 x。",
+    "answer": "6"
+  },
+  {
+    "fam": "geometry",
+    "idx": 0,
+    "file": "geometry_0.json",
+    "problem": "长方形长8厘米，宽5厘米，它的周长是多少？",
+    "answer": "26厘米"
+  },
+  {
+    "fam": "geometry",
+    "idx": 6,
+    "file": "geometry_6.json",
+    "problem": "三角形底是6厘米，高是4厘米，它的面积是多少？",
+    "answer": "12平方厘米"
+  },
+  {
+    "fam": "geometry",
+    "idx": 16,
+    "file": "geometry_16.json",
+    "problem": "直角三角形两条直角边分别是6和8，求斜边长。",
+    "answer": "10厘米"
+  },
+  {
+    "fam": "function-graph",
+    "idx": 0,
+    "file": "function-graph_0.json",
+    "problem": "一条直线经过 (0,1) 和 (2,5)，求它的解析式",
+    "answer": "y=2x+1"
+  },
+  {
+    "fam": "function-graph",
+    "idx": 9,
+    "file": "function-graph_9.json",
+    "problem": "二次函数 y=x²-4x+3 的顶点坐标是多少？",
+    "answer": "顶点(2,-1)"
+  },
+  {
+    "fam": "function-graph",
+    "idx": 14,
+    "file": "function-graph_14.json",
+    "problem": "直线 y=2x-4 与 y=-x+5 的交点是多少？",
+    "answer": "交点(3,2)"
+  }
+]
