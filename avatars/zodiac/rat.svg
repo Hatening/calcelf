@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="CalcElf Rat">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DDF3FF"/><stop offset="1" stop-color="#A9D9FF"/></linearGradient>
+<filter id="shadow" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#24313A" flood-opacity=".16"/></filter>
+<filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+<style>
+.out{stroke:#24313A;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
+.line{fill:none;stroke:#24313A;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.eye{fill:#fff;stroke:#24313A;stroke-width:10}
+.pupil{fill:#1E2933}
+.hi{fill:#fff}
+.blush{fill:#F58AA1;opacity:.65}
+</style></defs>
+<circle cx="256" cy="256" r="226" fill="url(#bg)" filter="url(#shadow)"/>
+<circle cx="256" cy="256" r="226" fill="none" stroke="#FFFFFF" stroke-opacity=".48" stroke-width="8"/>
+<path d="M82 112h18M91 103v18M422 108h14M429 101v14" class="line" stroke="#fff" stroke-width="7" opacity=".7"/><circle cx="113" cy="386" r="7" fill="#fff" opacity=".7"/>
+<!-- tail curling --> <path d="M155 374C86 391 91 322 142 322c30 0 34-27 15-45" class="line" stroke="#8B5E3C" stroke-width="20"/>
+<!-- body --> <ellipse cx="262" cy="366" rx="77" ry="63" fill="#A9744F" class="out"/>
+<!-- ears --> <circle cx="180" cy="184" r="58" fill="#A9744F" class="out"/><circle cx="329" cy="180" r="60" fill="#A9744F" class="out"/><circle cx="180" cy="184" r="31" fill="#F6B2BE"/><circle cx="329" cy="180" r="32" fill="#F6B2BE"/>
+<!-- head --> <path d="M153 238C157 166 201 134 256 134c62 0 106 41 108 106 2 60-40 103-107 103-65 0-108-45-104-105Z" fill="#B9845F" class="out"/>
+<!-- eyes --> <ellipse cx="216" cy="239" rx="28" ry="36" class="eye"/><ellipse cx="302" cy="234" rx="28" ry="36" class="eye"/><ellipse cx="224" cy="244" rx="12" ry="20" class="pupil"/><ellipse cx="310" cy="239" rx="12" ry="20" class="pupil"/><circle cx="229" cy="236" r="6" class="hi"/><circle cx="315" cy="231" r="6" class="hi"/>
+<circle cx="205" cy="277" r="12" class="blush"/><circle cx="312" cy="272" r="12" class="blush"/>
+<!-- nose/mouth --> <path d="M249 270q8-10 16 0-8 11-16 0Z" fill="#E77986" class="out"/><path d="M257 279q-2 18-16 25M257 279q3 18 18 23" class="line" stroke-width="8"/>
+<!-- cheese --> <path d="M327 345h75l-18 57h-58Z" fill="#FFD75A" class="out"/><circle cx="369" cy="366" r="8" fill="#E9AF26"/><circle cx="351" cy="387" r="7" fill="#E9AF26"/>
+</svg>
