@@ -787,13 +787,20 @@ const renderSol=ss.map(sol=>{
   return {sol,steps};
 }).filter(x=>x.steps.length>0);
 const solList = renderSol.length?renderSol:ss.map((sol,i)=>({sol,steps:(sol.steps||[]).map((st,idx)=>({num:idx+1,desc:st.description??st.text??st.desc??st.content??st.body??st.explanation??'',formula:st.formula??st.equation??st.math??st.expression??''}))}));
-$('solutions').innerHTML=solList.map((x,i)=>{const sol=x.sol;
-  return `<div class="solution tw-sol" data-sol="${i}"><div class="sol-head"><b>${bulb} ${esc(sol.name||('Method '+(i+1)))}</b>${sol.recommended?`<span class="pill sol-rec">${starI}</span>`:''}</div>${x.steps.map(st=>{
-  const num = st.num ?? '';
-  return `<div class="step tw-pending"><div class="num">${esc(num)}</div><div><p class="tw-desc"></p>${st.formula?`<div class="formula tw-formula"></div>`:''}</div></div>`;
-}).join('')}</div>`;}).join('');
-    // v5.7.2：结构化步骤按 解法→步骤→公式 逐字打字机流出；点击面板立即全部显示
-    startSolutionsTypewriter(solList);
+// v6.2：仅在拿到结构化步骤时才整体替换；否则保留已逐字流出的讲解，避免“解题思路被清空”
+if (solList.length) {
+  $('solutions').innerHTML=solList.map((x,i)=>{const sol=x.sol;
+    return `<div class="solution tw-sol" data-sol="${i}"><div class="sol-head"><b>${bulb} ${esc(sol.name||('Method '+(i+1)))}</b>${sol.recommended?`<span class="pill sol-rec">${starI}</span>`:''}</div>${x.steps.map(st=>{
+    const num = st.num ?? '';
+    return `<div class="step tw-pending"><div class="num">${esc(num)}</div><div><p class="tw-desc"></p>${st.formula?`<div class="formula tw-formula"></div>`:''}</div></div>`;
+  }).join('')}</div>`;}).join('');
+  // v5.7.2：结构化步骤按 解法→步骤→公式 逐字打字机流出；点击面板立即全部显示
+  startSolutionsTypewriter(solList);
+} else if (window.__streamEl) {
+  window.__streamEl.classList.add('stream-complete');   // 保留流式讲解
+} else {
+  $('solutions').innerHTML=`<div class="solution"><div class="sol-head"><b>${bulb} ${esc(walkUi().walk)}</b></div><div class="stream-text" style="white-space:pre-wrap;line-height:1.95;font-size:15.5px;color:#1f2937">${esc(currentResult.answer||'')}</div></div>`;
+}
     currentSession={summary:(currentResult.question_text||'')+'\n'+(currentResult.answer||'')};
     $('chat').innerHTML=`<div class="msg assistant">${esc((currentLang==='zh-CN'||currentLang==='zh-TW')?(currentLang==='zh-TW'?'你好！圍繞這道題繼續問我。':'你好！围绕这道题继续问我。'):'Hi! Ask me anything about this problem.')}</div>`;
     if (j.is_anonymous) { setStatus(`🎁 您当前是免费体验模式，今日剩余 ${j.remaining_free} 次免费解题机会。`, false); }

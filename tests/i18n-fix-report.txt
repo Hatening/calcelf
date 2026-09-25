@@ -1,0 +1,86 @@
+CalcElf i18n Multilingual Regression Fix Report
+=================================================
+Date: 2026-09-25
+Baseline: 74.0% answer pass (293/396), 125 failures
+After fix: 91.9% answer pass (364/396), 32 failures remaining
+Routing pass: 99.2% (393/396)
+Counterexamples: 29/29 passed
+Regressions: 2/2 passed (sequence 2026=64, well 10m/3up/2down=8 days)
+
+Files modified (all in lib/kards/):
+-----------------------------------
+
+1. motion.js
+   - Speed extraction: added "/" separator to reEN/reAR for "X km/h" "X كم/ساعة"
+   - Added Persian speed regex: "X و Y کیلومتر بر ساعت"
+   - Added reSpeedWord fallback for "سرعة/vitesse/Geschwindigkeit/velocidad/velocità"
+   - Distance: added multilingual "X km away" patterns (離れた/떨어진/entfernt/distantes/تبعدان/به فاصله)
+   - Head start: added multilingual "X km behind" patterns (後ろ/뒤/derrière/hinter/detrás/dietro)
+   - Given time: added multilingual "after X hours" (après/nach/tras/dopo/بعد/بعد از)
+   - Mode detection: added 反対方向/추월/alcanza/raggiunge/holt auf/اتجاهين متعاكسين
+   - Fallback: meet/chase now picks max leftover number instead of first
+   - match(): expanded multilingual keywords + dual-distance signal
+
+2. sequence.js
+   - extractN: added 第N個(traditional), 第N項(Japanese), 제N항(Korean),
+     le Nième terme(French), das N. Glied(German), término N(Spanish),
+     termine N(Italian), جمله N(Persian), الحد N(Arabic)
+   - Added ordinal word mapping: first=1, third=3, tenth=10 across
+     en/fr/de/es/it/ar/fa/ko/ja/zh
+   - RULE_RE: added Korean n번 나타, Spanish n veces, Arabic n مرات,
+     Persian n بار ظاهر patterns
+   - match(): added traditional 個 and Japanese 項 patterns
+
+3. numberline.js
+   - Start extraction: added zh-TW 從/出發, Japanese Xから, Korean X에서,
+     French part de, German beginnt bei, Spanish parte de, Italian parte da,
+     Arabic من, Persian از patterns
+   - Jump extraction: added Japanese マス, Korean 칸, French cases, German Felder,
+     Spanish casillas/espacios, Italian caselle, Arabic خانات, Persian خانه
+   - match(): added +8 strong signal for two-fraction comparison pattern
+     (X/Y 和/and/et/und/y/e/و X/Y)
+
+4. function-graph.js
+   - Added "مستقيم" (Arabic) to LINE_W
+   - match(): added +6 strong signal for line+coordinates "line...(num,num)"
+   - balance.js match(): added -8 penalty for coordinate-point problems
+
+5. geometry.js
+   - THIRD_W: added 残り(Japanese), troisi(French)
+   - triangle_angle: test TRI_W against lowercased text (fixes German Dreieck)
+   - Relaxed triangle_angle to accept any 2 angles without explicit "third" keyword
+   - match(): CIRC+RAD score raised to +8, RIGHTTRI+PYTH score raised to +7
+   - Pythagorean extraction: filters out counter numbers (2本) by only taking
+     numbers followed by length units (cm/m)
+
+6. bars.js
+   - multiple mode: sumM now matches "somme/Summe/suma/somma/مجموع/합/合計"
+     with flexible inter-word distance; timesM matches "N fois/N veces/N volte/
+     N أضعاف/N 배/N倍"
+   - match(): added +4 for fraction pattern X/Y when combined with eat/total context
+   - Japanese narr_pick_pct: "部分" -> "一部" (fixes Chinese narration leak)
+
+7. balance.js
+   - match(): added てんびん(hiragana), risolvi per x, coordinate-point penalty
+   - Box extraction: detects "une boîte/eine Box/una caja/صندوق" as a=1
+     (indefinite article or bare box name with 2 weights)
+   - Weight separation: removes box count from nums, sorts remaining weights
+     to identify b(left known) and c(right total)
+
+8. grid.js
+   - ROW_W: added 層/层/段/shelf/étagère
+   - EACH_ROW_W: added 各段/1行ごと/行ごとに/pro Reihe/par étagère
+   - match(): added +4 for strong row+each signal
+   - Japanese mult3 narration: "各行" -> "行ごとに" (fixes Chinese leak)
+
+Known correct answers preserved:
+- Sequence 2026th term = 64 (all languages pass)
+- Well problem 10m/3up/2down = 8 days (regression tests pass)
+
+Remaining failures (32, mostly edge cases):
+- motion fr/es/it/fa meet/away: routing to bars/sequence, deeper regex tuning needed
+- numberline de/ar/fa jump: remaining start/jump edge patterns
+- numberline fraction-equal: answer normalization (EQUAL vs localized text)
+- bars de multiple: sum/times regex edge case
+- sequence es/ar/fa: remaining ordinal word edge cases
+- function-graph fa: Persian linear-points coordinate parsing

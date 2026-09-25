@@ -4,13 +4,16 @@ import { createEngine, buildTimeline } from '../core/engine.js';
 import { TOKENS, themeColor } from '../core/design-tokens.js';
 import { emoji, label, dashedLine, circle } from '../atoms/actors.js';
 import { progressBar, stepCard, highlightPulse } from '../atoms/ui.js';
+import { t as i18n, langOf, isRTL } from '../core/i18n.js';
 
 export function render(canvas, anim) {
   const scene = anim.scene || {};
   const actor = anim.actor || { emoji: '🐸' };
   const phases = Array.isArray(anim.phases) ? anim.phases : [];
   const depth = Number(scene.wellDepth) || 10;
-  const unit = scene.unit || '米';
+  const lang = langOf(anim);
+  const rtl = isRTL(lang);
+  const unit = scene.unit || (lang === 'zh-CN' || lang === 'zh-TW' ? '米' : 'm');
   const beats = Array.isArray(anim.beats) ? anim.beats : phases.map((p, i) => ({ id: `p${i}`, duration: 2500 }));
   const timeline = buildTimeline(beats);
   const totalMs = timeline.length ? timeline[timeline.length - 1].end + TOKENS.timing.holdMs : 5000;
@@ -40,7 +43,7 @@ export function render(canvas, anim) {
       circle(ctx, sx, sy, 24, { fill: '#fcd5ff' });
       ctx.fillStyle = '#0b1330';
       circle(ctx, sx - 9, sy - 6, 22, { fill: '#0b1330' });
-      label(ctx, '🌙 晚上', sx, sy + 52, { color: '#8fa4db', font: 13 });
+      label(ctx, '🌙 ' + i18n(lang, 'night'), sx, sy + 52, { color: '#8fa4db', font: 13 });
     } else {
       circle(ctx, sx, sy, 26, { fill: '#ffd76a' });
       ctx.strokeStyle = 'rgba(255,215,106,.5)';
@@ -52,7 +55,7 @@ export function render(canvas, anim) {
         ctx.lineTo(sx + Math.cos(a) * 42, sy + Math.sin(a) * 42);
         ctx.stroke();
       }
-      label(ctx, '☀️ 白天', sx, sy + 56, { color: '#ffd76a', font: 13 });
+      label(ctx, '☀️ ' + i18n(lang, 'day'), sx, sy + 56, { color: '#ffd76a', font: 13 });
     }
 
     // —— 井的矩形 ——
@@ -61,7 +64,12 @@ export function render(canvas, anim) {
     const wellW = Math.min(180, w * 0.36);
     const wellX = w / 2 - wellW / 2;
     const wellH = wellBottom - wellTop;
-    const d2y = (d) => wellTop + (Math.max(0, Math.min(d, depth)) / depth) * wellH;
+    // 坐标换算：卡片 phases 用“已爬高度”(0=井底, depth=井口)；
+    // 屏幕刻度用“深度”(0=井口/顶部, depth=井底/底部)。二者互为 depth-h。
+    const clampD = (v) => Math.max(0, Math.min(v, depth));
+    const depthY = (dv) => wellTop + (clampD(dv) / depth) * wellH;  // 深度 → y
+    const heightY = (hv) => depthY(depth - clampD(hv));             // 已爬高度 → y
+    const d2y = heightY;                                            // phases/物体用高度
 
     // 井体
     ctx.fillStyle = '#8a8ffc';
@@ -80,7 +88,7 @@ export function render(canvas, anim) {
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
     for (let d = 0; d <= depth; d++) {
-      const y = d2y(d);
+      const y = depthY(d);   // 深度刻度：0 在井口(上)，depth 在井底(下)
       ctx.strokeStyle = 'rgba(99,186,131,.4)';
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(wellX - 8, y); ctx.lineTo(wellX, y); ctx.stroke();
@@ -112,7 +120,7 @@ export function render(canvas, anim) {
     });
 
     // 底部状态条
-    const statusText = done ? ('完成：' + (anim.answer || p.label || '')) : (p.label || '');
+    const statusText = done ? (i18n(lang, 'done') + ': ' + (anim.answer || p.label || '')) : (p.label || '');
     stepCard(ctx, w, h, statusText, { color: done ? '#2fd6a5' : (isNight ? '#8fa4db' : '#ffd76a') });
 
     // 进度条

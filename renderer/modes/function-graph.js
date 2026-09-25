@@ -4,6 +4,7 @@ import { createEngine, buildTimeline, EASE } from '../core/engine.js';
 import { TOKENS, themeColor } from '../core/design-tokens.js';
 import { label, axes, circle, roundRect, emoji } from '../atoms/actors.js';
 import { progressBar, stepCard, highlightPulse } from '../atoms/ui.js';
+import { t as i18n, langOf } from '../core/i18n.js';
 
 const CONCRETE_EMOJI = {
   concrete_travel: '🚗',
@@ -13,6 +14,7 @@ const CONCRETE_EMOJI = {
 };
 
 export function render(canvas, anim) {
+  const lang = langOf(anim);
   const funcs = Array.isArray(anim.funcs) ? anim.funcs : [];
   const keyPoints = Array.isArray(anim.keyPoints) ? anim.keyPoints : [];
   const beats = Array.isArray(anim.beats) && anim.beats.length ? anim.beats : [
@@ -113,7 +115,8 @@ export function render(canvas, anim) {
       const e = CONCRETE_EMOJI[hint] || '📈';
       const bob = Math.sin(t / 500) * 6;
       emoji(ctx, e, w / 2, h * 0.45 + bob, 90);
-      label(ctx, 'x → time / x → 时间', w / 2, h * 0.45 + 80, { font: 14, color: '#8fa4db' });
+      const xLabel = (lang.indexOf('zh') === 0) ? 'x → 时间' : 'x → time';
+      label(ctx, xLabel, w / 2, h * 0.45 + 80, { font: 14, color: '#8fa4db' });
     }
 
     // —— 公式层（beat2）——

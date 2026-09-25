@@ -1,0 +1,141 @@
+========================================================
+ i18n BATCH-2  VERIFICATION REPORT
+ Cards: grid, sequence, geometry, function-graph
+ Time: 2026-09-25T07:39:34.540Z
+========================================================
+
+[1] node require each card:
+  PASS  require grid  — id=grid, keywords=154
+  PASS  require sequence  — id=sequence, keywords=127
+  PASS  require geometry  — id=geometry, keywords=146
+  PASS  require function-graph  — id=function-graph, keywords=117
+
+[2] per-language _keywords count (en/zh/ja/ko/fr/de/es/it ≥10; ar/fa ≥12):
+  PASS  keywords(grid) non-empty  — total=154
+  PASS  keywords(sequence) non-empty  — total=127
+  PASS  keywords(geometry) non-empty  — total=146
+  PASS  keywords(function-graph) non-empty  — total=117
+
+[3] runCard smoke (zh-CN / en / ar):
+  PASS  [grid|zh-CN] eligible
+  PASS  [grid|zh-CN] answer~=15  — got=15
+  PASS  [grid|zh-CN] no-zh-leak  — clean
+  PASS  [grid|zh-CN] rtl field  — rtl=false
+  PASS  [grid|zh-CN] language field  — language=zh-CN
+  PASS  [grid|en] eligible
+  PASS  [grid|en] answer~=15  — got=15
+  PASS  [grid|en] no-zh-leak  — clean
+  PASS  [grid|en] rtl field  — rtl=false
+  PASS  [grid|en] language field  — language=en
+  PASS  [grid|ar] eligible
+  PASS  [grid|ar] answer~=15  — got=15
+  PASS  [grid|ar] no-zh-leak  — clean
+  PASS  [grid|ar] rtl field  — rtl=true
+  PASS  [grid|ar] language field  — language=ar
+  PASS  [grid|zh-CN] eligible
+  PASS  [grid|zh-CN] answer~=12  — got=12
+  PASS  [grid|zh-CN] no-zh-leak  — clean
+  PASS  [grid|zh-CN] rtl field  — rtl=false
+  PASS  [grid|zh-CN] language field  — language=zh-CN
+  PASS  [grid|en] eligible
+  PASS  [grid|en] answer~=12  — got=12
+  PASS  [grid|en] no-zh-leak  — clean
+  PASS  [grid|en] rtl field  — rtl=false
+  PASS  [grid|en] language field  — language=en
+  PASS  [sequence|zh-CN] eligible
+  PASS  [sequence|zh-CN] answer~=64  — got=64
+  PASS  [sequence|zh-CN] no-zh-leak  — clean
+  PASS  [sequence|zh-CN] rtl field  — rtl=false
+  PASS  [sequence|zh-CN] language field  — language=zh-CN
+  PASS  [sequence|en] eligible
+  PASS  [sequence|en] answer~=64  — got=64
+  PASS  [sequence|en] no-zh-leak  — clean
+  PASS  [sequence|en] rtl field  — rtl=false
+  PASS  [sequence|en] language field  — language=en
+  PASS  [sequence|ar] eligible
+  PASS  [sequence|ar] answer~=64  — got=64
+  PASS  [sequence|ar] no-zh-leak  — clean
+  PASS  [sequence|ar] rtl field  — rtl=true
+  PASS  [sequence|ar] language field  — language=ar
+  PASS  [geometry|zh-CN] eligible
+  PASS  [geometry|zh-CN] answer~=16  — got=16厘米
+  PASS  [geometry|zh-CN] no-zh-leak  — clean
+  PASS  [geometry|zh-CN] rtl field  — rtl=false
+  PASS  [geometry|zh-CN] language field  — language=zh-CN
+  PASS  [geometry|en] eligible
+  PASS  [geometry|en] answer~=5  — got=5cm
+  PASS  [geometry|en] no-zh-leak  — clean
+  PASS  [geometry|en] rtl field  — rtl=false
+  PASS  [geometry|en] language field  — language=en
+  PASS  [geometry|ar] eligible
+  PASS  [geometry|ar] answer~=12.57  — got=12.57cm²
+  PASS  [geometry|ar] no-zh-leak  — clean
+  PASS  [geometry|ar] rtl field  — rtl=true
+  PASS  [geometry|ar] language field  — language=ar
+  PASS  [geometry|en] eligible
+  PASS  [geometry|en] answer~=40°  — got=40°
+  PASS  [geometry|en] no-zh-leak  — clean
+  PASS  [geometry|en] rtl field  — rtl=false
+  PASS  [geometry|en] language field  — language=en
+  PASS  [geometry|ar] eligible
+  PASS  [geometry|ar] answer~=145°  — got=145°
+  PASS  [geometry|ar] no-zh-leak  — clean
+  PASS  [geometry|ar] rtl field  — rtl=true
+  PASS  [geometry|ar] language field  — language=ar
+  PASS  [function-graph|zh-CN] eligible
+  PASS  [function-graph|zh-CN] answer~=y=2x+1  — got=y=2x+1
+  PASS  [function-graph|zh-CN] no-zh-leak  — clean
+  PASS  [function-graph|zh-CN] rtl field  — rtl=false
+  PASS  [function-graph|zh-CN] language field  — language=zh-CN
+  PASS  [function-graph|en] eligible
+  PASS  [function-graph|en] answer~=y=7  — got=y=7
+  PASS  [function-graph|en] no-zh-leak  — clean
+  PASS  [function-graph|en] rtl field  — rtl=false
+  PASS  [function-graph|en] language field  — language=en
+  PASS  [function-graph|ar] eligible
+  PASS  [function-graph|ar] answer~=(2,-1)  — got=الرأس (2,-1)
+  PASS  [function-graph|ar] no-zh-leak  — clean
+  PASS  [function-graph|ar] rtl field  — rtl=true
+  PASS  [function-graph|ar] language field  — language=ar
+  PASS  [function-graph|en] eligible
+  PASS  [function-graph|en] answer~=(2,3)  — got=intersection (2,3)
+  PASS  [function-graph|en] no-zh-leak  — clean
+  PASS  [function-graph|en] rtl field  — rtl=false
+  PASS  [function-graph|en] language field  — language=en
+
+[4] invariant: sequence 第2026个数 = 64:
+  PASS  seq[zh-CN] N=2026 -> 64  — got=64
+  PASS  seq[en] N=2026 -> 64  — got=64
+  PASS  seq[ar] N=2026 -> 64  — got=64
+
+[5) graphic scene present (quality gate):
+  PASS  grid has graphic scene  — concrete_array,dot_array,number_sentence
+  PASS  geometry has graphic scene  — concrete,shape,formula
+  PASS  function-graph has graphic scene  — concrete,graph,formula
+
+========================================================
+ TOTAL checks: 99/99 passed
+========================================================
+
+========================================================
+ [6] PER-LANGUAGE _KEYWORDS AUDIT (min 10; ar/fa min 12)
+========================================================
+grid:            en:19 zh-CN:19 zh-TW:19 ja:17 ko:16 fr:15 de:14 es:14 it:14 ar:16 fa:16
+sequence:        en:13 zh-CN:13 zh-TW:13 ja:12 ko:12 fr:12 de:11 es:11 it:11 ar:13 fa:13
+geometry:        en:16 zh-CN:18 zh-TW:18 ja:17 ko:17 fr:15 de:15 es:15 it:15 ar:16 fa:16
+function-graph:  en:14 zh-CN:12 zh-TW:12 ja:11 ko:11 fr:11 de:11 es:10 it:11 ar:12 fa:12
+  -> all langs >=10 ; ar/fa all >=12  [OK]
+
+========================================================
+ [7] fa (RTL) SMOKE
+========================================================
+[grid|fa]            elig=true ans=15     rtl=true no-zh-leak
+[geometry|fa]       elig=true ans=5cm    rtl=true no-zh-leak
+[sequence|fa]        elig=true ans=64     rtl=true no-zh-leak
+
+========================================================
+ CONCLUSION
+========================================================
+4 cards upgraded to full 11-language i18n. All 99 automated checks pass.
+Invariant preserved: sequence 第2026个数 = 64 (zh/en/ar/fa).
+renderParams now carries rtl + language on every card.

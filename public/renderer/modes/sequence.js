@@ -3,6 +3,27 @@
 import { createEngine, buildTimeline } from '../core/engine.js';
 import { label, roundRect, circle } from '../atoms/actors.js';
 import { stepCard, progressBar, highlightPulse } from '../atoms/ui.js';
+import { langOf } from '../core/i18n.js';
+
+const SEQ_I18N = {
+  en: { hRule:'Pattern: n appears n times', hTri:'Cumulative: triangular T(k)=k(k+1)/2', hLoc:'Locate: T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`T(${n})=${v}`, target:'term {N}', ansSmall:'Term {N}' },
+  'zh-CN': { hRule:'规律：数字 n，连续出现 n 次', hTri:'累计个数：三角形数 T(k)=k(k+1)/2', hLoc:'定位：T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`共 ${v}`, target:'第 {N} 个', ansSmall:'第 {N} 个数' },
+  'zh-TW': { hRule:'規律：數字 n，連續出現 n 次', hTri:'累計個數：三角形數 T(k)=k(k+1)/2', hLoc:'定位：T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`共 ${v}`, target:'第 {N} 個', ansSmall:'第 {N} 個數' },
+  ja: { hRule:'規則：数字 n が n 回連続出現', hTri:'累計：三角形数 T(k)=k(k+1)/2', hLoc:'位置：T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`T(${n})=${v}`, target:'第 {N} 項', ansSmall:'第 {N} 項' },
+  ko: { hRule:'규칙: 숫자 n이 n번 연속', hTri:'누적: 삼각수 T(k)=k(k+1)/2', hLoc:'위치: T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`T(${n})=${v}`, target:'제 {N}항', ansSmall:'제 {N}항' },
+  fr: { hRule:'Règle : n apparaît n fois', hTri:'Cumul : triangulaire T(k)=k(k+1)/2', hLoc:'Position : T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`T(${n})=${v}`, target:'terme {N}', ansSmall:'Terme {N}' },
+  de: { hRule:'Muster: n erscheint n Mal', hTri:'Kumulativ: Dreieckszahl T(k)=k(k+1)/2', hLoc:'Position: T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`T(${n})=${v}`, target:'{N}. Glied', ansSmall:'{N}. Glied' },
+  es: { hRule:'Patrón: n aparece n veces', hTri:'Acumulado: triangular T(k)=k(k+1)/2', hLoc:'Posición: T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`T(${n})=${v}`, target:'término {N}', ansSmall:'Término {N}' },
+  it: { hRule:'Schema: n appare n volte', hTri:'Cumulato: triangolare T(k)=k(k+1)/2', hLoc:'Posizione: T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`T(${n})=${v}`, target:'termine {N}', ansSmall:'Termine {N}' },
+  ar: { hRule:'النمط: يظهر n عدد n مرات', hTri:'التراكمي: العددي المثلث T(k)=k(k+1)/2', hLoc:'الموضع: T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`T(${n})=${v}`, target:'الحد {N}', ansSmall:'الحد {N}' },
+  fa: { hRule:'الگو: n، n بار پیاپی', hTri:'تجمعی: عدد مثلثی T(k)=k(k+1)/2', hLoc:'موقعیت: T({a})={b} < {N} ≤ T({c})={d}', cum:(n,v)=>`T(${n})=${v}`, target:'جمله {N}', ansSmall:'جمله {N}' },
+};
+
+function fill(s, vars) {
+  let r = String(s);
+  for (const k in vars) r = r.split('{' + k + '}').join(vars[k]);
+  return r;
+}
 
 const GROUP_COLORS = ['#4f8cff', '#2fd6a5', '#f59e0b', '#c4b5fd', '#f472b6', '#38bdf8', '#a3e635', '#fb923c'];
 const gcolor = (n) => GROUP_COLORS[(n - 1) % GROUP_COLORS.length];
@@ -24,15 +45,16 @@ function chip(ctx, cx, cy, r, text, color, opts = {}) {
 export function render(canvas, anim) {
   const sc = anim.scene || {};
   const N = sc.N, m = sc.m, Tprev = sc.Tprev, Tm = sc.Tm, off = sc.offsetWithin;
-  const zh = (anim.language || 'zh').indexOf('zh') === 0;
+  const lang = langOf(anim);
+  const L = SEQ_I18N[lang] || SEQ_I18N.en;
   const T = {
-    hRule: zh ? '规律：数字 n，连续出现 n 次' : 'Pattern: n appears n times in a row',
-    hTri: zh ? '累计个数：三角形数 T(k)=1+2+…+k=k(k+1)/2' : 'Cumulative: triangular T(k)=1+2+…+k=k(k+1)/2',
-    hLoc: zh ? `定位：T(${m - 1})=${Tprev} < ${N} ≤ T(${m})=${Tm}` : `Locate: T(${m - 1})=${Tprev} < ${N} ≤ T(${m})=${Tm}`,
-    cum: (n, v) => zh ? `共 ${v}` : `T(${n})=${v}`,
+    hRule: L.hRule,
+    hTri: L.hTri,
+    hLoc: fill(L.hLoc, { a: m - 1, b: Tprev, N, c: m, d: Tm }),
+    cum: L.cum,
     dots: '……',
-    target: zh ? `第 ${N} 个` : `term ${N}`,
-    ansSmall: zh ? `第 ${N} 个数` : `Term ${N}`,
+    target: fill(L.target, { N }),
+    ansSmall: fill(L.ansSmall, { N }),
     ansBig: `= ${m}`,
   };
 
@@ -136,11 +158,13 @@ export function render(canvas, anim) {
           stroke: isTarget ? '#ffd76a' : null,
         });
         if (isTarget) {
+          ctx.save(); ctx.globalAlpha = mAlpha;   // 与卡片一起淡入，避免短暂“空环”
           highlightPulse(ctx, chipX(j), my, r + 5, t, { color: '#ffd76a' });
           label(ctx, T.target, chipX(j), my + r + 16, { color: '#ffd76a', font: 12, weight: 'bold' });
+          ctx.restore();
         }
       }
-      if (m > cmShow) label(ctx, '+…', chipX(cmShow - 1) + r + 12, my, { color: '#8fa4db', font: 16 });
+      if (m > cmShow) label(ctx, '+…', chipX(cmShow - 1) + r + 12, my, { color: '#8fa4db', font: 16, alpha: mAlpha });
     }
 
     // ===== 拍 3：居中实心答案卡（绿色描边）=====

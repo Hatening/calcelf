@@ -1,0 +1,104 @@
+================================================================================
+ i18n BATCH-1 验证报告 — 4 张知识卡升级到 11 语种
+================================================================================
+日期: 2026-09-25
+代码根目录: /home/user/Doubao/chats/38442579084875522/_v6base
+参考实现: lib/kards/axis_motion.js（严格逐行对齐其模式）
+i18n 内核: lib/kards/i18n.js（直接 require，未改动）
+
+涉及卡片:
+  1. lib/kards/motion.js      — 行程问题（相遇/追及/背向）
+  2. lib/kards/numberline.js  — 数轴（整数跳跃/分数比较）
+  3. lib/kards/bars.js        — 条形模型（分数/百分比/和倍）
+  4. lib/kards/balance.js     — 天平与方程（ax+b=c）
+
+--------------------------------------------------------------------------------
+一、require 冒烟（每张卡 node -e require 不报错）
+--------------------------------------------------------------------------------
+  motion.js      : OK  keywords=173
+  numberline.js  : OK  keywords=164
+  bars.js        : OK  keywords=177
+  balance.js     : OK  keywords=156
+  （keywords 为 11 语种 _keywords 合集；ar/fa 每语种 _keywords 均 >=12 个）
+  RTL: ar=true, fa=true（renderParams 均已带 rtl + language 字段）
+
+--------------------------------------------------------------------------------
+二、zh-CN / en / ar 三语 runCard 典型题 smoke（tests/i18n-batch1-smoke.js）
+--------------------------------------------------------------------------------
+  结果: 12/12 PASS
+
+  motion (相遇, d=120, vA=40, vB=20):
+    zh-CN  eligible=true  answer="2 小时"      旁白全中文
+    en     eligible=true  answer="2 h"          旁白全英文, 零中文泄漏
+    ar     eligible=true  answer="2 ساعة"      旁白全阿文, rtl=true, 零中文泄漏
+  numberline (jump, start=3, right=4):
+    zh-CN  eligible=true  answer="7"
+    en     eligible=true  answer="7"            "Jump 4 spaces to the right..."
+    ar     eligible=true  answer="7"            "اقفز 4 خانات نحو اليمين..."
+  bars (fraction, total=20, 3/5):
+    zh-CN  eligible=true  answer="12"
+    en     eligible=true  answer="12"           "Take 3 of those parts..."
+    ar     eligible=true  answer="12"            "نأخذ 3 من هذه الأجزاء..."
+  balance (2x+5=17):
+    zh-CN  eligible=true  answer="6"
+    en     eligible=true  answer="6"            "Take 5 away from BOTH sides..."
+    ar     eligible=true  answer="6"            "نزيل 5 من الطرفين معاً..."
+
+  泄漏校验: 对 en/ar 逐句扫描 narration + beat.label + scene.label + answer，
+            无任何 CJK 汉字；renderParams.rtl===true(ar/fa)；renderParams.language 与请求一致。
+
+--------------------------------------------------------------------------------
+三、全 11 语种遍历（每张卡用同一典型题，逐语种跑 runCard）
+--------------------------------------------------------------------------------
+  语种集合: en, zh-CN, zh-TW, ja, ko, fr, de, es, it, ar, fa
+  - 对所有 eligible 输出扫描模板键回退（narr_/unit_/time_/beat_/scene_/answer_ 前缀）: 无泄漏
+  - ja 输出含汉字属正常（日语假名体系本就使用汉字，i18n.looksLikeLang('ja') 显式允许 CJK）
+  - 非 zh 语种输出无 CJK 泄漏（ja 除外，见上）
+  - 数字/算式/单位换算在所有语种下数学一致
+
+--------------------------------------------------------------------------------
+四、已知正确口径回归（samples/*.json 全量）
+--------------------------------------------------------------------------------
+  82 条既有样本（motion/numberline/bars/balance）数学答案复算:
+    79/82 完全一致。
+  3 条"差异"全部是 motion 英文题的答案单位本地化，非数学错误:
+    - en "Two cars ... toward each other"  exp="2 小时"  now="2 h"
+    - en "Two people walk away..."         exp="1000"    now="1000 m"
+    - en "Two cyclists ... toward each other" exp="1 小时" now="1 h"
+  说明: 旧版 solve() 硬编码中文单位，英文题也输出"X 小时/米"。本次按需求改为
+        答案也走 i18n.t()，英文题输出 "2 h / 1000 m"，符合"非中文请求零中文泄漏"。
+        3 条样本的 expectedAnswer 为旧口径残留，数学结果完全正确。
+
+  validate() 逻辑保持:
+    - motion: 三模式复算 + 追及必须 fast>slow，未改动
+    - numberline: jump 复算保留；分数比较改用结构化 winner 字段判定
+      （diff>0 必须 winner===1, diff<0 必须 winner===-1），口径与原 /更大/ 正则等价，
+      仅去除对中文字符串的依赖以支持多语种
+    - bars: 三模式复算，未改动
+    - balance: a>0 / x===(c-b)/a / 答案==x / x 为整数 / >=3 步，未改动
+  已知口径未触碰: 数列第2026个数=64、爬井方向自井底向上（属 axis_motion/sequence，本次未改）。
+
+--------------------------------------------------------------------------------
+五、每张卡完成项对照（a)~g)）
+--------------------------------------------------------------------------------
+  (a) 顶部 require('./i18n') + i18n.register(cardId, {11语种表}): 全部完成
+      每语种含 _keywords（路由词）+ 全部旁白模板 + 渲染 beat/scene 标签
+  (b) module.exports.keywords = i18n.keywords(cardId): 全部完成
+  (c) match() 多语种触发词（ar/fa/ja/ko/fr/de/es/it）: 全部加入
+  (d) extract() 多语种上下文词: 相距/每小时/从X出发/向右跳/几分之几/百分之/天平/解方程等
+      均补多语种变体；数字本身通用
+  (e) solve() 全部 narration 走 i18n.t()，答案文本走模板（"{t} {timeUnit}" / "{t} ساعة"）
+  (f) renderParams() beats/scene 标签走 i18n.t()，并带 rtl: i18n.isRTL(lang) 与 language: lang
+  (g) validate() 保留原逻辑与已知口径（numberline 分数比较改结构化 winner，口径等价）
+
+--------------------------------------------------------------------------------
+六、过程中修复的问题
+--------------------------------------------------------------------------------
+  1. motion 阿语模式: 补 يلتقيان/تلتقيان/باتجاه بعض 触发词（阿语"相遇"双数形式）
+  2. motion 时间单位键名不一致: 表内 time_min/time_sec，查找曾用 time_minute/time_second
+     → 改为显式映射 {hour:time_hour, minute:time_min, second:time_sec}
+  3. motion 阿语秒误判: "الثانية"(后者) 含 ثانية 子串 → 要求 ثانية 前接数字才算"秒"
+  4. bars/balance 两处残留 .replace 拼接 hack 清理为干净模板串
+
+结论: 4 张卡已全部升级为 11 语种，三语 smoke 12/12 通过，无中文泄漏，数学口径回归。
+================================================================================

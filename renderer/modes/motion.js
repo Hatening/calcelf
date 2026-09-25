@@ -4,9 +4,11 @@ import { createEngine, buildTimeline } from '../core/engine.js';
 import { TOKENS, themeColor } from '../core/design-tokens.js';
 import { emoji, label, arrow, circle, dashedLine } from '../atoms/actors.js';
 import { progressBar, stepCard, highlightPulse } from '../atoms/ui.js';
+import { t as i18n, langOf } from '../core/i18n.js';
 
 export function render(canvas, anim) {
   const scene = anim.scene || {};
+  const lang = langOf(anim);
   const beats = Array.isArray(anim.beats) ? anim.beats : [{ id: 'b', duration: 5000 }];
   const timeline = buildTimeline(beats);
   const totalMs = timeline.length ? timeline[timeline.length - 1].end + TOKENS.timing.holdMs : 5000;
@@ -73,7 +75,7 @@ export function render(canvas, anim) {
       ctx.globalAlpha = Math.min(1, (idx - 1) * 0.7);
       dashedLine(ctx, meetX, roadY - 74, meetX, roadY + 30, { color: '#2fd6a5', width: 2 });
       circle(ctx, meetX, roadY, 6, { fill: '#2fd6a5' });
-      label(ctx, scene.meetPt || '相遇点', meetX, roadY - 86, { color: '#2fd6a5', font: 14 });
+      label(ctx, scene.meetPt || i18n(lang, 'meetingPoint'), meetX, roadY - 86, { color: '#2fd6a5', font: 14 });
       ctx.restore();
     }
 

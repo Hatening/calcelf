@@ -4,9 +4,12 @@ import { createEngine, buildTimeline } from '../core/engine.js';
 import { TOKENS, themeColor } from '../core/design-tokens.js';
 import { emoji, label, bar, circle } from '../atoms/actors.js';
 import { progressBar, stepCard, highlightPulse } from '../atoms/ui.js';
+import { t as i18n, langOf } from '../core/i18n.js';
 
 export function render(canvas, anim) {
   const scene = anim.scene || {};
+  const lang = langOf(anim);
+  const isZh = lang.indexOf('zh') === 0;
   const beats = Array.isArray(anim.beats) ? anim.beats : [{ id: 'b', duration: 5000 }];
   const timeline = buildTimeline(beats);
   const totalMs = timeline.length ? timeline[timeline.length - 1].end + TOKENS.timing.holdMs : 5000;
@@ -61,7 +64,7 @@ export function render(canvas, anim) {
         ctx.restore();
       }
       // 标签
-      label(ctx, `单位“1” = ${total}`, barX + barW + 10, barY + barH / 2, { color: '#8fa4db', font: 13, align: 'left' });
+      label(ctx, i18n(lang, 'unit1') + ' = ' + total, barX + barW + 10, barY + barH / 2, { color: '#8fa4db', font: 13, align: 'left' });
       if (idx >= 3) {
         label(ctx, `${num}/${den} = ${part}`, barX + segW * num / 2, barY - 20, { color: '#f59e0b', font: 16, weight: 'bold' });
         highlightPulse(ctx, barX + segW * num / 2, barY + barH / 2, segW * num / 2, t, { color: '#f59e0b' });
@@ -85,10 +88,13 @@ export function render(canvas, anim) {
       const y2 = h * 0.46; // 甲
       // 乙 = 1 份
       bar(ctx, barX, y1, unitW, barH, { color: '#4f8cff', radius: 8 });
-      label(ctx, '乙(1份)', barX + unitW / 2, y1 - 16, { color: '#4f8cff', font: 13 });
+      const labelB = isZh ? '乙(1份)' : 'B(1)';
+      const labelA = isZh ? `甲(${k}份)` : `A(${k})`;
+      const labelOne = isZh ? `1份 = ${unitVal}` : `1 = ${unitVal}`;
+      label(ctx, labelB, barX + unitW / 2, y1 - 16, { color: '#4f8cff', font: 13 });
       // 甲 = k 份
       bar(ctx, barX, y2, unitW * k, barH, { color: '#f59e0b', radius: 8 });
-      label(ctx, `甲(${k}份)`, barX + unitW * k / 2, y2 + barH + 20, { color: '#f59e0b', font: 13 });
+      label(ctx, labelA, barX + unitW * k / 2, y2 + barH + 20, { color: '#f59e0b', font: 13 });
       // 分割 k 份
       ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,.4)'; ctx.lineWidth = 1.5;
       for (let i = 1; i < k; i++) {
@@ -98,7 +104,7 @@ export function render(canvas, anim) {
       ctx.restore();
       if (idx >= 2) {
         highlightPulse(ctx, barX + unitW / 2, y1 + barH / 2, unitW / 2, t, { color: '#4f8cff' });
-        label(ctx, `1份 = ${unitVal}`, barX + unitW / 2, y1 - 40, { color: '#2fd6a5', font: 16, weight: 'bold' });
+        label(ctx, labelOne, barX + unitW / 2, y1 - 40, { color: '#2fd6a5', font: 16, weight: 'bold' });
       }
     }
 
