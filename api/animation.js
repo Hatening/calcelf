@@ -2,6 +2,7 @@ const { getUser, admin } = require('../lib/supabase');
 const { allow } = require('../lib/rate');
 const { responses } = require('../lib/openai');
 const { detectArchetype, layoutDirective, partsBin } = require('../lib/anim-parts');
+const bank = require('../lib/kards/bank');
 
 // ============================================================
 // v5.8.4 独立动画（把题目原文直接交给模型，模型自己解题并写一整页 HTML，贴近 DeepSeek 网页聊天效果）
@@ -34,6 +35,18 @@ function buildPrompt(b, fixNotes) {
   // v5.9：先判版式，再给强制版式指令（竖式题必须竖排对齐，绝不允许横式）
   const arch = detectArchetype(b.problem);
   const directive = layoutDirective(arch);
+  // 例题库：检索 1-2 个同族"教学分镜参考"（只学具象程度与场景顺序，禁止照抄题目/数值）
+  let storyboardBlock = '';
+  try {
+    const refs = bank.relevant(b.problem, { k: 2, maxBeats: 6 });
+    if (refs.length) {
+      storyboardBlock = `\n=== TEACHING STORYBOARD REFERENCE (distilled worked examples) ===\n` +
+        `These show the EXPECTED level of concreteness and the scene-by-scene order for this kind of problem.\n` +
+        `Learn HOW to stage it (real objects first, then the abstract step), but build a FRESH animation for the given problem:\n` +
+        `do NOT reuse these problems, numbers, or labels. Output language stays ${b.language || 'en'}.\n` +
+        JSON.stringify(refs) + '\n';
+    }
+  } catch (e) { console.error('[animation] bank guidance failed:', e.message); }
   const repairBlock = fixNotes
     ? `*** REPAIR REQUIRED *** A previous attempt was rejected because: ${fixNotes}\nFix EVERY issue, reuse the matching pieces from the PARTS KIT, and output ONE complete valid HTML document.\n`
     : '';
@@ -46,7 +59,7 @@ ${String(b.problem || '').slice(0, 6000)}
 ${solutionLine}
 
 ${directive}
-
+${storyboardBlock}
 === GENERAL VISUAL RULES ===
 - Do NOT just make generic text cards. Draw the real things and quantities from the problem, and animate their changes.
 - Use inline SVG (preferred) plus CSS transitions / vanilla JS. Every logical step must be a visible change of the objects, not a paragraph of text.
