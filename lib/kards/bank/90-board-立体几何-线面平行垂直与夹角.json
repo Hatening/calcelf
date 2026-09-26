@@ -1,0 +1,206 @@
+{
+  "topic": "立体几何：线面平行垂直与夹角",
+  "examples": [
+    {
+      "problem": "如图，正方体 ABCD-A₁B₁C₁D₁ 的棱长为 2，小航用细杆搭出这个正方体框架。求证：A₁C₁ ∥ 平面 ABCD。",
+      "answer": "连接 AC。因为 AA₁ ∥ CC₁ 且 AA₁ = CC₁，所以四边形 AA₁C₁C 是平行四边形，所以 A₁C₁ ∥ AC。又 AC ⊂ 平面 ABCD，A₁C₁ ⊄ 平面 ABCD，所以 A₁C₁ ∥ 平面 ABCD。",
+      "difficulty": "低",
+      "beats": [
+        {
+          "narration": "先看清这个正方体，底面 ABCD 是我们要比较的平面。",
+          "visual": "正方体 ABCD-A₁B₁C₁D₁ 从中心旋转出现，不可见棱用虚线。底面 ABCD 被蓝色半透明填充，慢慢亮起。"
+        },
+        {
+          "narration": "在顶面上找到 A₁C₁，在底面上找到 AC，它们的位置有什么联系？",
+          "visual": "顶面的线段 A₁C₁ 用红色描出并加粗，底面的线段 AC 用黄色描出，两者同时闪烁。"
+        },
+        {
+          "narration": "把 A₁C₁ 和 AC 放在一起比一比——它们方向相同。",
+          "visual": "用虚线箭头把 A₁C₁ 平移到 AC 的位置，两条线重合，出现双箭头平行符号，四边形 AA₁C₁C 边框高亮。"
+        },
+        {
+          "narration": "AA₁ 和 CC₁ 平行且相等，所以 AA₁C₁C 是平行四边形，A₁C₁ ∥ AC。",
+          "visual": "竖棱 AA₁ 和 CC₁ 用绿色闪烁，标上等长小短线，平行四边形 AA₁C₁C 面被浅绿色填充。"
+        },
+        {
+          "narration": "AC 在平面 ABCD 内，A₁C₁ 不在平面 ABCD 内，所以 A₁C₁ 与平面 ABCD 平行。",
+          "visual": "AC 落入蓝色平面 ABCD 内并高亮，A₁C₁ 悬浮在平面上方。文字判定定理“线线平行 ⇒ 线面平行”从下方升起。"
+        },
+        {
+          "narration": "结论：A₁C₁ ∥ 平面 ABCD。",
+          "visual": "红色 A₁C₁ 与蓝色平面 ABCD 之间出现平行符号，屏幕中央打出最终结论式：A₁C₁ ∥ 平面 ABCD。"
+        }
+      ],
+      "key_objects": [
+        "正方体 ABCD-A₁B₁C₁D₁",
+        "平面 ABCD",
+        "线段 A₁C₁",
+        "线段 AC",
+        "平行四边形 AA₁C₁C"
+      ],
+      "pitfall": "只看到 A₁C₁ ∥ AC 就直接下结论，忘记检查 A₁C₁ 是否在平面 ABCD 外。"
+    },
+    {
+      "problem": "如图，长方体 ABCD-A₁B₁C₁D₁ 中，AB=2，AD=1，AA₁=2，小杰在棱 AA₁ 上取中点 E，在棱 DD₁ 上取中点 F。求证：EF ∥ 平面 ABCD。",
+      "answer": "因为 E、F 分别是 AA₁、DD₁ 的中点，所以 AE ∥ DF 且 AE = DF，四边形 AEFD 是平行四边形，所以 EF ∥ AD。又 AD ⊂ 平面 ABCD，EF ⊄ 平面 ABCD，所以 EF ∥ 平面 ABCD。",
+      "difficulty": "中",
+      "beats": [
+        {
+          "narration": "这是一个长宽高分别为 2、1、2 的长方体，底面 ABCD 是要比较的平面。",
+          "visual": "长方体 ABCD-A₁B₁C₁D₁ 出现，棱长标注 AB=2、AD=1、AA₁=2。底面 ABCD 蓝色半透明高亮。"
+        },
+        {
+          "narration": "在两条竖棱上找到中点 E 和 F，把它们连起来。",
+          "visual": "AA₁ 的中点处红点闪烁并标出 E，DD₁ 的中点处红点闪烁并标出 F，红色线段 EF 从 E 连到 F。"
+        },
+        {
+          "narration": "再把底面上的 AD 连起来，看看 EF 和 AD 有什么关系。",
+          "visual": "底面线段 AD 用黄色描出，EF 保持红色，两条线同时闪烁，出现平行双箭头。"
+        },
+        {
+          "narration": "AE 和 DF 都垂直于底面，长度都是 1，所以 AE ∥ DF 且 AE = DF。",
+          "visual": "竖段 AE 和 DF 用绿色高亮，标上等长短线，AE 和 DF 分别向下平移到 AD 两端，组成平行四边形 AEFD。"
+        },
+        {
+          "narration": "于是四边形 AEFD 是平行四边形，EF ∥ AD。",
+          "visual": "平行四边形 AEFD 在长方体侧面被浅绿色填充，EF 与 AD 同时加粗，平行符号闪烁。"
+        },
+        {
+          "narration": "AD 在平面 ABCD 内，EF 不在平面 ABCD 内，所以 EF ∥ 平面 ABCD。",
+          "visual": "AD 沉入蓝色平面 ABCD 内，EF 悬浮在上方。判定定理文字出现，最后打出：EF ∥ 平面 ABCD。"
+        }
+      ],
+      "key_objects": [
+        "长方体 ABCD-A₁B₁C₁D₁",
+        "中点 E",
+        "中点 F",
+        "线段 EF",
+        "线段 AD",
+        "平面 ABCD"
+      ],
+      "pitfall": "误以为 EF 与 AD 相等就能直接推出线面平行，忘记说明 EF 不在平面 ABCD 内。"
+    },
+    {
+      "problem": "如图，正三棱柱 ABC-A₁B₁C₁ 中，AB=2，AA₁=3，D 是 AC 的中点。求证：BD ⊥ 平面 ACC₁A₁。",
+      "answer": "因为△ABC 是正三角形，D 为 AC 中点，所以 BD ⊥ AC。又因为三棱柱是直三棱柱，AA₁ ⊥ 平面 ABC，所以 AA₁ ⊥ BD。AC ∩ AA₁ = A，所以 BD ⊥ 平面 ACC₁A₁。",
+      "difficulty": "中",
+      "beats": [
+        {
+          "narration": "先看这个正三棱柱，底面 ABC 是边长为 2 的正三角形。",
+          "visual": "正三棱柱 ABC-A₁B₁C₁ 出现，底面 ABC 用浅蓝色三角形高亮，三条边标上 AB=BC=CA=2。"
+        },
+        {
+          "narration": "D 是 AC 的中点，把 BD 连起来。",
+          "visual": "AC 中点处红点闪烁标出 D，红色线段 BD 从 B 连到 D，并加粗。"
+        },
+        {
+          "narration": "正三角形中，中线也是高，所以 BD ⊥ AC。",
+          "visual": "AC 用黄色高亮，BD 红色，在 D 点出现直角符号，BD 与 AC 同时闪烁，显示垂直。"
+        },
+        {
+          "narration": "直三棱柱的侧棱 AA₁ 垂直底面，所以 AA₁ ⊥ 平面 ABC，也就垂直 BD。",
+          "visual": "侧棱 AA₁ 用绿色高亮，在 A 点画直角符号，AA₁ 竖直向下延伸并与 BD 相交于 B 的正上方投影，显示 AA₁ ⊥ BD。"
+        },
+        {
+          "narration": "AC 和 AA₁ 是平面 ACC₁A₁ 内两条相交直线，BD 同时垂直于它们。",
+          "visual": "平面 ACC₁A₁ 被浅紫色半透明填充，AC 和 AA₁ 用黄色和绿色加粗，交点在 A 处闪烁。"
+        },
+        {
+          "narration": "所以 BD ⊥ 平面 ACC₁A₁。",
+          "visual": "BD 垂直插入平面 ACC₁A₁，出现直角标记，判定定理“线线垂直 ⇒ 线面垂直”出现，最后打出：BD ⊥ 平面 ACC₁A₁。"
+        }
+      ],
+      "key_objects": [
+        "正三棱柱 ABC-A₁B₁C₁",
+        "中点 D",
+        "线段 BD",
+        "线段 AC",
+        "侧棱 AA₁",
+        "平面 ACC₁A₁"
+      ],
+      "pitfall": "只证明 BD⊥AC 就结束，漏掉 BD⊥AA₁，或者没说明 AC 与 AA₁ 相交。"
+    },
+    {
+      "problem": "如图，正方体 ABCD-A₁B₁C₁D₁ 的棱长为 1，小宇在棱 CC₁ 的中点处标记了 E。求直线 AE 与平面 ABCD 所成角的正切值。",
+      "answer": "以 A 为原点建系：A(0,0,0)，C(1,1,0)，E(1,1,1/2)。AE 在底面 ABCD 上的投影为 AC，EC⊥平面 ABCD，EC=1/2，AC=√2。设所求线面角为 θ，则 tanθ = EC/AC = (1/2)/√2 = √2/4。",
+      "difficulty": "高",
+      "beats": [
+        {
+          "narration": "棱长为 1 的正方体，底面 ABCD 是投影面。",
+          "visual": "正方体 ABCD-A₁B₁C₁D₁ 出现，棱长标 1，底面 ABCD 蓝色半透明。"
+        },
+        {
+          "narration": "在 CC₁ 的中点标出 E，连接 AE，再连接底面上的 AC。",
+          "visual": "CC₁ 中点出现红点 E，红色线段 AE 从 A 连到 E，黄色虚线 AC 从 A 连到 C，AC 闪烁表示投影。"
+        },
+        {
+          "narration": "EC 垂直底面，所以 AC 就是 AE 在底面 ABCD 上的投影，∠EAC 就是所求的线面角。",
+          "visual": "绿色竖段 EC 高亮，在 C 点画直角符号，角 EAC 用弧线标出，写上 θ。"
+        },
+        {
+          "narration": "把直角三角形 AEC 从立体图中拉出来，和平面图对照。",
+          "visual": "三角形 AEC 从正方体中飞出，展平成直角三角形，直角在 C，标出 AC 和 EC。"
+        },
+        {
+          "narration": "AC 是正方形底面的对角线，长为 √2；EC 是棱长的一半，长为 1/2。",
+          "visual": "AC 上标注 √2，EC 上标注 1/2，底面的正方形 ABCD 显示对角线 AC。"
+        },
+        {
+          "narration": "所以 tanθ = EC/AC = (1/2)/√2 = √2/4。",
+          "visual": "公式 tanθ = 对边/邻边 = EC/AC 出现，数字代入后化简为 √2/4，最终答案高亮。"
+        }
+      ],
+      "key_objects": [
+        "正方体 ABCD-A₁B₁C₁D₁",
+        "中点 E",
+        "线段 AE",
+        "线段 AC",
+        "线段 EC",
+        "平面 ABCD",
+        "角 θ"
+      ],
+      "pitfall": "把 AE 与底面的夹角误认为与 AB 的夹角，或者忘记投影是 AC 而不是 AB。"
+    },
+    {
+      "problem": "如图，正方体 ABCD-A₁B₁C₁D₁ 的棱长为 2，小睿取 AB 的中点 E、BC 的中点 F。求异面直线 A₁E 与 B₁F 所成角的余弦值。",
+      "answer": "以 A 为原点建系：A(0,0,0)，B(2,0,0)，C(2,2,0)，A₁(0,0,2)，B₁(2,0,2)，E(1,0,0)，F(2,1,0)。A₁E = (1,0,-2)，B₁F = (0,1,-2)。cosθ = |A₁E·B₁F|/(|A₁E||B₁F|) = |0+0+4|/(√5·√5) = 4/5。",
+      "difficulty": "高",
+      "beats": [
+        {
+          "narration": "棱长为 2 的正方体，E 是 AB 中点，F 是 BC 中点。",
+          "visual": "正方体 ABCD-A₁B₁C₁D₁ 出现，棱长标 2，AB 中点红点 E，BC 中点红点 F。"
+        },
+        {
+          "narration": "把两条异面直线 A₁E 和 B₁F 画出来，它们不在同一个平面内。",
+          "visual": "红色线段 A₁E 从 A₁ 连到 E，蓝色线段 B₁F 从 B₁ 连到 F，两条线闪烁并旋转展示它们既不平行也不相交。"
+        },
+        {
+          "narration": "求异面直线夹角，可以建立空间直角坐标系，用向量来算。",
+          "visual": "以 A 为原点出现 x、y、z 三条坐标轴，正方体棱与坐标轴对齐，各点坐标依次标出。"
+        },
+        {
+          "narration": "写出关键点坐标：A₁(0,0,2)，E(1,0,0)，B₁(2,0,2)，F(2,1,0)。",
+          "visual": "四个点分别闪烁并弹出坐标卡片：A₁(0,0,2)、E(1,0,0)、B₁(2,0,2)、F(2,1,0)。"
+        },
+        {
+          "narration": "得到方向向量 A₁E=(1,0,-2)，B₁F=(0,1,-2)。",
+          "visual": "向量 A₁E 和 B₁F 用箭头从起点画出，旁边写出坐标分量。"
+        },
+        {
+          "narration": "代入夹角公式：cosθ = |A₁E·B₁F|/(|A₁E||B₁F|) = 4/5。",
+          "visual": "公式 cosθ = |向量点积|/(模长乘积) 出现，分别计算点积为 4，模长都是 √5，最终结果 4/5 高亮。"
+        }
+      ],
+      "key_objects": [
+        "正方体 ABCD-A₁B₁C₁D₁",
+        "中点 E",
+        "中点 F",
+        "异面直线 A₁E",
+        "异面直线 B₁F",
+        "空间直角坐标系",
+        "方向向量"
+      ],
+      "pitfall": "用向量法时忘记取绝对值，或者把异面直线夹角公式和线面角公式弄混。"
+    }
+  ]
+}
