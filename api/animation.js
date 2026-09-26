@@ -3,6 +3,7 @@ const { allow } = require('../lib/rate');
 const { responses } = require('../lib/openai');
 const { detectArchetype, layoutDirective, partsBin } = require('../lib/anim-parts');
 const bank = require('../lib/kards/bank');
+const { topologyGuide } = require('../lib/anim-topology');
 
 // ============================================================
 // v5.8.4 独立动画（把题目原文直接交给模型，模型自己解题并写一整页 HTML，贴近 DeepSeek 网页聊天效果）
@@ -47,6 +48,8 @@ function buildPrompt(b, fixNotes) {
         JSON.stringify(refs) + '\n';
     }
   } catch (e) { console.error('[animation] bank guidance failed:', e.message); }
+  // 拓扑规律：环形/最优化等结构的通用运动与数学法则（举一反三）
+  const topologyBlock = topologyGuide(b.problem);
   const repairBlock = fixNotes
     ? `*** REPAIR REQUIRED *** A previous attempt was rejected because: ${fixNotes}\nFix EVERY issue, reuse the matching pieces from the PARTS KIT, and output ONE complete valid HTML document.\n`
     : '';
@@ -60,6 +63,7 @@ ${solutionLine}
 
 ${directive}
 ${storyboardBlock}
+${topologyBlock}
 === GENERAL VISUAL RULES ===
 - Do NOT just make generic text cards. Draw the real things and quantities from the problem, and animate their changes.
 - Use inline SVG (preferred) plus CSS transitions / vanilla JS. Every logical step must be a visible change of the objects, not a paragraph of text.
